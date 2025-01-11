@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "aprovacao-ad-romaneios": {
+    "liberacao-documentos-alcada": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -22,11 +22,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/aprovacao-ad-romaneios",
+            "outputPath": "dist/liberacao-documentos-alcada",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -39,6 +39,9 @@
               }
             ],
             "styles": [
+              "./node_modules/@po-ui/style/css/po-theme-default.min.css",
+              "./node_modules/@totvs/po-theme/css/po-theme-default-variables.min.css",
+              "./node_modules/@totvs/po-theme/css/po-theme-default.min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -71,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "aprovacao-ad-romaneios:build:production"
+              "buildTarget": "liberacao-documentos-alcada:build:production"
             },
             "development": {
-              "buildTarget": "aprovacao-ad-romaneios:build:development"
+              "buildTarget": "liberacao-documentos-alcada:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -98,6 +101,9 @@
               }
             ],
             "styles": [
+              "./node_modules/@po-ui/style/css/po-theme-default.min.css",
+              "./node_modules/@totvs/po-theme/css/po-theme-default-variables.min.css",
+              "./node_modules/@totvs/po-theme/css/po-theme-default.min.css",
               "src/styles.scss"
             ],
             "scripts": []

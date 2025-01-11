@@ -1,0 +1,28 @@
+<po-page-dynamic-search 
+(p-quick-search)="buscaProduto($event)"
+(p-change-disclaimers)="clickDisclaimers($event)"
+(p-advanced-search)="realizaBuscaAvancada($event)"
+[p-actions]="opcoesTela"
+[p-filters]="filtroBuscaAvancada"
+>
+
+<po-tabs>
+    <po-tab p-label="Pendentes" [p-active]="selectedTab == 'pendentes'" (p-click)="switchTab('pendentes')"></po-tab>
+    <po-tab p-label="Aprovados" [p-active]="selectedTab == 'aprovados'" (p-click)="switchTab('aprovados')"></po-tab>
+    <po-tab p-label="Recusados" [p-active]="selectedTab == 'recusados'" (p-click)="switchTab('recusados')"></po-tab>
+    <po-tab p-label="Bloqueados" [p-active]="selectedTab == 'bloqueados'" (p-click)="switchTab('bloqueados')"></po-tab>
+    <po-tab p-label="Todos" [p-active]="selectedTab == 'todos'" (p-click)="switchTab('todos')"></po-tab>
+</po-tabs>
+
+
+
+<po-table
+    p-container="border"
+    [p-columns]="columns"
+    [p-items]="documentos"
+    [p-loading]="loading"
+    [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
+    (p-dblClick)="openDocumento($event)" 
+/>
+
+</po-page-dynamic-search>
