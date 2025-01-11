@@ -1,7 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { PoModule, PoTabsModule } from '@po-ui/ng-components';
@@ -14,7 +13,7 @@ import { DocumentosComponent } from './components/documentos/documentos.componen
 @NgModule({
   declarations: [
     AppComponent,
-   DocumentosComponent 
+    DocumentosComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +23,7 @@ import { DocumentosComponent } from './components/documentos/documentos.componen
     PoTemplatesModule,
     PoTabsModule,
     ProtheusLibCoreModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

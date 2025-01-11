@@ -17,8 +17,8 @@ export class AppComponent {
   }
 
   readonly menus: Array<PoMenuItem> = [
-    { label: 'Home', action: this.onClick.bind(this) },
-    { label: 'Sair', action: this.closeApp.bind(this) }
+    { label: 'Home', action: this.onClick.bind(this), shortLabel: 'Home', icon: 'po-icon-home' },
+    { label: 'Sair', action: this.closeApp.bind(this), shortLabel: 'Sair', icon: 'po-icon-exit' }
   ];
 
   private onClick() {

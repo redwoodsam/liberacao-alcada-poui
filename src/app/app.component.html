@@ -1,6 +1,12 @@
 <div class="po-wrapper">
-  <!-- <po-toolbar p-title="Liberação de Documentos"></po-toolbar> -->
+  <po-toolbar p-title="Liberação de Documentos"></po-toolbar>
 
-  <po-menu [p-menus]="menus" [p-collapsed]="true" ></po-menu>
+  <po-menu [p-collapsed]="true" [p-menus]="menus" >
+    <div *p-menu-header-template class="po-p-2 po-font-title sample-menu-header-text-color">
+      <p>Bem-vindo</p>
+    </div>
+  </po-menu>
+
   <router-outlet></router-outlet>
+  <po-page-default></po-page-default>
 </div>
