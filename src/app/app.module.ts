@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { PoModule, PoTabsModule } from '@po-ui/ng-components';
-import { PoTemplatesModule } from '@po-ui/ng-templates';
+import { PoModalModule, PoModule, PoTabsModule } from '@po-ui/ng-components';
+import { PoPageDynamicSearchModule, PoPageDynamicTableModule, PoTemplatesModule } from '@po-ui/ng-templates';
 import { ProtheusLibCoreModule } from '@totvs/protheus-lib-core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +23,9 @@ import { DocumentosComponent } from './components/documentos/documentos.componen
     PoTemplatesModule,
     PoTabsModule,
     ProtheusLibCoreModule,
+    PoPageDynamicSearchModule,
+    PoPageDynamicTableModule,
+    PoModalModule,
     BrowserAnimationsModule,
   ],
   providers: [

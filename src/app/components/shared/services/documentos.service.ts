@@ -13,26 +13,58 @@ export class DocumentosService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /* 
+      { 'id', 'Documento', 
+      { 'tipo-documento', 'Tipo Documento', 
+      { 'cod-usuario', 'Cód. Usuario', 
+      { 'cod-aprovador', 'Cod. Aprovador', 
+      { 'grp-aprov', 'Grp. Aprov', 
+      { 'data-emissao', 'Data Emissão', 
+      { 'valor-total', 'Valor total', 
+      { 'data-liberacao', 'Data Liberação', 
+      { 'prazo', 'Prazo', 
+      { 'aviso', 'Aviso', 
+      { 'tipo-compra', 'Tipo Compra', 
+  */
+
   getAll(pageNumber: number, filtrosAplicados: string): Observable<DocumentosServiceModel> {
     // return this.httpClient.get(`${this.baseUrl}/${categoria}`, { headers: this.headers });
     return of<DocumentosServiceModel>(
       {
-        items:[
-      {
-        id: "11",
-        data: "2021-07-01",
-        fornecedor: "Fornecedor 1",
-        produto: "Produto 1",
-        quantidade: 10,
-        valor: 100.00,
-        contrato: "11111",
-        status: "pendente",
+        items: [
+          {
+            id: 'Documento',
+            tipoDocumento: 'Tipo Documento',
+            codUsuario: 'Cód. Usuario',
+            codAprovador: 'Cod. Aprovador',
+            grpAprov: 'Grp. Aprov',
+            dataEmissao: '2025-01-10',
+            valorTotal: 1000,
+            dataLiberacao:  ' ',
+            prazo: '2025-01-10',
+            aviso: 'Aviso',
+            tipoCompra: 'Tipo Compra',
+            status: 'pendente'
+          },
+          {
+            id: 'Documento',
+            tipoDocumento: 'Tipo Documento',
+            codUsuario: 'Cód. Usuario',
+            codAprovador: 'Cod. Aprovador',
+            grpAprov: 'Grp. Aprov',
+            dataEmissao: '2025-01-10',
+            valorTotal: 1000,
+            dataLiberacao:  ' ',
+            prazo: '2025-01-10',
+            aviso: 'Aviso',
+            tipoCompra: 'Tipo Compra',
+            status: 'pendente'
+          },
+        ],
+      hasNext: false
       }
-    ],
-    hasNext: false
-  }
-  )
-  }
+    )
+}
 
 
 }

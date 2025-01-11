@@ -1,5 +1,5 @@
 <po-page-dynamic-search 
-(p-quick-search)="buscaProduto($event)"
+(p-quick-search)="buscaDocumento($event)"
 (p-change-disclaimers)="clickDisclaimers($event)"
 (p-advanced-search)="realizaBuscaAvancada($event)"
 [p-actions]="opcoesTela"
@@ -17,12 +17,25 @@
 
 
 <po-table
+    #tableDocumento
+    [p-actions]="acoesTabela"
     p-container="border"
     [p-columns]="columns"
     [p-items]="documentos"
     [p-loading]="loading"
     [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
-    (p-dblClick)="openDocumento($event)" 
-/>
+    (p-dblClick)="abrirDocumento($event)"></po-table>
 
 </po-page-dynamic-search>
+
+<po-modal
+    p-title="Visualizar Documento"
+>
+    teste
+    <!-- <po-page-dynamic-form
+        [p-fields]="fields"
+        [p-actions]="actions"
+        [p-literals]="{ save: 'Salvar', cancel: 'Cancelar' }"
+        [p-form]="form"
+    ></po-page-dynamic-form> -->
+</po-modal>
