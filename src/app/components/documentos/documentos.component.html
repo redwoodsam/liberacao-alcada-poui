@@ -25,17 +25,56 @@
     [p-loading]="loading"
     [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
     (p-dblClick)="abrirDocumento($event)"></po-table>
-
 </po-page-dynamic-search>
+
 
 <po-modal
     p-title="Visualizar Documento"
 >
-    teste
-    <!-- <po-page-dynamic-form
-        [p-fields]="fields"
-        [p-actions]="actions"
-        [p-literals]="{ save: 'Salvar', cancel: 'Cancelar' }"
-        [p-form]="form"
-    ></po-page-dynamic-form> -->
+
+    <po-dynamic-view
+        [p-fields]="formularioDocumento"
+        [p-value]="documentoSelecionado" 
+    >
+        
+    </po-dynamic-view>
+
+    <div class="po-action-btns-wrapper">
+        <po-button
+            p-icon="po-icon-document"
+            p-size="large"
+            p-kind="primary"
+            (p-click)="abrirItensDocumento(documentoSelecionado)"
+        >
+
+        </po-button>
+        <po-button
+            p-icon="po-icon-ok"
+            p-size="large"
+            p-kind="primary"
+            (p-click)="aprovarDocumento(documentoSelecionado)"
+        >
+
+        </po-button>
+        <po-button
+            p-icon="po-icon-close"
+            p-size="large"
+            p-kind="primary"
+            p-danger
+            (p-click)="rejeitarDocumento(documentoSelecionado)"
+        >
+
+        </po-button>
+    </div>
+
+</po-modal>
+
+
+<po-modal
+    #modalItens
+    p-title="Visualizar itens"
+>
+
+teste
+
 </po-modal>

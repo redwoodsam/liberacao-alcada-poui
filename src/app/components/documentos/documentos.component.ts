@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoDynamicFormField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoDynamicFormField, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Documento } from '../shared/interfaces/documento';
@@ -27,7 +27,7 @@ export class DocumentosComponent implements OnInit {
   
   filtroBuscaAvancada: Array<PoPageDynamicSearchFilters>;
 
-  formularioDocumento: Array<PoDynamicFormField> = [];
+  formularioDocumento: Array<PoDynamicViewField> = [];
 
   documentoSelecionado: Documento = {} as Documento;
 
@@ -40,12 +40,13 @@ export class DocumentosComponent implements OnInit {
 
   public cancelarModal: PoModalAction = {
     action: () => {
-      this.poModal.close();
+      this.modalDocumento.close();
     },
     label: 'Cancelar',
   };
 
-  @ViewChild(PoModalComponent) poModal: any;
+  @ViewChild(PoModalComponent) modalDocumento: any;
+  @ViewChild('modalItens') modalItens: any;
   // @ViewChild(PoDynamicFormComponent) dynamicForm: PoDynamicFormComponent;
 
 
@@ -54,7 +55,7 @@ export class DocumentosComponent implements OnInit {
     this.columns = this.constroiColunas();
     this.acoesTabela = this.constroiAcoesTabela();
     // this.opcoesTela = this.constroiOpcoesTela();
-    this.formularioDocumento = this.constroiFormularioDocumento();
+    this.formularioDocumento = this.constroiFormularioVisuDocumanto();
   }
 
   ngOnInit(): void {
@@ -65,6 +66,114 @@ export class DocumentosComponent implements OnInit {
   /**
    * Construção dos elementos da tela
   */
+
+  constroiFormularioVisuDocumanto(): PoDynamicViewField[] {
+    return [
+      {
+        property: 'id',
+        label: 'Documento',
+        // divider: 'Dados do Documento',
+        container: 'Dados do Documento',
+        gridColumns: 4,
+        order: 1
+      },
+      {
+        property: 'valorTotal',
+        label: 'Valor Total',
+        type: 'currency',
+        gridColumns: 4 
+      },
+      {
+        property: 'dataEmissao',
+        label: 'Data Emissão',
+        type: 'date',
+        gridColumns: 4
+      },
+      {
+        property: 'moeda',
+        label: 'Moeda',
+        gridColumns: 4
+      },
+      {
+        property: 'dataLiberacao',
+        label: 'Data Liberação',
+        gridColumns: 4,
+      },
+      {
+        property: 'observacoes',
+        label: 'Observações',
+        gridColumns: 12
+      },
+      {
+        property: 'centroCusto',
+        label: 'Centro de custo',
+        container: "Dados das Entidades Contábeis",
+        gridColumns: 4
+      },
+      {
+        property: 'contaContabil',
+        label: 'Conta Contábil',
+        gridColumns: 4
+      },
+      {
+        property: 'itemConta',
+        label: 'Item Conta',
+        gridColumns: 4
+      },
+      {
+        property: 'classeValor',
+        label: 'Classe de Valor',
+        gridColumns: 4
+      },
+      {
+        property: 'nome',
+        label: 'Nome',
+        container: 'Dados do Aprovador',
+        gridColumns: 4
+      },
+      {
+        property: 'limite',
+        label: 'Limite',
+        type: 'decimal',
+        gridColumns: 4
+      },
+      {
+        property: 'perLimite',
+        label: 'Per. Limite',
+        gridColumns: 4
+      },
+      {
+        property: 'saldoData',
+        label: 'Saldo na Data',
+        gridColumns: 4
+      },
+      {
+        property: 'moeda',
+        label: 'Moeda',
+        gridColumns: 4
+      },
+      {
+        property: 'valorMinimo',
+        label: 'Valor Mínimo',
+        gridColumns: 4
+      },
+      {
+        property: 'valorMaximo',
+        label: 'Valor Máximo',
+        gridColumns: 4
+      },
+      {
+        property: 'codPerfil',
+        label: 'Cod Perfil',
+        gridColumns: 4
+      },
+      {
+        property: 'descPerfil',
+        label: 'Desc Perfil',
+        gridColumns: 4
+      },
+    ];
+  }	
 
   constroiFormularioDocumento(): PoDynamicFormField[] {
     return [
@@ -78,17 +187,6 @@ export class DocumentosComponent implements OnInit {
         property: 'descricao',
         label: 'Descrição do Produto',
         type: 'string',
-      },
-      {
-        property: 'tipo',
-        label: 'Tipo',
-        options: [
-          { value: 'PA', label: 'PA' },
-          { value: 'PI', label: 'PI' },
-          { value: 'MP', label: 'MP' },
-          { value: 'KT', label: 'KT' },
-          { value: 'EM', label: 'EM' },
-        ],
       },
       {
         property: 'armazem',
@@ -153,7 +251,7 @@ export class DocumentosComponent implements OnInit {
 
   abrirDocumento(documento: any) {
     this.documentoSelecionado = documento;
-    this.poModal?.open()
+    this.modalDocumento?.open()
   }
 
 
@@ -172,10 +270,18 @@ export class DocumentosComponent implements OnInit {
   }
 
 
-  incluiDocumento(): void {
-    this.edicao = false;
-    // this.dynamicForm.form.reset();
-    // this.poModal?.open();
+  abrirItensDocumento(documento: Documento) {
+    // console.log('Abrindo itens documento: ', documento);
+    console.log(this.modalItens);
+    this.modalItens.open();
+  }
+
+  aprovarDocumento(documento: Documento) {
+    console.log('Aprovando documento: ', documento);
+  }
+
+  rejeitarDocumento(documento: Documento) {
+    console.log('Rejeitando documento: ', documento);
   }
 
   buscaDocumento(documento: string): void {
