@@ -6,3 +6,7 @@
     flex-direction: column;
     row-gap: 1em;
 }
+
+::ng-deep .po-tabs-button-wrapper {
+    margin-left: 2em;
+}

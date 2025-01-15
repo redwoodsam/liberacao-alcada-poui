@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PoDynamicFormField, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
-import { Documento } from '../shared/interfaces/documento';
+import { Documento, ItemDocumento } from '../shared/interfaces/documento';
 import { DocumentosService } from '../shared/services/documentos.service';
 
 @Component({
@@ -31,6 +31,8 @@ export class DocumentosComponent implements OnInit {
 
   documentoSelecionado: Documento = {} as Documento;
 
+  itemsDocumentoSelecionado: ItemDocumento[] = []
+
   public confirmarModal: PoModalAction = {
     action: () => {
       // this.salvarFormulario();
@@ -47,6 +49,7 @@ export class DocumentosComponent implements OnInit {
 
   @ViewChild(PoModalComponent) modalDocumento: any;
   @ViewChild('modalItens') modalItens: any;
+  @ViewChild('modalSaldos') modalSaldos: any;
   // @ViewChild(PoDynamicFormComponent) dynamicForm: PoDynamicFormComponent;
 
 
@@ -54,7 +57,7 @@ export class DocumentosComponent implements OnInit {
     this.filtroBuscaAvancada = this.constroiBuscaAvançada();
     this.columns = this.constroiColunas();
     this.acoesTabela = this.constroiAcoesTabela();
-    // this.opcoesTela = this.constroiOpcoesTela();
+    this.opcoesTela = this.constroiAcoesTela();
     this.formularioDocumento = this.constroiFormularioVisuDocumanto();
   }
 
@@ -205,6 +208,12 @@ export class DocumentosComponent implements OnInit {
     ]
   }
 
+  constroiAcoesTela(): PoPageAction[] {
+    return [
+      { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
+    ]
+  }
+
   constroiColunas(): PoTableColumn[] {
     return [
       { property: 'id', label: 'Documento' },
@@ -254,7 +263,9 @@ export class DocumentosComponent implements OnInit {
     this.modalDocumento?.open()
   }
 
-
+  abrirModalSaldos() {
+    this.modalSaldos?.open()
+  }
 
   getItens(pageNumber: number = 1) {
     this.loading = true;
@@ -272,8 +283,12 @@ export class DocumentosComponent implements OnInit {
 
   abrirItensDocumento(documento: Documento) {
     // console.log('Abrindo itens documento: ', documento);
-    console.log(this.modalItens);
+    this.itemsDocumentoSelecionado = documento.itens as ItemDocumento[];
     this.modalItens.open();
+  }
+
+  formatarTituloItem(item: ItemDocumento) {
+    return `Item ${item.id} - ${item.produto} - ${item.descricao}`
   }
 
   aprovarDocumento(documento: Documento) {

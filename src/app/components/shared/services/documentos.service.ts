@@ -44,6 +44,46 @@ export class DocumentosService {
             prazo: '2025-01-10',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
+            itens: [
+              {
+                id: '1',
+                produto: 'Produto 1',
+                descricao: 'Descrição do produto 1',
+                quantidadeUm1: 10,
+                quantidadeUm2: 5,
+                valorUnitario: 100,
+                valorTotal: 500,
+                dataEntrega: '2025-01-15',
+                status: 'pendente',
+                solicitante: 'Fulano de tal',
+                centroCusto: '0102003',
+                contaContabil: '0101001',
+                necessidade: '2025-01-10',
+                os: '200OS',
+                observacao: 'Observação do item 1',
+                um1: 'unidade',
+                um2: 'caixa'
+              },
+                            {
+                id: '2',
+                produto: 'Produto 2',
+                descricao: 'Descrição do produto 2',
+                quantidadeUm1: 10,
+                quantidadeUm2: 5,
+                valorUnitario: 100,
+                valorTotal: 500,
+                dataEntrega: '2025-01-15',
+                status: 'pendente',
+                solicitante: 'Fulano de tal',
+                centroCusto: '0102003',
+                contaContabil: '0101001',
+                necessidade: '2025-01-10',
+                os: '200OS',
+                observacao: 'Observação do item 1',
+                um1: 'unidade',
+                um2: 'caixa'
+              }
+            ],
             status: 'pendente'
           },
           {

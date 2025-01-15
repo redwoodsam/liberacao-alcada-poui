@@ -1,10 +1,3 @@
-<po-page-dynamic-search 
-(p-quick-search)="buscaDocumento($event)"
-(p-change-disclaimers)="clickDisclaimers($event)"
-(p-advanced-search)="realizaBuscaAvancada($event)"
-[p-actions]="opcoesTela"
-[p-filters]="filtroBuscaAvancada"
->
 
 <po-tabs>
     <po-tab p-label="Pendentes" [p-active]="selectedTab == 'pendentes'" (p-click)="switchTab('pendentes')"></po-tab>
@@ -15,6 +8,13 @@
 </po-tabs>
 
 
+<po-page-dynamic-search 
+(p-quick-search)="buscaDocumento($event)"
+(p-change-disclaimers)="clickDisclaimers($event)"
+(p-advanced-search)="realizaBuscaAvancada($event)"
+[p-actions]="opcoesTela"
+[p-filters]="filtroBuscaAvancada"
+>
 
 <po-table
     #tableDocumento
@@ -75,6 +75,52 @@
     p-title="Visualizar itens"
 >
 
-teste
 
+    <po-list-view
+    [p-items]="itemsDocumentoSelecionado"
+    >
+
+        <ng-template p-list-view-content-template let-item [p-title]="formatarTituloItem">
+            <div class="po-row">
+                <!-- <po-info class="po-md-3" p-label="Id" [p-value]="item.id"></po-info>
+                <po-info class="po-md-3" p-label="Produto" [p-value]="item.produto + ' - ' + item.descricao"></po-info> -->
+                <po-info class="po-md-3" p-label="Quantidade" [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
+
+                @if (item?.valorUnitario && item?.valorTotal) {
+                    <po-info class="po-md-3" p-label="Valor unitário" [p-value]="item.valorUnitario"></po-info>
+                    <po-info class="po-md-3" p-label="Valor total" [p-value]="item.valorTotal"></po-info>
+                }
+
+                <po-info class="po-md-3" p-label="Centro Custo" [p-value]="item.centroCusto"></po-info>
+                <po-info class="po-md-3" p-label="Conta Contábil" [p-value]="item.contaContabil"></po-info>
+
+                @if (item?.dataEntrega) {
+                    <po-info class="po-md-3" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
+                }
+
+                @if (item?.necessidade) {
+                    <po-info class="po-md-3" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
+                }
+
+                <po-info class="po-md-3" p-label="Solicitante" [p-value]="item.solicitante"></po-info>
+
+                @if (item?.os) {
+                    <po-info class="po-md-3" p-label="OS/OP" [p-value]="item.os"></po-info>
+                }
+
+                <po-info class="po-md-9" p-label="Observação" [p-value]="item.observacao"></po-info>
+                
+
+            </div>
+        </ng-template>
+
+    </po-list-view>
+</po-modal>
+
+<po-modal 
+    #modalSaldos
+    p-title="Ver Saldo"
+>
+
+    Implementar modal saldo
 </po-modal>
