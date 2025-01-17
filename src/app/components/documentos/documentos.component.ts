@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoDynamicFormField, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoDialogService, PoDynamicFormField, PoDynamicViewField, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
+import { Aprovador } from '../shared/interfaces/aprovador.model';
 import { Documento, ItemDocumento } from '../shared/interfaces/documento';
+import { Saldo } from '../shared/interfaces/saldo.model';
 import { DocumentosService } from '../shared/services/documentos.service';
 
 @Component({
@@ -12,57 +14,62 @@ import { DocumentosService } from '../shared/services/documentos.service';
 })
 export class DocumentosComponent implements OnInit {
 
+  // Paginação
   pageNumber: number = 1;
   pageSize: number = 10;
-  loading: boolean = false;
 
+  // filtros
   filtrosAplicados: string = '';
-  columns: Array<PoTableColumn> = [];
-  documentos: Documento[] = []
+  filtroBuscaAvancada: Array<PoPageDynamicSearchFilters>;
   selectedTab = 'pendentes';
 
-  edicao = false;
+  // Layout
   opcoesTela: Array<PoPageAction> = [];
   acoesTabela: Array<PoTableAction> = [];
-  
-  filtroBuscaAvancada: Array<PoPageDynamicSearchFilters>;
 
+  // Estado global
+  edicao = false;
+  loading: boolean = false;
+
+  // Tabela
+  columns: Array<PoTableColumn> = [];
+  documentos: Documento[] = []
+
+
+  // Documento
   formularioDocumento: Array<PoDynamicViewField> = [];
-
   documentoSelecionado: Documento = {} as Documento;
+  itemsDocumentoSelecionado: ItemDocumento[] = [];
 
-  itemsDocumentoSelecionado: ItemDocumento[] = []
+  // Saldos
+  saldoAtual: Saldo = {} as Saldo;
+  formularioSaldo: Array<PoDynamicViewField> = [];
 
-  public confirmarModal: PoModalAction = {
-    action: () => {
-      // this.salvarFormulario();
-    },
-    label: 'Confirmar',
-  };
+  // Aprovadores
+  aprovadores: Aprovador[] =  []
+  superiores:  Aprovador[] =  []
 
-  public cancelarModal: PoModalAction = {
-    action: () => {
-      this.modalDocumento.close();
-    },
-    label: 'Cancelar',
-  };
+
 
   @ViewChild(PoModalComponent) modalDocumento: any;
   @ViewChild('modalItens') modalItens: any;
   @ViewChild('modalSaldos') modalSaldos: any;
-  // @ViewChild(PoDynamicFormComponent) dynamicForm: PoDynamicFormComponent;
+  @ViewChild('modalTransferencia') modalTransferencia: any;
+  
 
 
-  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService,) {
+  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService) {
     this.filtroBuscaAvancada = this.constroiBuscaAvançada();
     this.columns = this.constroiColunas();
     this.acoesTabela = this.constroiAcoesTabela();
     this.opcoesTela = this.constroiAcoesTela();
     this.formularioDocumento = this.constroiFormularioVisuDocumanto();
+    this.formularioSaldo = this.constroiFormularioSaldos()
   }
 
   ngOnInit(): void {
     this.getItens(1);
+    this.getSaldo();
   }
 
 
@@ -84,7 +91,7 @@ export class DocumentosComponent implements OnInit {
         property: 'valorTotal',
         label: 'Valor Total',
         type: 'currency',
-        gridColumns: 4 
+        gridColumns: 4
       },
       {
         property: 'dataEmissao',
@@ -176,7 +183,7 @@ export class DocumentosComponent implements OnInit {
         gridColumns: 4
       },
     ];
-  }	
+  }
 
   constroiFormularioDocumento(): PoDynamicFormField[] {
     return [
@@ -199,12 +206,98 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
+  /*
+  {
+    "codAprovador": "TEC001",
+    "codUsuario": "000016",
+    "nome": "Samuel Araujo",
+    "superior": {
+        "codUsuario": "000003",
+        "nome": "Fulano de Tal",
+    },
+    "limite": 15000.00,
+    "moeda": "Real",
+    "perLimite": "Mensal",
+    "login": "samuel.araujo",
+    "saldo": {
+        "valor": 15000.00,
+        "dataRef": "2025-01-15",
+        "moeda": "Real"
+    }
+}
+  */
+
+  constroiFormularioSaldos(): PoDynamicViewField[] {
+    return [
+      {
+        property: 'codUsuario',
+        label: 'Usuário',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'nome',
+        label: 'Usuário',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'superior.nome',
+        label: 'Superior',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'limite',
+        label: 'Limite',
+        type: 'currency',
+        gridColumns: 3
+      },
+      {
+        property: 'moeda',
+        label: 'Moeda',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'perLimite',
+        label: 'Per. Limite',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'login',
+        label: 'Login',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'saldo',
+        label: 'Saldo',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'saldo.dataRef',
+        label: 'Data Ref.',
+        type: 'date',
+        gridColumns: 3
+      },
+      {
+        property: 'saldo.moeda',
+        label: 'Moeda',
+        type: 'string',
+        gridColumns: 3
+      },
+    ];
+  }
+
   constroiAcoesTabela(): PoPageAction[] {
     return [
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Aprovar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Recusar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Transferir para', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
+      { label: 'Aprovar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok' },
+      { label: 'Recusar', action: this.abrirConfirmacaoRecusa.bind(this), icon: 'po-icon-close' },
+      { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
     ]
   }
 
@@ -267,6 +360,17 @@ export class DocumentosComponent implements OnInit {
     this.modalSaldos?.open()
   }
 
+  abrirModalTransferencia() {
+    this.modalTransferencia?.open()
+  }
+
+  getSaldo() {
+    this.documentosService.consultaSaldo()
+      .subscribe((res) => {
+        this.saldoAtual = res
+      });
+  }
+
   getItens(pageNumber: number = 1) {
     this.loading = true;
 
@@ -291,12 +395,42 @@ export class DocumentosComponent implements OnInit {
     return `Item ${item.id} - ${item.produto} - ${item.descricao}`
   }
 
+
+  abrirConfirmacaoAprovacao(documento: Documento) {
+    this.poDialogService.confirm({
+      title: 'Aprovação',
+      message: `Confirma aprovação do documento ${documento.id} ?`,
+      confirm: () => this.aprovarDocumento(documento),
+      literals: {cancel: "Não", confirm: 'Sim'},
+    })
+  }
+
+  abrirConfirmacaoRecusa(documento: Documento) {
+    this.poDialogService.confirm({
+      title: 'Recusa',
+      message: `Confirma Recusa do documento ${documento.id} ?`,
+      confirm: () => this.rejeitarDocumento(documento),
+      literals: {cancel: "Não", confirm: 'Sim'},
+    })
+  }
+
   aprovarDocumento(documento: Documento) {
-    console.log('Aprovando documento: ', documento);
+    console.log("Aprovação do documento: " + documento.id)
+    this.poNotificationService.success("Documento Aprovado com Sucesso!")
+
+    if(!this.modalDocumento.isHidden) {
+      this.modalDocumento?.close()
+    }
+    
   }
 
   rejeitarDocumento(documento: Documento) {
-    console.log('Rejeitando documento: ', documento);
+    console.log("Recusa do documento: " + documento.id)
+    this.poNotificationService.success("Documento Recusado com Sucesso!")
+
+    if(!this.modalDocumento.isHidden) {
+      this.modalDocumento?.close()
+    }
   }
 
   buscaDocumento(documento: string): void {

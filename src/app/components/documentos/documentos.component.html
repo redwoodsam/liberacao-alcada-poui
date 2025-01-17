@@ -1,4 +1,5 @@
 
+<!-- Tabs de busca -->
 <po-tabs>
     <po-tab p-label="Pendentes" [p-active]="selectedTab == 'pendentes'" (p-click)="switchTab('pendentes')"></po-tab>
     <po-tab p-label="Aprovados" [p-active]="selectedTab == 'aprovados'" (p-click)="switchTab('aprovados')"></po-tab>
@@ -8,6 +9,7 @@
 </po-tabs>
 
 
+<!-- PESQUISA -->
 <po-page-dynamic-search 
 (p-quick-search)="buscaDocumento($event)"
 (p-change-disclaimers)="clickDisclaimers($event)"
@@ -28,7 +30,10 @@
 </po-page-dynamic-search>
 
 
+<!-- MODAL VISUALIZAÇÃO -->
+
 <po-modal
+    p-size="xl"
     p-title="Visualizar Documento"
 >
 
@@ -49,10 +54,11 @@
 
         </po-button>
         <po-button
+            id="dlg-po-btn-aprovar"
             p-icon="po-icon-ok"
             p-size="large"
             p-kind="primary"
-            (p-click)="aprovarDocumento(documentoSelecionado)"
+            (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)"
         >
 
         </po-button>
@@ -61,7 +67,7 @@
             p-size="large"
             p-kind="primary"
             p-danger
-            (p-click)="rejeitarDocumento(documentoSelecionado)"
+            (p-click)="abrirConfirmacaoRecusa(documentoSelecionado)"
         >
 
         </po-button>
@@ -76,6 +82,7 @@
 >
 
 
+<!-- Modal itens -->
     <po-list-view
     [p-items]="itemsDocumentoSelecionado"
     >
@@ -117,10 +124,29 @@
     </po-list-view>
 </po-modal>
 
+
+<!-- Modal Saldos -->
 <po-modal 
     #modalSaldos
+    p-size="xl"
     p-title="Ver Saldo"
 >
+    <po-dynamic-view
+        [p-fields]="formularioSaldo"
+        [p-value]="saldoAtual" 
+    >
+        
+    </po-dynamic-view>
 
-    Implementar modal saldo
 </po-modal>
+
+
+<!-- Modal Tranferencia -->
+ <po-modal
+    #modalTransferencia
+    p-title="Transferir para"
+ >
+
+ 
+
+ </po-modal>

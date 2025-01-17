@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DocumentosServiceModel } from '../interfaces/documentosService.model';
+import { Saldo } from '../interfaces/saldo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,29 @@ export class DocumentosService {
       { 'tipo-compra', 'Tipo Compra', 
   */
 
+  consultaSaldo() {
+    return of<Saldo>(
+      {
+        "codAprovador": "TEC001",
+        "codUsuario": "000016",
+        "nome": "Samuel Araujo",
+        "superior": {
+          "codUsuario": "000003",
+          "nome": "Fulano de Tal",
+        },
+        "limite": 15000.00,
+        "moeda": "Real",
+        "perLimite": "Mensal",
+        "login": "samuel.araujo",
+        "saldo": {
+          "valor": 15000.00,
+          "dataRef": "2025-01-15",
+          "moeda": "Real"
+        }
+      }
+    )
+  }
+
   getAll(pageNumber: number, filtrosAplicados: string): Observable<DocumentosServiceModel> {
     // return this.httpClient.get(`${this.baseUrl}/${categoria}`, { headers: this.headers });
     return of<DocumentosServiceModel>(
@@ -40,7 +64,7 @@ export class DocumentosService {
             grpAprov: 'Grp. Aprov',
             dataEmissao: '2025-01-10',
             valorTotal: 1000,
-            dataLiberacao:  ' ',
+            dataLiberacao: ' ',
             prazo: '2025-01-10',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
@@ -64,7 +88,7 @@ export class DocumentosService {
                 um1: 'unidade',
                 um2: 'caixa'
               },
-                            {
+              {
                 id: '2',
                 produto: 'Produto 2',
                 descricao: 'Descrição do produto 2',
@@ -94,17 +118,17 @@ export class DocumentosService {
             grpAprov: 'Grp. Aprov',
             dataEmissao: '2025-01-10',
             valorTotal: 1000,
-            dataLiberacao:  ' ',
+            dataLiberacao: ' ',
             prazo: '2025-01-10',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
             status: 'pendente'
           },
         ],
-      hasNext: false
+        hasNext: false
       }
     )
-}
+  }
 
 
 }
