@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoDialogService, PoDynamicFormField, PoDynamicViewField, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoDialogService, PoDynamicViewField, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Aprovador } from '../shared/interfaces/aprovador.model';
@@ -84,127 +84,39 @@ export class DocumentosComponent implements OnInit {
         label: 'Documento',
         // divider: 'Dados do Documento',
         container: 'Dados do Documento',
-        gridColumns: 4,
+        gridColumns: 3,
         order: 1
       },
       {
         property: 'valorTotal',
         label: 'Valor Total',
         type: 'currency',
-        gridColumns: 4
+        gridColumns: 2
       },
       {
         property: 'dataEmissao',
         label: 'Data Emissão',
         type: 'date',
-        gridColumns: 4
+        gridColumns: 2
       },
       {
         property: 'moeda',
         label: 'Moeda',
-        gridColumns: 4
+        gridColumns: 2
       },
       {
         property: 'dataLiberacao',
         label: 'Data Liberação',
-        gridColumns: 4,
+        gridColumns: 2,
       },
       {
         property: 'observacoes',
         label: 'Observações',
         gridColumns: 12
       },
-      {
-        property: 'centroCusto',
-        label: 'Centro de custo',
-        container: "Dados das Entidades Contábeis",
-        gridColumns: 4
-      },
-      {
-        property: 'contaContabil',
-        label: 'Conta Contábil',
-        gridColumns: 4
-      },
-      {
-        property: 'itemConta',
-        label: 'Item Conta',
-        gridColumns: 4
-      },
-      {
-        property: 'classeValor',
-        label: 'Classe de Valor',
-        gridColumns: 4
-      },
-      {
-        property: 'nome',
-        label: 'Nome',
-        container: 'Dados do Aprovador',
-        gridColumns: 4
-      },
-      {
-        property: 'limite',
-        label: 'Limite',
-        type: 'decimal',
-        gridColumns: 4
-      },
-      {
-        property: 'perLimite',
-        label: 'Per. Limite',
-        gridColumns: 4
-      },
-      {
-        property: 'saldoData',
-        label: 'Saldo na Data',
-        gridColumns: 4
-      },
-      {
-        property: 'moeda',
-        label: 'Moeda',
-        gridColumns: 4
-      },
-      {
-        property: 'valorMinimo',
-        label: 'Valor Mínimo',
-        gridColumns: 4
-      },
-      {
-        property: 'valorMaximo',
-        label: 'Valor Máximo',
-        gridColumns: 4
-      },
-      {
-        property: 'codPerfil',
-        label: 'Cod Perfil',
-        gridColumns: 4
-      },
-      {
-        property: 'descPerfil',
-        label: 'Desc Perfil',
-        gridColumns: 4
-      },
     ];
   }
 
-  constroiFormularioDocumento(): PoDynamicFormField[] {
-    return [
-      {
-        property: 'codigo',
-        label: 'Código do Produto',
-        type: 'string',
-        gridColumns: 12
-      },
-      {
-        property: 'descricao',
-        label: 'Descrição do Produto',
-        type: 'string',
-      },
-      {
-        property: 'armazem',
-        label: 'Armazém',
-        type: 'string',
-      },
-    ];
-  }
 
   /*
   {
@@ -327,8 +239,20 @@ export class DocumentosComponent implements OnInit {
 
   constroiBuscaAvançada(): PoPageDynamicSearchFilters[] {
     return [
-      { property: 'codigo', type: 'Código', gridColumns: 12 },
-      { property: 'descricao', type: 'string', gridColumns: 12 },
+      { property: 'emissao-de',    label: 'Emissão de: ', type: 'date', gridColumns: 12 },
+      { property: 'emissao-ate',   label: 'Emissão até: ',type: 'date', gridColumns: 12 },
+      { property: 'documento-de',  label: 'Documento de: ',type: 'string', gridColumns: 12 },
+      { property: 'documento-ate', label: 'Documento até: ',type: 'string', gridColumns: 12 },
+      {
+        property: 'status',
+        options: [
+          { value: 'todos',      label: 'Todos'      },
+          { value: 'pendentes',  label: 'Pendentes'  },
+          { value: 'aprovados',  label: 'Aprovados'  },
+          { value: 'recusados',  label: 'Recusados'  },
+          { value: 'bloqueados', label: 'Bloqueados' },
+        ],
+      },
       {
         property: 'tipo',
         options: [
@@ -365,9 +289,13 @@ export class DocumentosComponent implements OnInit {
   }
 
   getSaldo() {
+    this.loading = true
     this.documentosService.consultaSaldo()
       .subscribe((res) => {
         this.saldoAtual = res
+        this.loading = false;
+      }, (error) => {
+        this.poNotificationService.error(error)
       });
   }
 
@@ -381,6 +309,9 @@ export class DocumentosComponent implements OnInit {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
         this.documentos = this.documentos.concat(res.items);
+        this.loading = false;
+      }, (error) => {
+        this.poNotificationService.error(error)
       });
   }
 
