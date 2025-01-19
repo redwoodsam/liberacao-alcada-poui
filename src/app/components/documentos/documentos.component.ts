@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoDialogService, PoDynamicViewField, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoDialogService, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoRadioGroupOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Aprovador } from '../shared/interfaces/aprovador.model';
@@ -41,13 +41,23 @@ export class DocumentosComponent implements OnInit {
   documentoSelecionado: Documento = {} as Documento;
   itemsDocumentoSelecionado: ItemDocumento[] = [];
 
+
+
+  acoesModalTransferencia = {
+    confirmar: {label: 'Transferir', action: ()=> {}} as PoModalAction,
+    cancelar:  {label: 'Cancelar'  , action: this.fecharModalTransferencia.bind(this),  danger: true } as PoModalAction,
+  }
+
   // Saldos
   saldoAtual: Saldo = {} as Saldo;
   formularioSaldo: Array<PoDynamicViewField> = [];
 
   // Aprovadores
-  aprovadores: Aprovador[] =  []
-  superiores:  Aprovador[] =  []
+  aprovadores: PoRadioGroupOption[] =  []
+  superiores:  PoRadioGroupOption[] =  []
+
+  tipoTransferencia: "aprovador" | "superior" | "" = ""
+  novoAprovadorSelecionado = ""
 
 
 
@@ -70,12 +80,25 @@ export class DocumentosComponent implements OnInit {
   ngOnInit(): void {
     this.getItens(1);
     this.getSaldo();
+    this.getAprovadores()
+    this.getSuperiores()
   }
 
 
   /**
    * Construção dos elementos da tela
   */
+
+  fecharModalTransferencia() {
+    if (!this.modalTransferencia.isHidden){
+      this.modalTransferencia.close()
+    }
+  }
+
+  limparFormularioTransferenciaAprovador() {
+    this.tipoTransferencia = ""
+    this.novoAprovadorSelecionado= ""
+  }
 
   constroiFormularioVisuDocumanto(): PoDynamicViewField[] {
     return [
@@ -96,7 +119,7 @@ export class DocumentosComponent implements OnInit {
       {
         property: 'dataEmissao',
         label: 'Data Emissão',
-        type: 'date',
+        type: 'string',
         gridColumns: 2
       },
       {
@@ -154,7 +177,7 @@ export class DocumentosComponent implements OnInit {
         gridColumns: 3
       },
       {
-        property: 'superior.nome',
+        property: 'superior',
         label: 'Superior',
         type: 'string',
         gridColumns: 3
@@ -186,18 +209,12 @@ export class DocumentosComponent implements OnInit {
       {
         property: 'saldo',
         label: 'Saldo',
-        type: 'string',
+        type: 'currency',
         gridColumns: 3
       },
       {
-        property: 'saldo.dataRef',
+        property: 'dataRef',
         label: 'Data Ref.',
-        type: 'date',
-        gridColumns: 3
-      },
-      {
-        property: 'saldo.moeda',
-        label: 'Moeda',
         type: 'string',
         gridColumns: 3
       },
@@ -315,6 +332,34 @@ export class DocumentosComponent implements OnInit {
       });
   }
 
+  getAprovadores() {
+    this.documentosService
+      .getAprovadores()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((res) => {
+        this.aprovadores = res.map((aprovador: Aprovador) => {
+          return {label: `${aprovador?.codAprovador} - ${aprovador.nome}`, value: aprovador.codAprovador || ""}
+        })
+        this.loading = false;
+      }, (error) => {
+        this.poNotificationService.error(error)
+      });
+  }
+
+  getSuperiores() {
+    this.documentosService
+      .getSuperiores()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((res) => {
+        this.superiores = res.map((superior: Aprovador) => {
+          return {label: `${superior?.codAprovador} - ${superior.nome}`, value: superior.codAprovador || ""}
+        })
+        this.loading = false;
+      }, (error) => {
+        this.poNotificationService.error(error)
+      });
+  }
+
 
   abrirItensDocumento(documento: Documento) {
     // console.log('Abrindo itens documento: ', documento);
@@ -364,12 +409,22 @@ export class DocumentosComponent implements OnInit {
     }
   }
 
+  confirmarTransferencia() {
+    console.log()
+    this.modalTransferencia?.close()
+  }
+
   buscaDocumento(documento: string): void {
     this.filtrosAplicados = documento;
     this.pageNumber = 1;
     documento.length > 0 ? this.filtrosAplicados = 'codigo=' + documento : this.filtrosAplicados = '';
 
     this.getItens(this.pageNumber);
+  }
+
+  selecionaTipoTransferencia(tipo: any) {
+    this.tipoTransferencia = tipo;
+
   }
 
   carregarMais(): void {

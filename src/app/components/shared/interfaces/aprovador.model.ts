@@ -1,6 +1,6 @@
 export interface Aprovador {
-    id: string,
-    codAprovador:string,
-    nome: string,
-    tipo: string
+    id?: string,
+    codAprovador?:string,
+    nome?: string,
+    tipo?: string
 }

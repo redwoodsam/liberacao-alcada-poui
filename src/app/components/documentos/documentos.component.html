@@ -47,6 +47,15 @@
         >
 
         </po-button>
+        <!-- <po-button
+            id="dlg-po-btn-anexo"
+            p-icon="po-icon-ok"
+            p-size="large"
+            p-kind="primary"
+            (p-click)="abrirAnexosDocumento(documentoSelecionado)"
+        >
+
+        </po-button> -->
         <po-button
             id="dlg-po-btn-aprovar"
             p-icon="po-icon-ok"
@@ -139,9 +148,40 @@
  <po-modal
     #modalTransferencia
     p-title="Transferir para"
+    [p-primary-action]="acoesModalTransferencia['confirmar']"
+    [p-secondary-action]="acoesModalTransferencia['cancelar']"
+    (p-close)="limparFormularioTransferenciaAprovador()"
  >
 
+    <po-radio-group
+        name="tipo-transferencia"
+        p-label="Tipo de transferência"
+        [p-options] = "[
+            {label: 'Aprovador', value: 'aprovador'},
+            {label: 'Superior', value: 'superior'}
+        ]"
+        (p-change)="selecionaTipoTransferencia($event)"
+    >
+
+    </po-radio-group>
  
+    @if (tipoTransferencia == "aprovador") {
+        <po-select
+            name="select"
+            p-label="Aprovador ausente"
+            [p-options]="aprovadores"
+            (ngModelChange)="novoAprovadorSelecionado = $event"
+        />
+    }
+
+    @if (tipoTransferencia == "superior") {
+        <po-select
+            name="select"
+            p-label="Superior"
+            [p-options]="superiores"
+            (ngModelChange)="novoAprovadorSelecionado = $event"
+        />
+    }
 
  </po-modal>
 

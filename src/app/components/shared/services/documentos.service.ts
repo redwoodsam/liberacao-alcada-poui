@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { Aprovador } from '../interfaces/aprovador.model';
 import { DocumentosServiceModel } from '../interfaces/documentosService.model';
 import { Saldo } from '../interfaces/saldo.model';
 
@@ -34,19 +35,60 @@ export class DocumentosService {
         "codAprovador": "TEC001",
         "codUsuario": "000016",
         "nome": "Samuel Araujo",
-        "superior": {
-          "codUsuario": "000003",
-          "nome": "Fulano de Tal",
-        },
+        "superior": "Fulano de Tal",
         "limite": 15000.00,
         "moeda": "Real",
         "perLimite": "Mensal",
         "login": "samuel.araujo",
-        "saldo": {
-          "valor": 15000.00,
-          "dataRef": "2025-01-15",
-          "moeda": "Real"
-        }
+        "saldo": 15000.09,
+        "dataRef": "25/01/2025",
+      }
+    )
+  }
+
+  getAprovadores() {
+    return of<Aprovador[]>(
+      [
+        {
+          codAprovador: "TEC001",
+          nome: "Fulano"
+        },
+        {
+          codAprovador: "TEC002",
+          nome: "Ciclano"
+        },
+      ]
+    )
+  }
+
+  getSuperiores() {
+    return of<Aprovador[]>(
+      [
+        {
+          codAprovador: "TEC001",
+          nome: "Fulano"
+        },
+        {
+          codAprovador: "TEC002",
+          nome: "Ciclano"
+        },
+      ]
+    )
+  }
+
+  getSuperior() {
+    return of<Saldo>(
+      {
+        "codAprovador": "TEC001",
+        "codUsuario": "000016",
+        "nome": "Samuel Araujo",
+        "superior": "Fulano de Tal",
+        "limite": 15000.00,
+        "moeda": "Real",
+        "perLimite": "Mensal",
+        "login": "samuel.araujo",
+        "saldo": 15000.09,
+        "dataRef": "25/01/2025",
       }
     )
   }
@@ -62,10 +104,10 @@ export class DocumentosService {
             codUsuario: 'Cód. Usuario',
             codAprovador: 'Cod. Aprovador',
             grpAprov: 'Grp. Aprov',
-            dataEmissao: '2025-01-10',
+            dataEmissao: '10/01/2025',
             valorTotal: 1000,
             dataLiberacao: ' ',
-            prazo: '2025-01-10',
+            prazo: '10/01/2025',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
             itens: [
@@ -82,7 +124,7 @@ export class DocumentosService {
                 solicitante: 'Fulano de tal',
                 centroCusto: '0102003',
                 contaContabil: '0101001',
-                necessidade: '2025-01-10',
+                necessidade: '10/01/2025',
                 os: '200OS',
                 observacao: 'Observação do item 1',
                 um1: 'unidade',
@@ -101,7 +143,7 @@ export class DocumentosService {
                 solicitante: 'Fulano de tal',
                 centroCusto: '0102003',
                 contaContabil: '0101001',
-                necessidade: '2025-01-10',
+                necessidade: '10/01/2025',
                 os: '200OS',
                 observacao: 'Observação do item 1',
                 um1: 'unidade',
@@ -116,10 +158,10 @@ export class DocumentosService {
             codUsuario: 'Cód. Usuario',
             codAprovador: 'Cod. Aprovador',
             grpAprov: 'Grp. Aprov',
-            dataEmissao: '2025-01-10',
+            dataEmissao: '10/01/2025',
             valorTotal: 1000,
             dataLiberacao: ' ',
-            prazo: '2025-01-10',
+            prazo: '10/01/2025',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
             status: 'pendente'
