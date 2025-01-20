@@ -349,6 +349,7 @@
     @if (tipoTransferencia == "aprovador") {
         <po-select
             name="novoAprovadorSelecionado"
+            p-placeholder="Selecione um novo aprovador"
             p-label="Aprovador ausente"
             [p-options]="aprovadores"
             (ngModelChange)="novoAprovadorSelecionado = $event"
@@ -360,6 +361,7 @@
         <po-select
             name="novoAprovadorSelecionado"
             p-label="Superior"
+            p-placeholder="Selecione um novo aprovador"
             [p-options]="superiores"
             (p-change)="novoAprovadorSelecionado = $event"
             (ngModelChange)="novoAprovadorSelecionado = $event"
