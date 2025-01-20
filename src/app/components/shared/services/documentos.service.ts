@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Aprovador } from '../interfaces/aprovador.model';
+import { Documento } from '../interfaces/documento';
 import { DocumentosServiceModel } from '../interfaces/documentosService.model';
 import { Saldo } from '../interfaces/saldo.model';
 
@@ -14,20 +15,6 @@ export class DocumentosService {
   private headers = { 'Content-Type': 'application/json' };
 
   constructor(private httpClient: HttpClient) { }
-
-  /* 
-      { 'id', 'Documento', 
-      { 'tipo-documento', 'Tipo Documento', 
-      { 'cod-usuario', 'Cód. Usuario', 
-      { 'cod-aprovador', 'Cod. Aprovador', 
-      { 'grp-aprov', 'Grp. Aprov', 
-      { 'data-emissao', 'Data Emissão', 
-      { 'valor-total', 'Valor total', 
-      { 'data-liberacao', 'Data Liberação', 
-      { 'prazo', 'Prazo', 
-      { 'aviso', 'Aviso', 
-      { 'tipo-compra', 'Tipo Compra', 
-  */
 
   consultaSaldo() {
     return of<Saldo>(
@@ -150,7 +137,11 @@ export class DocumentosService {
                 um2: 'caixa'
               }
             ],
-            status: 'pendente'
+            status: 'pendente',
+            historico: [
+              {item: '01', nivel: '01', aprovador: 'Fulano 1', situacao: 'pendente', dataLiberacao: '', observacoes: 'asdas'},
+              {item: '02', nivel: '01', aprovador: 'Fulano 2', situacao: 'aprovado', dataLiberacao: '', observacoes: 'asdas'},
+            ],
           },
           {
             id: 'Documento',
@@ -164,12 +155,68 @@ export class DocumentosService {
             prazo: '10/01/2025',
             aviso: 'Aviso',
             tipoCompra: 'Tipo Compra',
-            status: 'pendente'
+            status: 'pendente',
+            itens: [
+              {
+                id: '1',
+                produto: 'Produto 1',
+                descricao: 'Descrição do produto 1',
+                quantidadeUm1: 10,
+                quantidadeUm2: 5,
+                valorUnitario: 100,
+                valorTotal: 500,
+                dataEntrega: '2025-01-15',
+                status: 'pendente',
+                solicitante: 'Fulano de tal',
+                centroCusto: '0102003',
+                contaContabil: '0101001',
+                necessidade: '10/01/2025',
+                os: '200OS',
+                observacao: 'Observação do item 1',
+                um1: 'unidade',
+                um2: 'caixa'
+              },
+              {
+                id: '2',
+                produto: 'Produto 2',
+                descricao: 'Descrição do produto 2',
+                quantidadeUm1: 10,
+                quantidadeUm2: 5,
+                valorUnitario: 100,
+                valorTotal: 500,
+                dataEntrega: '2025-01-15',
+                status: 'pendente',
+                solicitante: 'Fulano de tal',
+                centroCusto: '0102003',
+                contaContabil: '0101001',
+                necessidade: '10/01/2025',
+                os: '200OS',
+                observacao: 'Observação do item 1',
+                um1: 'unidade',
+                um2: 'caixa'
+              }
+            ],
+            historico: [
+              {item: '01', nivel: '01', aprovador: 'Fulano 1', situacao: 'pendente', dataLiberacao: '', observacoes: 'asdas'},
+              {item: '02', nivel: '01', aprovador: 'Fulano 2', situacao: 'aprovado', dataLiberacao: '', observacoes: 'asdas'},
+            ],
           },
         ],
         hasNext: false
       }
     )
+  }
+
+  rejeitarDocumento(documento: Documento){
+    return of('ok')
+  }
+
+  aprovarDocumento(documento: Documento){
+    return of('ok')
+  }
+
+  transferirDocumento(documento: Documento, aprovadorId: string){
+    return of('ok')
   }
 
 

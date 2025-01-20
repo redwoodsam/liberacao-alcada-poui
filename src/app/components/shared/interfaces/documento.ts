@@ -12,8 +12,8 @@ export interface Documento {
     aviso?: string,
     tipoCompra?: string,
     status: string,
-    itens?: Array<ItemDocumento>
-    detalhes?: Array<ItemDocumento>
+    itens?: Array<ItemDocumento>,
+    historico?: HistoricoDocumento[]
 }
 
 export interface ItemDocumento {
@@ -34,4 +34,13 @@ export interface ItemDocumento {
     necessidade?: string,
     status: string,
     os?: string,
+}
+
+export interface HistoricoDocumento {
+    item: string;
+    nivel: string;
+    aprovador: string;
+    situacao: string;
+    dataLiberacao: string;
+    observacoes: string;
 }

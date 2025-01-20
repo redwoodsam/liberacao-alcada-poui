@@ -2,6 +2,15 @@
     margin-top: 20px !important;
 }
 
+.filtros-container {
+    padding: 0 2em;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    width: 30%;
+    justify-content: center;
+}
+
 .po-action-btns-wrapper {
     position: absolute;
     bottom: 7em;
@@ -21,4 +30,64 @@
 
 ::ng-deep .po-modal-body {
     padding-right: 24px;
+}
+
+::ng-deep #row-btn-aprovar .po-button[p-kind=secondary]  {
+    background-color: #1b8f04 !important;
+    color: #ffffff !important;
+
+    &:hover {
+        background-color: #135f03 !important;
+    }
+}
+
+::ng-deep #dlg-po-btn-aprovar .po-button[p-kind=secondary]  {
+    background-color: #1b8f04 !important;
+    color: #ffffff !important;
+
+    &:hover {
+        background-color: #135f03 !important;
+    }
+}
+
+
+::ng-deep .po-table-subtitle-footer-container {
+    margin: 20px 0;
+}
+
+::ng-deep .po-table-row-template-container {
+    margin-left: 10px !important;
+}
+
+.modal-visualizacao-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    margin-bottom: 1.3em;
+}
+
+.modal-visualizacao-saldo-aprovador-container {
+    border: 1px solid #cccccc;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.historico-aprovacao-container {
+
+    ::ng-deep .po-list-view-content {
+        margin-top: 0 !important;
+    }
+
+    ::ng-deep .po-list-view-container {
+        padding: 10px;
+    }
+
+}
+
+.row-template-button-section {
+    display: flex;
+    gap: 1em;
+    margin-top: 1.5em;
+    margin-bottom: .5em;
+    margin-left: 1em;
 }

@@ -1,4 +1,17 @@
 
+<po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros"> 
+    <div class="filtros-container">
+        <po-input [(ngModel)]="documentoDe" name="documento-de" p-label="Documento de:"> </po-input>
+        <po-input [(ngModel)]="documentoAte" name="documento-ate" p-label="Documento até:"> </po-input>
+
+        <po-datepicker [(ngModel)]="emissaoDe" name="emissao-de" p-label="Emissão de:"></po-datepicker>
+        <po-datepicker [(ngModel)]="emissaoAte" name="emissao-ate" p-label="Emissão até:"></po-datepicker>
+
+        <po-select [p-required]="true" [p-placeholder]="'Todos'" (ngModelChange)="status = $event" p-label="Status" [p-options]="[{label: 'Pendentes', value: 'pendentes'}, {label: 'Aprovados', value: 'aprovados'}, {label: 'Recusados', value: 'recusados'},{label: 'Bloqueados', value: 'bloqueados'},{label: 'Todos', value: 'todos'},]"></po-select>
+
+        <po-button p-label="Próximo" p-kind="primary" p-size="large" (p-click)="aplicarFiltros()"></po-button>
+    </div>
+</po-page-default>
 
 <!-- PESQUISA -->
 <po-page-dynamic-search 
@@ -17,7 +30,83 @@
     [p-items]="documentos"
     [p-loading]="loading"
     [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
-    (p-dblClick)="abrirDocumento($event)">
+    (p-dblClick)="abrirDocumento($event)"
+>
+
+    <ng-template p-table-row-template let-rowItem let-i="rowIndex">
+
+        <po-list-view
+            [p-items]="rowItem.itens"
+        >
+            <ng-template p-list-view-content-template let-item [p-title]="formatarTituloItem">
+                <div class="po-row">
+                    <po-info class="po-md-1" p-label="Quantidade" [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
+
+                    @if (item?.valorUnitario && item?.valorTotal) {
+                        <po-info class="po-md-1" p-label="Valor unitário" [p-value]="'R$ ' + item.valorUnitario"></po-info>
+                        <po-info class="po-md-1" p-label="Valor total" [p-value]="'R$ ' + item.valorTotal"></po-info>
+                    }
+
+                    <po-info class="po-md-1" p-label="Centro Custo" [p-value]="item.centroCusto"></po-info>
+                    <po-info class="po-md-1" p-label="C. Contábil" [p-value]="item.contaContabil"></po-info>
+
+                    @if (item?.dataEntrega) {
+                        <po-info class="po-md-1" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
+                    }
+
+                    @if (item?.necessidade) {
+                        <po-info class="po-md-1" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
+                    }
+
+                    <po-info class="po-md-1" p-label="Solicitante" [p-value]="item.solicitante"></po-info>
+
+                    @if (item?.os) {
+                        <po-info class="po-md-1" p-label="OS/OP" [p-value]="item.os"></po-info>
+                    }
+
+                    <po-info class="po-md-1" p-label="Observação" [p-value]="item.observacao"></po-info>
+                    
+
+                </div>
+            </ng-template>
+
+        </po-list-view>
+
+        <div class="row-template-button-section">
+            <po-button
+                id="row-btn-aprovar"
+                p-icon="po-icon-ok"
+                p-size="small"
+                p-label="Aprovar"
+                (p-click)="abrirConfirmacaoAprovacao(rowItem)"
+            >
+                
+            </po-button>
+            <po-button
+                p-icon="po-icon-close"
+                p-size="small"
+                p-kind="primary"
+                p-label="Rejeitar"
+                p-danger
+                (p-click)="abrirModalRecusa(rowItem)"
+            >
+                
+            </po-button>
+
+            <po-button
+                p-icon="po-icon-arrow-right"
+                p-size="small"
+                p-kind="primary"
+                p-label="Transferir"
+                (p-click)="abrirModalTransferencia(rowItem)"
+            >
+                
+            </po-button>
+
+        </div>
+
+    </ng-template>
+
 </po-table>
 </po-page-dynamic-search>
 
@@ -29,13 +118,56 @@
     p-title="Visualizar Documento"
 >
 
-    <po-dynamic-view
-        [p-fields]="formularioDocumento"
-        [p-value]="documentoSelecionado" 
-    >
-        
-    </po-dynamic-view>
+    <div class="modal-visualizacao-container historico-aprovacao-container">
+        <h3>Histórico de aprovação</h3>
 
+        <po-list-view
+            [p-items]="historicoDocumento"
+        >
+
+            <ng-template p-list-view-content-template let-item>
+
+                <div class="po-row">
+                    <po-info class="po-md-2" p-label="Item" [p-value]="item.item"></po-info>
+                    <po-info class="po-md-2" p-label="Situação" [p-value]="item.situacao"></po-info>
+                    <po-info class="po-md-2" p-label="Aprovador" [p-value]="item.aprovador"></po-info>
+                    <po-info class="po-md-2" p-label="Nível" [p-value]="item.nivel"></po-info>
+                    <po-info class="po-md-2" p-label="Data Liberação" [p-value]="item.dataLiberacao"></po-info>
+                    <po-info class="po-md-2" p-label="Observações" [p-value]="item.observacoes"></po-info>
+                </div>
+            </ng-template>
+
+        </po-list-view>
+    </div>
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Documento a liberar</h3>
+
+        <po-table
+            #tableModalDocumento
+            p-container="border"
+            [p-columns]="columnsTabelaModalDocumento"
+            [p-items]="[documentoSelecionado]"
+            p-hide-columns-manager
+        >
+
+        </po-table>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Saldo do Aprovador</h3>
+
+        <po-dynamic-view
+           class="modal-visualizacao-saldo-aprovador-container" 
+            [p-fields]="formularioSaldoModalDocumento"
+            [p-value]="saldoAtual" 
+        >
+            
+        </po-dynamic-view>
+
+    </div>
 
 
     <div class="po-action-btns-wrapper">
@@ -47,20 +179,11 @@
         >
 
         </po-button>
-        <!-- <po-button
-            id="dlg-po-btn-anexo"
-            p-icon="po-icon-ok"
-            p-size="large"
-            p-kind="primary"
-            (p-click)="abrirAnexosDocumento(documentoSelecionado)"
-        >
-
-        </po-button> -->
+        
         <po-button
             id="dlg-po-btn-aprovar"
             p-icon="po-icon-ok"
             p-size="large"
-            p-kind="primary"
             (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)"
         >
 
@@ -70,13 +193,71 @@
             p-size="large"
             p-kind="primary"
             p-danger
-            (p-click)="abrirConfirmacaoRecusa(documentoSelecionado)"
+            (p-click)="abrirModalRecusa(documentoSelecionado)"
         >
 
         </po-button>
     </div>
 
 </po-modal>
+
+  <po-modal
+    #modalRecusa
+    p-title="Recusar documento"
+    [p-primary-action]="acoesModalRecusa['confirmar']"
+    [p-secondary-action]="acoesModalRecusa['cancelar']"
+ >
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento" p-placeholder="Explique, por gentileza, qual seria o motivo da recusa?"> </po-textarea>
+
+    </div>
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Documento</h3>
+
+        <po-table
+            #tableModalDocumento
+            p-container="border"
+            [p-columns]="columnsTabelaModalDocumento"
+            [p-items]="[documentoSelecionado]"
+            p-hide-columns-manager
+        >
+
+        </po-table>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Saldo do Aprovador</h3>
+
+        <po-dynamic-view
+           class="modal-visualizacao-saldo-aprovador-container" 
+            [p-fields]="formularioSaldoModalDocumento"
+            [p-value]="saldoAtual" 
+        >
+            
+        </po-dynamic-view>
+
+    </div>
+
+
+    <div class="po-action-btns-wrapper">
+        <po-button
+            p-icon="po-icon-document"
+            p-size="large"
+            p-kind="primary"
+            (p-click)="abrirItensDocumento(documentoSelecionado)"
+        >
+
+        </po-button>
+    </div>
+
+ </po-modal>
 
 
 <po-modal
@@ -85,40 +266,40 @@
 >
 
 
-<!-- Modal itens -->
+    <!-- Modal itens -->
     <po-list-view
-    [p-items]="itemsDocumentoSelecionado"
+        [p-items]="itemsDocumentoSelecionado"
     >
 
         <ng-template p-list-view-content-template let-item [p-title]="formatarTituloItem">
             <div class="po-row">
                 <!-- <po-info class="po-md-3" p-label="Id" [p-value]="item.id"></po-info>
                 <po-info class="po-md-3" p-label="Produto" [p-value]="item.produto + ' - ' + item.descricao"></po-info> -->
-                <po-info class="po-md-3" p-label="Quantidade" [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
+                <po-info class="po-md-2" p-label="Quantidade" [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
 
                 @if (item?.valorUnitario && item?.valorTotal) {
-                    <po-info class="po-md-3" p-label="Valor unitário" [p-value]="item.valorUnitario"></po-info>
-                    <po-info class="po-md-3" p-label="Valor total" [p-value]="item.valorTotal"></po-info>
+                    <po-info class="po-md-2" p-label="Valor unitário" [p-value]="'R$ ' + item.valorUnitario"></po-info>
+                    <po-info class="po-md-2" p-label="Valor total" [p-value]="'R$ ' + item.valorTotal"></po-info>
                 }
 
-                <po-info class="po-md-3" p-label="Centro Custo" [p-value]="item.centroCusto"></po-info>
-                <po-info class="po-md-3" p-label="Conta Contábil" [p-value]="item.contaContabil"></po-info>
+                <po-info class="po-md-2" p-label="Centro Custo" [p-value]="item.centroCusto"></po-info>
+                <po-info class="po-md-2" p-label="Conta Contábil" [p-value]="item.contaContabil"></po-info>
 
                 @if (item?.dataEntrega) {
-                    <po-info class="po-md-3" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
+                    <po-info class="po-md-2" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
                 }
 
                 @if (item?.necessidade) {
-                    <po-info class="po-md-3" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
+                    <po-info class="po-md-2" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
                 }
 
-                <po-info class="po-md-3" p-label="Solicitante" [p-value]="item.solicitante"></po-info>
+                <po-info class="po-md-2" p-label="Solicitante" [p-value]="item.solicitante"></po-info>
 
                 @if (item?.os) {
-                    <po-info class="po-md-3" p-label="OS/OP" [p-value]="item.os"></po-info>
+                    <po-info class="po-md-2" p-label="OS/OP" [p-value]="item.os"></po-info>
                 }
 
-                <po-info class="po-md-9" p-label="Observação" [p-value]="item.observacao"></po-info>
+                <po-info class="po-md-2" p-label="Observação" [p-value]="item.observacao"></po-info>
                 
 
             </div>
@@ -167,22 +348,25 @@
  
     @if (tipoTransferencia == "aprovador") {
         <po-select
-            name="select"
+            name="novoAprovadorSelecionado"
             p-label="Aprovador ausente"
             [p-options]="aprovadores"
             (ngModelChange)="novoAprovadorSelecionado = $event"
+            (p-change)="novoAprovadorSelecionado = $event"
         />
     }
 
     @if (tipoTransferencia == "superior") {
         <po-select
-            name="select"
+            name="novoAprovadorSelecionado"
             p-label="Superior"
             [p-options]="superiores"
+            (p-change)="novoAprovadorSelecionado = $event"
             (ngModelChange)="novoAprovadorSelecionado = $event"
         />
     }
 
  </po-modal>
+
 
 <po-loading-overlay p-text="Carregando itens" [hidden]="!loading"></po-loading-overlay>
