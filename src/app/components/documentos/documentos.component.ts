@@ -529,6 +529,10 @@ export class DocumentosComponent implements OnInit {
           this.modalRecusa?.close()
         }
 
+        if(!this.modalDocumento.isHidden) {
+          this.modalDocumento?.close()
+        }
+
       }, (error) => {
         this.poNotificationService.error(error)
       });
