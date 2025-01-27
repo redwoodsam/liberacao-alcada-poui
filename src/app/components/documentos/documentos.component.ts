@@ -95,7 +95,7 @@ export class DocumentosComponent implements OnInit {
     this.columnsTabelaModalDocumento = this.constroiColunasModalDocumento();
     this.acoesTabela = this.constroiAcoesTabela();
     this.opcoesTela = this.constroiAcoesTela();
-    this.formularioDocumento = this.constroiFormularioVisuDocumanto();
+    this.formularioDocumento = this.constroiFormularioVisuDocumento();
     this.formularioSaldo = this.constroiFormularioSaldos()
     this.formularioSaldoModalDocumento = this.constroiFormularioSaldoModalVisualizacao()
     this.colunasHistoricoDocumento = this.constroiFormularioHistoricoDocumento();
@@ -140,7 +140,7 @@ export class DocumentosComponent implements OnInit {
     this.novoAprovadorSelecionado = ""
   }
 
-  constroiFormularioVisuDocumanto(): PoDynamicViewField[] {
+  constroiFormularioVisuDocumento(): PoDynamicViewField[] {
     return [
       {
         property: 'id',
