@@ -41,6 +41,48 @@
 
 
         </po-grid>
+        <!-- <table class="non-poui-table">
+            <thead>
+                <th>Documento</th>
+                <th>Produto</th>
+                <th>Descrição</th>
+                <th>Quantidade</th>
+                <th>UN</th>
+                <th>Valor unitário</th>
+                <th>Valor total</th>
+                <th>Data Entrega</th>
+                <th>Status</th>
+                <th>Solicitante</th>
+                <th>Centro Custo</th>
+                <th>Necessidade</th>
+                <th>OS/OP</th>
+                <th>Observações</th>
+            </thead>
+
+            <tbody>
+
+                @for (item of rowItem.itens; track item.id) {
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.produto }}</td>
+                        <td>{{ item.descricao }}</td>
+                        <td>{{ item.quantidadeUm1 }}</td>
+                        <td>{{ item.um1 }}</td>
+                        <td>{{ item.valorUnitario }}</td>
+                        <td>{{ item.valorTotal }}</td>
+                        <td>{{ item.dataEntrega }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.solicitante }}</td>
+                        <td>{{ item.centroCusto }}</td>
+                        <td>{{ item.necessidade }}</td>
+                        <td>{{ item.os }}</td>
+                        <td>{{ item.observacao }}</td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table> -->
 
         <!-- <po-list-view
             [p-items]="rowItem.itens"
