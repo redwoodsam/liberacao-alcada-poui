@@ -4,7 +4,9 @@
     - [ ] Itens de documento 
     - [ ] Histórico de aprovação
 
-- [ ] Retirar botões de aprovar, rejeitar e transferir da lista de itens de documento e deixar apenas nos três pontos
+- [x] Retirar botões de aprovar, rejeitar e transferir da lista de itens de documento e deixar apenas nos três pontos
+
+- [ ] Retirar o botão ver saldo e colocar um título ao lado da busca avançada
 
 - [ ] Criar tela de login
 

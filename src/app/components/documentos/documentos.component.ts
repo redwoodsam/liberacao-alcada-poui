@@ -51,8 +51,9 @@ export class DocumentosComponent implements OnInit {
   documentoSelecionado: Documento = {} as Documento;
   itemsDocumentoSelecionado: ItemDocumento[] = [];
 
-  historicoDocumento = []
-  colunasHistoricoDocumento:any[] = []
+  historicoDocumento: Array<any> = []
+  colunasHistoricoDocumento: Array<any> = []
+  colunasItensDocumento: Array<any> = []
 
   acoesModalTransferencia = {
     confirmar: {label: 'Transferir', action: this.confirmarTransferencia.bind(this)} as PoModalAction,
@@ -99,6 +100,7 @@ export class DocumentosComponent implements OnInit {
     this.formularioSaldo = this.constroiFormularioSaldos()
     this.formularioSaldoModalDocumento = this.constroiFormularioSaldoModalVisualizacao()
     this.colunasHistoricoDocumento = this.constroiFormularioHistoricoDocumento();
+    this.colunasItensDocumento = this.constroiColunasItensDocumento();
   }
 
   ngOnInit(): void {
@@ -179,14 +181,33 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
+  constroiColunasItensDocumento() {
+    return [
+      { property: 'id', label: 'Documento', readonly: true,  width: 110},
+      { property: 'produto', label: 'Produto', readonly: true },
+      { property: 'descricao', label: 'Descrição', readonly: true },
+      { property: 'quantidadeUm1', label: 'Qtde', readonly: true, width: 70 },
+      { property: 'um1', label: 'UN', readonly: true, width: 70 },
+      { property: 'valorUnitario', label: 'Valor unit.', readonly: true },
+      { property: 'valorTotal', label: 'Valor Total', readonly: true },
+      { property: 'dataEntrega', label: 'Data Entrega', readonly: true },
+      { property: 'status', label: 'Status', readonly: true },
+      { property: 'solicitante', label: 'Solicitante', readonly: true },
+      { property: 'centroCusto', label: 'Centro Custo', readonly: true },
+      { property: 'necessidade', label: 'Necessidade', readonly: true },
+      { property: 'os', label: 'OS/OP', readonly: true },
+      { property: 'observacao', label: 'Observações', readonly: true },
+    ];
+  }
+
   constroiFormularioHistoricoDocumento() {
     return [
-        { property: 'item'                , label: 'Código'  },
-        { property: 'nivel'               , label: 'Nível'   },
-        { property: 'situacao'            , label: 'Situação' },
-        { property: 'aprovador'           , label: 'Aprovador' },
-        { property: 'dataLiberacao'       , label: 'Data Liberação' },
-        { property: 'observacoes'         , label: 'Observações'  },
+      { property: 'item', label: 'Item', readonly: true, width: 70 },
+      { property: 'nivel', label: 'Nível', readonly: true, width: 70 },
+      { property: 'situacao', label: 'Situação', readonly: true, width: 150 },
+      { property: 'aprovador', label: 'Aprovador', readonly: true, width: 200 },
+      { property: 'dataLiberacao', label: 'Data Liberação', readonly: true, width: 150 },
+      { property: 'observacoes', label: 'Observações', readonly: true  },
       ]
   }
 
