@@ -7,7 +7,7 @@
         <po-datepicker [(ngModel)]="emissaoDe" name="emissao-de" p-label="Emissão de:"></po-datepicker>
         <po-datepicker [(ngModel)]="emissaoAte" name="emissao-ate" p-label="Emissão até:"></po-datepicker>
 
-        <po-select [p-required]="true" [p-placeholder]="'Todos'" (ngModelChange)="status = $event" p-label="Status" [p-options]="[{label: 'Pendentes', value: 'pendentes'}, {label: 'Aprovados', value: 'aprovados'}, {label: 'Recusados', value: 'recusados'},{label: 'Bloqueados', value: 'bloqueados'},{label: 'Todos', value: 'todos'},]"></po-select>
+        <po-select [p-required]="true" [p-placeholder]="'Todos'" (ngModelChange)="status = $event" p-label="Status" [p-options]="[{label: 'Pendentes', value: 'Pendente'}, {label: 'Aprovados', value: 'Aprovado'}, {label: 'Recusados', value: 'Rejeitado'},{label: 'Bloqueados', value: 'Bloqueado'},{label: 'Todos', value: ''},]"></po-select>
 
         <po-button p-label="Próximo" p-kind="primary" p-size="large" (p-click)="aplicarFiltros()"></po-button>
     </div>
@@ -153,6 +153,7 @@
                 <th>Aprovador</th>
                 <th>Nível</th>
                 <th>Data Liberação</th>
+                <th>Mensagem</th>
                 <th>Observações</th>
             </thead>
             <tbody>
@@ -164,7 +165,8 @@
                         <td>{{ item.aprovador }}</td>
                         <td>{{ item.nivel }}</td>
                         <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
-                        <td>{{ item.observacoes }}</td>
+                        <td>{{ item.msg }}</td>
+                        <!-- <td>{{ item.observacoes }}</td> -->
                     </tr>
                 }
 

@@ -11,7 +11,8 @@ import { Saldo } from '../interfaces/saldo.model';
 })
 export class DocumentosService {
 
-  private baseUrl = 'http://desktop-k38u8fu:8099/rest/controlealcada';
+  // private baseUrl = 'http://desktop-k38u8fu:8099/rest/controlealcada';
+  private baseUrl = 'http://srv-protheus-homo.ald.com:9945/api/rest/controlealcada';
   private headers = { 'Content-Type': 'application/json' };
 
   constructor(private httpClient: HttpClient) { }

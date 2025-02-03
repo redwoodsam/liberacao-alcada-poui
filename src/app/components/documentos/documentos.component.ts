@@ -29,7 +29,7 @@ export class DocumentosComponent implements OnInit {
   documentoAte = "ZZZZZZZZZ"
   emissaoDe = ""
   emissaoAte = `${new Date().getFullYear()}-12-31`
-  status = "pendentes"
+  status = "Pendente"
 
 
   // Layout
@@ -104,7 +104,7 @@ export class DocumentosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getItens(1);
+    // this.getItens(1);
     this.getSaldo();
     this.getAprovadores()
     this.getSuperiores()
@@ -186,8 +186,8 @@ export class DocumentosComponent implements OnInit {
       { property: 'id', label: 'Documento', readonly: true, width: 110 },
       { property: 'produto', label: 'Produto', readonly: true },
       { property: 'descricao', label: 'Descrição', readonly: true },
-      { property: 'quantidadeUm1', label: 'Qtde', readonly: true, width: 70 },
-      { property: 'um1', label: 'UN', readonly: true, width: 70 },
+      { property: 'quantidade', label: 'Qtde', readonly: true, width: 70 },
+      { property: 'um', label: 'UN', readonly: true, width: 70 },
       { property: 'valorUnitario', label: 'Valor unit.', readonly: true },
       { property: 'valorTotal', label: 'Valor Total', readonly: true },
       { property: 'dataEntrega', label: 'Data Entrega', readonly: true },
@@ -475,7 +475,7 @@ export class DocumentosComponent implements OnInit {
 
 
   abrirItensDocumento(documento: Documento) {
-    this.itemsDocumentoSelecionado = documento.itens as ItemDocumento[];
+    this.itemsDocumentoSelecionado = documento.Itens as ItemDocumento[];
     this.modalItens.open();
   }
 

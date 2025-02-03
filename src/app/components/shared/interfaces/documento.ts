@@ -1,9 +1,9 @@
 export interface Documento {
     id: string,
-    tipoDocumento: string,
+    tipo: string,
     codUsuario: string,
-    codAprovador: string,
-    grpAprov: string,
+    codAprovador?: string,
+    grpAprov?: string,
     dataEmissao: string,
     valorTotal: number,
     moeda?: string,
@@ -12,18 +12,17 @@ export interface Documento {
     aviso?: string,
     tipoCompra?: string,
     status: string,
-    itens?: Array<ItemDocumento>,
-    historico?: HistoricoDocumento[]
+    Itens?: Array<ItemDocumento>,
+    Liberacao?: HistoricoDocumento[],
+    obs?: string
 }
 
 export interface ItemDocumento {
-    id: string,
+    id?: string,
     produto: string,
     descricao: string,
     quantidadeUm1: number,
-    um1: string,
-    quantidadeUm2?: number,
-    um2?: string,
+    um: string,
     valorUnitario?: number,
     dataEntrega?: string,
     observacao?: string
@@ -37,10 +36,12 @@ export interface ItemDocumento {
 }
 
 export interface HistoricoDocumento {
-    item: string;
+    item?: string;
     nivel: string;
     aprovador: string;
     situacao: string;
-    dataLiberacao: string;
-    observacoes: string;
+    status: string;
+    msg: string;
+    dataLiberacao?: string;
+    observacoes?: string;
 }
