@@ -88,8 +88,6 @@ export class DocumentosService {
       'Authorization': `Basic ${btoa('admin:admin')}`
     }
 
-    console.log(filtrosAplicados)
-    
     return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${ filtrosAplicados.documentoDe || '%20'}/${ filtrosAplicados.documentoAte }/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte}/${filtrosAplicados.status}/000001`, { headers: headers })
   }
 

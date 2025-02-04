@@ -371,20 +371,10 @@ export class DocumentosComponent implements OnInit {
 
   constroiBuscaAvançada(): PoPageDynamicSearchFilters[] {
     return [
-      { property: 'emissao-de', label: 'Emissão de: ', type: 'date', gridColumns: 12 },
-      { property: 'emissao-ate', label: 'Emissão até: ', type: 'date', gridColumns: 12 },
-      { property: 'documento-de', label: 'Documento de: ', type: 'string', gridColumns: 12 },
-      { property: 'documento-ate', label: 'Documento até: ', type: 'string', gridColumns: 12 },
-      {
-        property: 'status',
-        options: [
-          { value: 'todos', label: 'Todos' },
-          { value: 'pendentes', label: 'Pendentes' },
-          { value: 'aprovados', label: 'Aprovados' },
-          { value: 'recusados', label: 'Recusados' },
-          { value: 'bloqueados', label: 'Bloqueados' },
-        ],
-      },
+      { property: 'emissaoDe', label: 'Emissão de: ', type: 'date', gridColumns: 12 },
+      { property: 'emissaoAte', label: 'Emissão até: ', type: 'date', gridColumns: 12 },
+      { property: 'documentoDe', label: 'Documento de: ', type: 'string', gridColumns: 12 },
+      { property: 'documentoAte', label: 'Documento até: ', type: 'string', gridColumns: 12 },
     ];
   }
 
@@ -597,9 +587,15 @@ export class DocumentosComponent implements OnInit {
   }
 
   buscaDocumento(documento: string): void {
-    this.filtrosAplicados = documento;
-    this.pageNumber = 1;
-    documento.length > 0 ? this.filtrosAplicados = 'codigo=' + documento : this.filtrosAplicados = '';
+
+    if(documento) {
+      this.documentoDe = documento;
+      this.documentoAte = documento;
+    } else {
+      this.documentoDe = " ";
+      this.documentoAte = "ZZZZZZZZZ";
+    }
+
 
     this.getItens(this.pageNumber);
   }
@@ -618,12 +614,30 @@ export class DocumentosComponent implements OnInit {
   realizaBuscaAvancada(retornoBuscaAvancada: {
     [key: string]: any;
   }): void {
-    this.filtrosAplicados = '';
-    for (let atributo in retornoBuscaAvancada) {
-      if (retornoBuscaAvancada.hasOwnProperty(atributo)) {
-        this.filtrosAplicados += `${atributo}=${retornoBuscaAvancada[atributo]}&`;
-      }
+
+    console.log(retornoBuscaAvancada)
+
+    this.documentoDe = retornoBuscaAvancada['documentoDe'] 
+    this.documentoAte = retornoBuscaAvancada['documentoAte'] 
+    this.emissaoDe = retornoBuscaAvancada['emissaoDe'] 
+    this.emissaoAte = retornoBuscaAvancada['emissaoAte'] 
+
+    if (!retornoBuscaAvancada['documentoDe']) {
+      this.documentoDe = " "
     }
+
+    if (!retornoBuscaAvancada['documentoAte']) {
+      this.documentoAte = "ZZZZZZZZZ"
+    }
+
+    if (!retornoBuscaAvancada['emissaoDe']) {
+      this.emissaoDe = " "
+    }
+
+    if (!retornoBuscaAvancada['emissaoAte']) {
+      this.emissaoAte = `${new Date().getFullYear()}-12-31`
+    }
+
     this.pageNumber = 1;
     this.getItens();
   }
