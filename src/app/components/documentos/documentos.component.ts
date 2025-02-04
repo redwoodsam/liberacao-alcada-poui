@@ -325,7 +325,8 @@ export class DocumentosComponent implements OnInit {
 
   constroiAcoesTela(): PoPageAction[] {
     return [
-      { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
+      // { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
+      { label: 'Voltar', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
     ]
   }
 
