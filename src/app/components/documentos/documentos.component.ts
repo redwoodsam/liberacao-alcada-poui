@@ -643,20 +643,17 @@ export class DocumentosComponent implements OnInit {
   }
 
 
-  clickDisclaimers(e: any[]) {
-    this.filtrosAplicados = '';
+  // Executado quando é removido os filtros da busca avançada
+  clickDisclaimers(disclaimers: any[]) {
     this.pageNumber = 1;
-    if (e.length === 0) {
-      this.getItens();
-    } else {
-      e.map(
-        (disclaimer) =>
-          (this.filtrosAplicados += `${disclaimer.property}=${disclaimer.value}&`)
-      );
-      this.getItens();
-    }
+    console.log(disclaimers);
+
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoDe')) this.documentoDe = " "
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = "ZZZZZZZZZ"
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoDe')) this.emissaoDe = " "
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoAte')) this.emissaoAte = `${new Date().getFullYear()}-12-31`
+
+    this.getItens();
   }
-
-
 
 }
