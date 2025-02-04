@@ -438,7 +438,8 @@ export class DocumentosComponent implements OnInit {
       .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
-        this.documentos = this.documentos.concat(res.Items);
+        console.log(res);
+        this.documentos = this.documentos.concat(res.Itens);
         this.loading = false;
       }, (error) => {
         this.poNotificationService.error(error)
