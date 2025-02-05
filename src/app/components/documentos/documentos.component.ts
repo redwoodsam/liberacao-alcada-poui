@@ -29,7 +29,7 @@ export class DocumentosComponent implements OnInit {
   documentoAte = "ZZZZZZZZZ"
   emissaoDe = ""
   emissaoAte = `${new Date().getFullYear()}-12-31`
-  status = "Pendente"
+  status = "02"
 
 
   // Layout
@@ -319,7 +319,7 @@ export class DocumentosComponent implements OnInit {
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
       { label: 'Aprovar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok' },
       { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close' },
-      { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
+      // { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
     ]
   }
 
@@ -385,7 +385,7 @@ export class DocumentosComponent implements OnInit {
 
   abrirDocumento(documento: any) {
     this.documentoSelecionado = documento;
-    this.historicoDocumento = documento.historico
+    this.historicoDocumento = documento.Liberacao
     this.modalDocumento?.open()
   }
 
@@ -418,13 +418,6 @@ export class DocumentosComponent implements OnInit {
 
     if (pageNumber === 1) this.documentos = [];
 
-    /*
-      documentoDe = ""
-      documentoAte = "ZZZZZZZZZ"
-      emissaoDe = ""
-      emissaoAte = `${new Date().getFullYear()}-12-31`
-      status = "pendentes"
-    */
     this.documentosService
       .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))

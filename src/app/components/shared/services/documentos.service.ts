@@ -88,7 +88,7 @@ export class DocumentosService {
       'Authorization': `Basic ${btoa('admin:admin')}`
     }
 
-    return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${ filtrosAplicados.documentoDe || '%20'}/${ filtrosAplicados.documentoAte }/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte}/${filtrosAplicados.status}/000001`, { headers: headers })
+    return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${ filtrosAplicados.documentoDe || '%20'}/${ filtrosAplicados.documentoAte }/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte}/${filtrosAplicados.status}/000006`, { headers: headers })
   }
 
   rejeitarDocumento(documento: Documento){
