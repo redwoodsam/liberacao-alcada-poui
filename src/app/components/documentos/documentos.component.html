@@ -155,6 +155,7 @@
                 <th>Data Liberação</th>
                 <th>Mensagem</th>
                 <th>Observações</th>
+                <th>Status</th>
             </thead>
             <tbody>
 
@@ -166,6 +167,7 @@
                         <td>{{ item.nivel }}</td>
                         <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
                         <td>{{ item.msg }}</td>
+                        <td>{{ item.status }}</td>
                         <!-- <td>{{ item.observacoes }}</td> -->
                     </tr>
                 }

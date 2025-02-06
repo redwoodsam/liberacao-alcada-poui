@@ -163,11 +163,11 @@ export class DocumentosComponent implements OnInit {
         type: 'string',
         gridColumns: 2
       },
-      {
-        property: 'moeda',
-        label: 'Moeda',
-        gridColumns: 2
-      },
+      // {
+      //   property: 'moeda',
+      //   label: 'Moeda',
+      //   gridColumns: 2
+      // },
       {
         property: 'dataLiberacao',
         label: 'Data Liberação',
@@ -181,12 +181,27 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
+  /*
+        {
+          "id": "",
+          "produto": "016023",
+          "descricao": "                                                  ",
+          "quantidadeUm1": 1,
+          "valorUnitario": 0,
+          "valorTotal": 0,
+          "dataEntrega": "",
+          "centroCusto": "                                        ",
+          "necessidade": "20240125",
+          "um": "PC"
+        },
+
+  */
   constroiColunasItensDocumento() {
     return [
       { property: 'id', label: 'Documento', readonly: true, width: 110 },
       { property: 'produto', label: 'Produto', readonly: true },
       { property: 'descricao', label: 'Descrição', readonly: true },
-      { property: 'quantidade', label: 'Qtde', readonly: true, width: 70 },
+      { property: 'quantidadeUm1', label: 'Qtde', readonly: true, width: 70 },
       { property: 'um', label: 'UN', readonly: true, width: 70 },
       { property: 'valorUnitario', label: 'Valor unit.', readonly: true },
       { property: 'valorTotal', label: 'Valor Total', readonly: true },
@@ -200,14 +215,27 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
+  /*
+  "Liberacao": [
+        {
+          "nivel": "01",
+          "aprovador": "",
+          "situacao": "  /  /    ",
+          "status": "Pendente",
+          "msg": ""
+        }
+      ]
+  */
   constroiFormularioHistoricoDocumento() {
     return [
       { property: 'item', label: 'Item', readonly: true, width: 70 },
       { property: 'nivel', label: 'Nível', readonly: true, width: 70 },
       { property: 'situacao', label: 'Situação', readonly: true, width: 150 },
+      { property: 'status', label: 'Status', readonly: true, width: 150 },
       { property: 'aprovador', label: 'Aprovador', readonly: true, width: 200 },
       { property: 'dataLiberacao', label: 'Data Liberação', readonly: true, width: 150 },
-      { property: 'observacoes', label: 'Observações', readonly: true },
+      // { property: 'observacoes', label: 'Observações', readonly: true },
+      { property: 'msg', label: 'Observações', readonly: true },
     ]
   }
 
@@ -330,26 +358,29 @@ export class DocumentosComponent implements OnInit {
     ]
   }
 
+  //01=Aguardando nivel anterior;02=Pendente;03=Liberado;04=Bloqueado;05=Liberado outro aprov.;06=Rejeitado;07=Rej/Bloq outro aprov.
   constroiColunas(): PoTableColumn[] {
     return [
       {
         property: 'status', type: 'subtitle', label: 'Status', subtitles: [
-          { value: 'pendente', content: '', label: 'Pendente', color: 'color-08' },
-          { value: 'aprovada', content: '', label: 'aprovada', color: 'color-10' },
-          { value: 'rejeitada', content: '', label: 'Rejeitada', color: 'color-07' },
-          { value: 'bloqueada', content: '', label: 'Bloqueada', color: 'color-04' },
+          { value: '02', content: '', label: 'Pendente', color: 'color-08' },
+          { value: '03', content: '', label: 'Aprovada', color: 'color-10' },
+          { value: '06', content: '', label: 'Rejeitada', color: 'color-07' },
+          { value: '04', content: '', label: 'Bloqueada', color: 'color-04' },
         ]
       },
-      { property: 'id', label: 'Documento' },
+      { property: 'id', label: 'ID' },
+      { property: 'doc', label: 'Documento' },
       { property: 'tipoDocumento', label: 'Tipo Documento' },
       { property: 'codUsuario', label: 'Cód. Usuario' },
-      { property: 'codAprovador', label: 'Cod. Aprovador' },
+      // { property: 'codAprovador', label: 'Cod. Aprovador' },
       { property: 'grpAprov', label: 'Grp. Aprov' },
       { property: 'dataEmissao', label: 'Data Emissão' },
       { property: 'valorTotal', label: 'Valor total', type: 'currency' },
       { property: 'dataLiberacao', label: 'Data Liberação' },
       { property: 'prazo', label: 'Prazo' },
       { property: 'aviso', label: 'Aviso' },
+      { property: 'msg', label: 'Mensagem' },
       { property: 'tipoCompra', label: 'Tipo Compra' },
 
     ];
