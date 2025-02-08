@@ -6,8 +6,9 @@ import { MAIN_ROUTES } from './components/main/main-routes';
 export const ROUTES: Route[] = [
     {
         path: '',
-        component:MainComponent, 
-        children: MAIN_ROUTES
+        component: MainComponent, 
+        loadChildren: () => import('./components/main/main.module').then(m => m.MainModule)
+        
     },
     {
         path: 'login',
@@ -16,6 +17,11 @@ export const ROUTES: Route[] = [
     {
         path: 'home',
         component: MainComponent,
-        children: MAIN_ROUTES
+        loadChildren: () => import('./components/main/main.module').then(m => m.MainModule)
     },
+    {
+        path: '',
+        redirectTo: '',
+        pathMatch: 'full'
+    }
 ]

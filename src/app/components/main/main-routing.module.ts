@@ -4,7 +4,6 @@ import { MAIN_ROUTES } from './main-routes';
 
 
 @NgModule({
-  // imports: [RouterModule.forRoot(MAIN_ROUTES)],
   imports: [RouterModule.forChild(MAIN_ROUTES)],
   exports: [RouterModule]
 })
