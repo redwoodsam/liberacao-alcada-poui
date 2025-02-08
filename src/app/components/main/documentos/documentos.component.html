@@ -1,5 +1,4 @@
-
-<po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros"> 
+<po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros">
     <div class="filtros-container">
         <po-input [(ngModel)]="documentoDe" name="documento-de" p-label="Documento de:"> </po-input>
         <po-input [(ngModel)]="documentoAte" name="documento-ate" p-label="Documento até:"> </po-input>
@@ -7,41 +6,28 @@
         <po-datepicker [(ngModel)]="emissaoDe" name="emissao-de" p-label="Emissão de:"></po-datepicker>
         <po-datepicker [(ngModel)]="emissaoAte" name="emissao-ate" p-label="Emissão até:"></po-datepicker>
 
-        <po-select [p-required]="true" [p-placeholder]="'Pendentes'" (ngModelChange)="status = $event" p-label="Status" [p-options]="[{label: 'Pendentes', value: '02'}, {label: 'Aprovados', value: '03'}, {label: 'Recusados', value: '06'},{label: 'Bloqueados', value: '04'},{label: 'Todos', value: ' '},]"></po-select>
+        <po-select [p-required]="true" [p-placeholder]="'Pendentes'" (ngModelChange)="status = $event" p-label="Status"
+            [p-options]="[{label: 'Pendentes', value: '02'}, {label: 'Aprovados', value: '03'}, {label: 'Recusados', value: '06'},{label: 'Bloqueados', value: '04'},{label: 'Todos', value: ' '},]"></po-select>
 
         <po-button p-label="Próximo" p-kind="primary" p-size="large" (p-click)="aplicarFiltros()"></po-button>
     </div>
 </po-page-default>
 
 <!-- PESQUISA -->
-<po-page-dynamic-search 
-    (p-quick-search)="buscaDocumento($event)"
-    (p-change-disclaimers)="clickDisclaimers($event)"
-    (p-advanced-search)="realizaBuscaAvancada($event)"
-    [p-actions]="opcoesTela"
-    [p-filters]="filtroBuscaAvancada"
->
+<po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"
+    (p-advanced-search)="realizaBuscaAvancada($event)" [p-actions]="opcoesTela" [p-filters]="filtroBuscaAvancada">
 
-<po-table
-    #tableDocumento
-    [p-actions]="acoesTabela"
-    p-container="border"
-    [p-columns]="columns"
-    [p-items]="documentos"
-    [p-loading]="loading"
-    [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
-    (p-dblClick)="abrirDocumento($event)"
->
+    <po-table #tableDocumento [p-actions]="acoesTabela" p-container="border" [p-columns]="columns"
+        [p-items]="documentos" [p-loading]="loading"
+        [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
+        (p-dblClick)="abrirDocumento($event)">
 
-    <ng-template p-table-row-template let-rowItem let-i="rowIndex">
-        <po-grid
-         [p-columns]="colunasItensDocumento"
-         [p-data]="rowItem.itens"
-        >
+        <ng-template p-table-row-template let-rowItem let-i="rowIndex">
+            <po-grid [p-columns]="colunasItensDocumento" [p-data]="rowItem.itens">
 
 
-        </po-grid>
-        <!-- <table class="non-poui-table">
+            </po-grid>
+            <!-- <table class="non-poui-table">
             <thead>
                 <th>Documento</th>
                 <th>Produto</th>
@@ -84,7 +70,7 @@
 
         </table> -->
 
-        <!-- <po-list-view
+            <!-- <po-list-view
             [p-items]="rowItem.itens"
         >
             <ng-template p-list-view-content-template let-item [p-title]="formatarTituloItem">
@@ -121,23 +107,20 @@
 
         </po-list-view> -->
 
-    </ng-template>
+        </ng-template>
 
-</po-table>
+    </po-table>
 </po-page-dynamic-search>
 
 
 <!-- MODAL VISUALIZAÇÃO -->
 
-<po-modal
-    p-size="xl"
-    p-title="Visualizar Documento"
->
+<po-modal p-size="xl" p-title="Visualizar Documento">
 
     <div class="modal-visualizacao-container historico-aprovacao-container">
         <h3>Histórico de aprovação</h3>
 
-        
+
         <!-- <po-grid
          [p-columns]="colunasHistoricoDocumento"
          [p-data]="historicoDocumento"
@@ -160,16 +143,16 @@
             <tbody>
 
                 @for (item of historicoDocumento; track item.item) {
-                    <tr>
-                        <td>{{ item.item }}</td>
-                        <td>{{ item.situacao }}</td>
-                        <td>{{ item.aprovador }}</td>
-                        <td>{{ item.nivel }}</td>
-                        <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
-                        <td>{{ item.msg }}</td>
-                        <td>{{ item.status }}</td>
-                        <!-- <td>{{ item.observacoes }}</td> -->
-                    </tr>
+                <tr>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.situacao }}</td>
+                    <td>{{ item.aprovador }}</td>
+                    <td>{{ item.nivel }}</td>
+                    <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
+                    <td>{{ item.msg }}</td>
+                    <td>{{ item.status }}</td>
+                    <!-- <td>{{ item.observacoes }}</td> -->
+                </tr>
                 }
 
             </tbody>
@@ -198,13 +181,8 @@
     <div class="modal-visualizacao-container">
         <h3>Documento a liberar</h3>
 
-        <po-table
-            #tableModalDocumento
-            p-container="border"
-            [p-columns]="columnsTabelaModalDocumento"
-            [p-items]="[documentoSelecionado]"
-            p-hide-columns-manager
-        >
+        <po-table #tableModalDocumento p-container="border" [p-columns]="columnsTabelaModalDocumento"
+            [p-items]="[documentoSelecionado]" p-hide-columns-manager>
 
         </po-table>
 
@@ -213,60 +191,41 @@
     <div class="modal-visualizacao-container">
         <h3>Saldo do Aprovador</h3>
 
-        <po-dynamic-view
-           class="modal-visualizacao-saldo-aprovador-container" 
-            [p-fields]="formularioSaldoModalDocumento"
-            [p-value]="saldoAtual" 
-        >
-            
+        <po-dynamic-view class="modal-visualizacao-saldo-aprovador-container" [p-fields]="formularioSaldoModalDocumento"
+            [p-value]="saldoAtual">
+
         </po-dynamic-view>
 
     </div>
 
 
     <div class="po-action-btns-wrapper">
-        <po-button
-            p-icon="po-icon-document"
-            p-size="large"
-            p-kind="primary"
-            (p-click)="abrirItensDocumento(documentoSelecionado)"
-        >
+        <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
+            (p-click)="abrirItensDocumento(documentoSelecionado)">
 
         </po-button>
-        
-        <po-button
-            id="dlg-po-btn-aprovar"
-            p-icon="po-icon-ok"
-            p-size="large"
-            (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)"
-        >
+
+        <po-button id="dlg-po-btn-aprovar" p-icon="po-icon-ok" p-size="large"
+            (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)">
 
         </po-button>
-        <po-button
-            p-icon="po-icon-close"
-            p-size="large"
-            p-kind="primary"
-            p-danger
-            (p-click)="abrirModalRecusa(documentoSelecionado)"
-        >
+        <po-button p-icon="po-icon-close" p-size="large" p-kind="primary" p-danger
+            (p-click)="abrirModalRecusa(documentoSelecionado)">
 
         </po-button>
     </div>
 
 </po-modal>
 
-  <po-modal
-    #modalRecusa
-    p-title="Recusar documento"
-    [p-primary-action]="acoesModalRecusa['confirmar']"
-    [p-secondary-action]="acoesModalRecusa['cancelar']"
- >
+<po-modal #modalRecusa p-title="Recusar documento" [p-primary-action]="acoesModalRecusa['confirmar']"
+    [p-secondary-action]="acoesModalRecusa['cancelar']">
 
 
     <div class="modal-visualizacao-container">
         <h3>Justificativa</h3>
 
-        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento" p-placeholder="Explique, por gentileza, qual seria o motivo da recusa?"> </po-textarea>
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Explique, por gentileza, qual seria o motivo da recusa?"> </po-textarea>
 
     </div>
 
@@ -274,13 +233,8 @@
     <div class="modal-visualizacao-container">
         <h3>Documento</h3>
 
-        <po-table
-            #tableModalDocumento
-            p-container="border"
-            [p-columns]="columnsTabelaModalDocumento"
-            [p-items]="[documentoSelecionado]"
-            p-hide-columns-manager
-        >
+        <po-table #tableModalDocumento p-container="border" [p-columns]="columnsTabelaModalDocumento"
+            [p-items]="[documentoSelecionado]" p-hide-columns-manager>
 
         </po-table>
 
@@ -289,72 +243,61 @@
     <div class="modal-visualizacao-container">
         <h3>Saldo do Aprovador</h3>
 
-        <po-dynamic-view
-           class="modal-visualizacao-saldo-aprovador-container" 
-            [p-fields]="formularioSaldoModalDocumento"
-            [p-value]="saldoAtual" 
-        >
-            
+        <po-dynamic-view class="modal-visualizacao-saldo-aprovador-container" [p-fields]="formularioSaldoModalDocumento"
+            [p-value]="saldoAtual">
+
         </po-dynamic-view>
 
     </div>
 
 
     <div class="po-action-btns-wrapper">
-        <po-button
-            p-icon="po-icon-document"
-            p-size="large"
-            p-kind="primary"
-            (p-click)="abrirItensDocumento(documentoSelecionado)"
-        >
+        <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
+            (p-click)="abrirItensDocumento(documentoSelecionado)">
 
         </po-button>
     </div>
 
- </po-modal>
+</po-modal>
 
 
-<po-modal
-    #modalItens
-    p-title="Visualizar itens"
->
+<po-modal #modalItens p-title="Visualizar itens">
 
 
     <!-- Modal itens -->
-    <po-list-view
-        [p-items]="itemsDocumentoSelecionado"
-    >
+    <po-list-view [p-items]="itemsDocumentoSelecionado">
 
         <ng-template p-list-view-content-template let-item [p-title]="formatarTituloItem">
             <div class="po-row">
                 <!-- <po-info class="po-md-3" p-label="Id" [p-value]="item.id"></po-info>
                 <po-info class="po-md-3" p-label="Produto" [p-value]="item.produto + ' - ' + item.descricao"></po-info> -->
-                <po-info class="po-md-2" p-label="Quantidade" [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
+                <po-info class="po-md-2" p-label="Quantidade"
+                    [p-value]="item.quantidadeUm1 + ' ('+ item.um1 +')'"></po-info>
 
                 @if (item?.valorUnitario && item?.valorTotal) {
-                    <po-info class="po-md-2" p-label="Valor unitário" [p-value]="'R$ ' + item.valorUnitario"></po-info>
-                    <po-info class="po-md-2" p-label="Valor total" [p-value]="'R$ ' + item.valorTotal"></po-info>
+                <po-info class="po-md-2" p-label="Valor unitário" [p-value]="'R$ ' + item.valorUnitario"></po-info>
+                <po-info class="po-md-2" p-label="Valor total" [p-value]="'R$ ' + item.valorTotal"></po-info>
                 }
 
                 <po-info class="po-md-2" p-label="Centro Custo" [p-value]="item.centroCusto"></po-info>
                 <po-info class="po-md-2" p-label="Conta Contábil" [p-value]="item.contaContabil"></po-info>
 
                 @if (item?.dataEntrega) {
-                    <po-info class="po-md-2" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
+                <po-info class="po-md-2" p-label="Data Entrega" [p-value]="item.dataEntrega"></po-info>
                 }
 
                 @if (item?.necessidade) {
-                    <po-info class="po-md-2" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
+                <po-info class="po-md-2" p-label="Necessidade" [p-value]="item.necessidade"></po-info>
                 }
 
                 <po-info class="po-md-2" p-label="Solicitante" [p-value]="item.solicitante"></po-info>
 
                 @if (item?.os) {
-                    <po-info class="po-md-2" p-label="OS/OP" [p-value]="item.os"></po-info>
+                <po-info class="po-md-2" p-label="OS/OP" [p-value]="item.os"></po-info>
                 }
 
                 <po-info class="po-md-2" p-label="Observação" [p-value]="item.observacao"></po-info>
-                
+
 
             </div>
         </ng-template>
@@ -364,65 +307,37 @@
 
 
 <!-- Modal Saldos -->
-<po-modal 
-    #modalSaldos
-    p-size="xl"
-    p-title="Ver Saldo"
->
-    <po-dynamic-view
-        [p-fields]="formularioSaldo"
-        [p-value]="saldoAtual" 
-    >
-        
+<po-modal #modalSaldos p-size="xl" p-title="Ver Saldo">
+    <po-dynamic-view [p-fields]="formularioSaldo" [p-value]="saldoAtual">
+
     </po-dynamic-view>
 
 </po-modal>
 
 
 <!-- Modal Tranferencia -->
- <po-modal
-    #modalTransferencia
-    p-title="Transferir para"
-    [p-primary-action]="acoesModalTransferencia['confirmar']"
-    [p-secondary-action]="acoesModalTransferencia['cancelar']"
-    (p-close)="limparFormularioTransferenciaAprovador()"
- >
+<po-modal #modalTransferencia p-title="Transferir para" [p-primary-action]="acoesModalTransferencia['confirmar']"
+    [p-secondary-action]="acoesModalTransferencia['cancelar']" (p-close)="limparFormularioTransferenciaAprovador()">
 
-    <po-radio-group
-        name="tipo-transferencia"
-        p-label="Tipo de transferência"
-        [p-options] = "[
+    <po-radio-group name="tipo-transferencia" p-label="Tipo de transferência" [p-options]="[
             {label: 'Aprovador', value: 'aprovador'},
             {label: 'Superior', value: 'superior'}
-        ]"
-        (p-change)="selecionaTipoTransferencia($event)"
-    >
+        ]" (p-change)="selecionaTipoTransferencia($event)">
 
     </po-radio-group>
- 
+
     @if (tipoTransferencia == "aprovador") {
-        <po-select
-            name="novoAprovadorSelecionado"
-            p-placeholder="Selecione um novo aprovador"
-            p-label="Aprovador ausente"
-            [p-options]="aprovadores"
-            (ngModelChange)="novoAprovadorSelecionado = $event"
-            (p-change)="novoAprovadorSelecionado = $event"
-        />
+    <po-select name="novoAprovadorSelecionado" p-placeholder="Selecione um novo aprovador" p-label="Aprovador ausente"
+        [p-options]="aprovadores" (ngModelChange)="novoAprovadorSelecionado = $event"
+        (p-change)="novoAprovadorSelecionado = $event" />
     }
 
     @if (tipoTransferencia == "superior") {
-        <po-select
-            name="novoAprovadorSelecionado"
-            p-label="Superior"
-            p-placeholder="Selecione um novo aprovador"
-            [p-options]="superiores"
-            (p-change)="novoAprovadorSelecionado = $event"
-            (ngModelChange)="novoAprovadorSelecionado = $event"
-        />
+    <po-select name="novoAprovadorSelecionado" p-label="Superior" p-placeholder="Selecione um novo aprovador"
+        [p-options]="superiores" (p-change)="novoAprovadorSelecionado = $event"
+        (ngModelChange)="novoAprovadorSelecionado = $event" />
     }
 
- </po-modal>
-
+</po-modal>
 
 <po-loading-overlay p-text="Carregando itens" [hidden]="!loading"></po-loading-overlay>

@@ -1,29 +1,24 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
 import { PoModalModule, PoModule, PoTableModule, PoTabsModule } from '@po-ui/ng-components';
 import { PoPageDynamicSearchModule, PoPageDynamicTableModule, PoTemplatesModule } from '@po-ui/ng-templates';
 import { ProtheusLibCoreModule } from '@totvs/protheus-lib-core';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { DocumentosComponent } from './components/main/documentos/documentos.component';
-import { LoginComponent } from './components/login/login.component';
-import { MainComponent } from './components/main/main.component';
-import { MainModule } from './components/main/main.module';
+import { AppRoutingModule } from '../../app-routing.module';
+import { DocumentosComponent } from './documentos/documentos.component';
+import { MainRoutingModule } from './main-routing.module';
+import { MainComponent } from './main.component';
+
+
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-  ],
+  declarations: [MainComponent, DocumentosComponent],
   imports: [
+    MainRoutingModule,
     BrowserModule,
     AppRoutingModule,
     PoModule,
-    RouterModule.forRoot([]),
     FormsModule,
     PoTemplatesModule,
     PoTabsModule,
@@ -33,11 +28,7 @@ import { MainModule } from './components/main/main.module';
     PoTableModule,
     PoModalModule,
     BrowserAnimationsModule,
-    MainModule
   ],
-  providers: [
-    provideHttpClient(withInterceptorsFromDi()),
-  ],
-  bootstrap: [AppComponent]
+  exports: [MainComponent]
 })
-export class AppModule { }
+export class MainModule { }

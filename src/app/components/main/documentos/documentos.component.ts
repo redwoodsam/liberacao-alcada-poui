@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoDialogService, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
-import { Aprovador } from '../shared/interfaces/aprovador.model';
-import { Documento, HistoricoDocumento, ItemDocumento } from '../shared/interfaces/documento';
-import { Saldo } from '../shared/interfaces/saldo.model';
-import { DocumentosService } from '../shared/services/documentos.service';
+import { Router } from '@angular/router';
+import { Documento, HistoricoDocumento, ItemDocumento } from '../../shared/interfaces/documento';
+import { Saldo } from '../../shared/interfaces/saldo.model';
+import { DocumentosService } from '../../shared/services/documentos.service';
+import { Aprovador } from '../../shared/interfaces/aprovador.model';
 
 @Component({
   selector: 'app-documentos',
@@ -89,8 +90,23 @@ export class DocumentosComponent implements OnInit {
   @ViewChild('modalRecusa') modalRecusa: any;
 
 
+  // constructor(private proAppConfigService: ProAppConfigService) {
+  //   if (!this.proAppConfigService.insideProtheus()) {
+  //     this.proAppConfigService.loadAppConfig();
+  //   }
+  // }
 
-  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService) {
+
+
+  //   private closeApp() {
+  //   if (this.proAppConfigService.insideProtheus()) {
+  //     this.proAppConfigService.callAppClose();
+  //   } else {
+  //     alert("O App não está sendo executado dentro do Protheus.");
+  //   }
+  // }
+
+  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService ) {
     this.filtroBuscaAvancada = this.constroiBuscaAvançada();
     this.columns = this.constroiColunas();
     this.columnsTabelaModalDocumento = this.constroiColunasModalDocumento();
