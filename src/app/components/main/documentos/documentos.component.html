@@ -1,4 +1,104 @@
-<po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros">
+<po-page-default  [hidden]="!mostraFiltros">
+
+    <div class="widgets-charts-documentos">
+
+        <po-widget >
+            <po-chart
+                [p-series]="[
+                    { label: 'Pendentes', data: 100 },
+                    { label: 'Liberados', data: 10 }
+                ]"
+                [p-height]="250"
+                p-title="Status"
+            >
+            </po-chart>
+
+        </po-widget>
+
+        <po-widget>
+            <po-chart
+                [p-series]="[
+                    { label: 'Pedidos de compra', data: 100 },
+                    { label: 'Solicitações de compra', data: 10 }
+                ]"
+                [p-height]="250"
+                p-title="Tipos"
+            >
+            </po-chart>
+        </po-widget>
+
+        <po-widget>
+            <po-chart
+                [p-series]="[
+                    { label: 'Marcio Silva', data: 100 },
+                    { label: 'Samuel Araujo', data: 10 }
+                ]"
+                [p-height]="250"
+                p-title="Solicitantes"
+            >
+            </po-chart>
+        </po-widget>
+
+    </div>
+
+    <div class="filtros-wrapper">
+        <div class="filtros-container">
+
+            <po-input [(ngModel)]="documentoDe" name="documento-de" p-label="Documento de:"> </po-input>
+            <po-input [(ngModel)]="documentoAte" name="documento-ate" p-label="Documento até:"> </po-input>
+
+            <po-datepicker [(ngModel)]="emissaoDe" name="emissao-de" p-label="Emissão de:"></po-datepicker>
+            <po-datepicker [(ngModel)]="emissaoAte" name="emissao-ate" p-label="Emissão até:"></po-datepicker>
+
+            <po-select [p-required]="true" [p-placeholder]="'Pendentes'" (ngModelChange)="status = $event" p-label="Status"
+                [p-options]="[{label: 'Pendentes', value: '02'}, {label: 'Aprovados', value: '03'}, {label: 'Recusados', value: '06'},{label: 'Bloqueados', value: '04'},{label: 'Todos', value: ' '},]"></po-select>
+
+            <div class="btn-container">
+                <po-button p-label="Próximo" class="filtro-btn" p-kind="primary" p-size="large" p-icon="po-icon-arrow-right" (p-click)="aplicarFiltros()"></po-button>
+            </div>
+
+        </div>
+    </div>
+</po-page-default>
+<!-- <po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros">
+
+    <div class="widgets-charts-documentos">
+        <po-widget >
+            <po-chart
+                [p-series]="[
+                    { label: 'Angular', data: 100 },
+                    { label: 'React', data: 10 }
+                ]"
+                [p-height]="250"
+            >
+            </po-chart>
+
+        </po-widget>
+
+        <po-widget>
+            <po-chart
+                [p-series]="[
+                    { label: 'Angular', data: 100 },
+                    { label: 'React', data: 10 }
+                ]"
+                [p-height]="250"
+            >
+            </po-chart>
+        </po-widget>
+
+        <po-widget>
+            <po-chart
+                [p-series]="[
+                    { label: 'Angular', data: 100 },
+                    { label: 'React', data: 10 }
+                ]"
+                [p-height]="250"
+            >
+            </po-chart>
+        </po-widget>
+
+    </div>
+
     <div class="filtros-container">
         <po-input [(ngModel)]="documentoDe" name="documento-de" p-label="Documento de:"> </po-input>
         <po-input [(ngModel)]="documentoAte" name="documento-ate" p-label="Documento até:"> </po-input>
@@ -11,7 +111,7 @@
 
         <po-button p-label="Próximo" p-kind="primary" p-size="large" (p-click)="aplicarFiltros()"></po-button>
     </div>
-</po-page-default>
+</po-page-default> -->
 
 <!-- PESQUISA -->
 <po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"
@@ -23,12 +123,13 @@
         (p-dblClick)="abrirDocumento($event)">
 
         <ng-template p-table-row-template let-rowItem let-i="rowIndex">
-            <po-grid [p-columns]="colunasItensDocumento" [p-data]="rowItem.itens">
+            <!-- <po-grid [p-columns]="colunasItensDocumento" [p-data]="rowItem.itens">
 
 
-            </po-grid>
-            <!-- <table class="non-poui-table">
+            </po-grid> -->
+            <table id="itens-table" class="non-poui-table">
             <thead>
+                <th>Status</th>
                 <th>Documento</th>
                 <th>Produto</th>
                 <th>Descrição</th>
@@ -37,7 +138,6 @@
                 <th>Valor unitário</th>
                 <th>Valor total</th>
                 <th>Data Entrega</th>
-                <th>Status</th>
                 <th>Solicitante</th>
                 <th>Centro Custo</th>
                 <th>Necessidade</th>
@@ -49,6 +149,7 @@
 
                 @for (item of rowItem.itens; track item.id) {
                     <tr>
+                        <td>{{ item.status }}</td>
                         <td>{{ item.id }}</td>
                         <td>{{ item.produto }}</td>
                         <td>{{ item.descricao }}</td>
@@ -57,7 +158,6 @@
                         <td>{{ item.valorUnitario }}</td>
                         <td>{{ item.valorTotal }}</td>
                         <td>{{ item.dataEntrega }}</td>
-                        <td>{{ item.status }}</td>
                         <td>{{ item.solicitante }}</td>
                         <td>{{ item.centroCusto }}</td>
                         <td>{{ item.necessidade }}</td>
@@ -68,7 +168,7 @@
 
             </tbody>
 
-        </table> -->
+        </table>
 
             <!-- <po-list-view
             [p-items]="rowItem.itens"
@@ -188,7 +288,7 @@
 
     </div>
 
-    <div class="modal-visualizacao-container">
+    <!-- <div class="modal-visualizacao-container">
         <h3>Saldo do Aprovador</h3>
 
         <po-dynamic-view class="modal-visualizacao-saldo-aprovador-container" [p-fields]="formularioSaldoModalDocumento"
@@ -196,14 +296,14 @@
 
         </po-dynamic-view>
 
-    </div>
+    </div> -->
 
 
     <div class="po-action-btns-wrapper">
-        <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
+        <!-- <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
             (p-click)="abrirItensDocumento(documentoSelecionado)">
 
-        </po-button>
+        </po-button> -->
 
         <po-button id="dlg-po-btn-aprovar" p-icon="po-icon-ok" p-size="large"
             (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)">
@@ -240,7 +340,7 @@
 
     </div>
 
-    <div class="modal-visualizacao-container">
+    <!-- <div class="modal-visualizacao-container">
         <h3>Saldo do Aprovador</h3>
 
         <po-dynamic-view class="modal-visualizacao-saldo-aprovador-container" [p-fields]="formularioSaldoModalDocumento"
@@ -248,7 +348,7 @@
 
         </po-dynamic-view>
 
-    </div>
+    </div> -->
 
 
     <div class="po-action-btns-wrapper">

@@ -24,7 +24,7 @@ export class DocumentosComponent implements OnInit {
   filtroBuscaAvancada: Array<PoPageDynamicSearchFilters>;
 
   // filtros globais
-  mostraFiltros = true;
+  mostraFiltros = false;
 
   documentoDe = ""
   documentoAte = "ZZZZZZZZZ"
@@ -120,10 +120,10 @@ export class DocumentosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getItens(1);
-    this.getSaldo();
-    this.getAprovadores()
-    this.getSuperiores()
+    this.getItens(1);
+    // this.getSaldo();
+    // this.getAprovadores()
+    // this.getSuperiores()
   }
 
 
@@ -197,21 +197,6 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
-  /*
-        {
-          "id": "",
-          "produto": "016023",
-          "descricao": "                                                  ",
-          "quantidadeUm1": 1,
-          "valorUnitario": 0,
-          "valorTotal": 0,
-          "dataEntrega": "",
-          "centroCusto": "                                        ",
-          "necessidade": "20240125",
-          "um": "PC"
-        },
-
-  */
   constroiColunasItensDocumento() {
     return [
       { property: 'id', label: 'Documento', readonly: true, width: 110 },
@@ -231,17 +216,7 @@ export class DocumentosComponent implements OnInit {
     ];
   }
 
-  /*
-  "Liberacao": [
-        {
-          "nivel": "01",
-          "aprovador": "",
-          "situacao": "  /  /    ",
-          "status": "Pendente",
-          "msg": ""
-        }
-      ]
-  */
+
   constroiFormularioHistoricoDocumento() {
     return [
       { property: 'item', label: 'Item', readonly: true, width: 70 },
@@ -254,7 +229,6 @@ export class DocumentosComponent implements OnInit {
       { property: 'msg', label: 'Observações', readonly: true },
     ]
   }
-
 
 
   constroiFormularioSaldos(): PoDynamicViewField[] {
@@ -370,7 +344,7 @@ export class DocumentosComponent implements OnInit {
   constroiAcoesTela(): PoPageAction[] {
     return [
       // { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
-      { label: 'Voltar', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
+      { label: 'Filtros', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
     ]
   }
 
@@ -403,6 +377,7 @@ export class DocumentosComponent implements OnInit {
 
   }
 
+
   constroiColunasModalDocumento(): PoTableColumn[] {
     return [
       { property: 'id', label: 'Documento' },
@@ -417,12 +392,20 @@ export class DocumentosComponent implements OnInit {
 
   }
 
+
   constroiBuscaAvançada(): PoPageDynamicSearchFilters[] {
     return [
-      { property: 'emissaoDe', label: 'Emissão de: ', type: 'date', gridColumns: 12 },
-      { property: 'emissaoAte', label: 'Emissão até: ', type: 'date', gridColumns: 12 },
-      { property: 'documentoDe', label: 'Documento de: ', type: 'string', gridColumns: 12 },
+      { property: 'emissaoDe'   , label: 'Emissão de: '   , type: 'date'  , gridColumns: 12 },
+      { property: 'emissaoAte'  , label: 'Emissão até: '  , type: 'date'  , gridColumns: 12 },
+      { property: 'documentoDe' , label: 'Documento de: ' , type: 'string', gridColumns: 12 },
       { property: 'documentoAte', label: 'Documento até: ', type: 'string', gridColumns: 12 },
+      { property: 'status'      , label: 'Status: '       , type: 'string', options: [
+          { value: '02', label: 'Pendente'  },
+          { value: '03', label: 'Aprovada'  },
+          { value: '06', label: 'Rejeitada' },
+          { value: '04', label: 'Bloqueada' },
+        ]
+      },
     ];
   }
 
@@ -436,9 +419,11 @@ export class DocumentosComponent implements OnInit {
     this.modalDocumento?.open()
   }
 
+
   abrirModalSaldos() {
     this.modalSaldos?.open()
   }
+
 
   abrirModalTransferencia(documentoSelecionado: Documento) {
 
@@ -448,6 +433,7 @@ export class DocumentosComponent implements OnInit {
 
     this.modalTransferencia?.open()
   }
+
 
   getSaldo() {
     this.loading = true
@@ -459,6 +445,7 @@ export class DocumentosComponent implements OnInit {
         this.poNotificationService.error(error)
       });
   }
+
 
   getItens(pageNumber: number = 1) {
     this.loading = true;
@@ -477,6 +464,7 @@ export class DocumentosComponent implements OnInit {
       });
   }
 
+
   getAprovadores() {
     this.documentosService
       .getAprovadores()
@@ -490,6 +478,7 @@ export class DocumentosComponent implements OnInit {
         this.poNotificationService.error(error)
       });
   }
+
 
   getSuperiores() {
     this.documentosService
@@ -511,9 +500,11 @@ export class DocumentosComponent implements OnInit {
     this.modalItens.open();
   }
 
+
   formatarTituloItem(item: ItemDocumento) {
     return `${item.produto} - ${item.descricao}`
   }
+
 
   formatarTituloHistorico(historico: HistoricoDocumento) {
     return ``
@@ -528,6 +519,7 @@ export class DocumentosComponent implements OnInit {
       literals: { cancel: "Não", confirm: 'Sim' },
     })
   }
+
 
   abrirConfirmacaoRecusa() {
 
@@ -545,10 +537,12 @@ export class DocumentosComponent implements OnInit {
     })
   }
 
+
   abrirModalRecusa(documento: Documento) {
     this.documentoSelecionado = documento
     this.modalRecusa?.open()
   }
+
 
   aprovarDocumento(documento: Documento) {
     this.loading = true;
@@ -572,6 +566,7 @@ export class DocumentosComponent implements OnInit {
 
 
   }
+
 
   rejeitarDocumento() {
 
@@ -601,6 +596,7 @@ export class DocumentosComponent implements OnInit {
 
   }
 
+
   confirmarTransferencia() {
 
     if (!this.novoAprovadorSelecionado) {
@@ -627,6 +623,7 @@ export class DocumentosComponent implements OnInit {
       });
   }
 
+
   buscaDocumento(documento: string): void {
 
     if(documento) {
@@ -641,10 +638,12 @@ export class DocumentosComponent implements OnInit {
     this.getItens(this.pageNumber);
   }
 
+
   selecionaTipoTransferencia(tipo: any) {
     this.tipoTransferencia = tipo;
 
   }
+
 
   carregarMais(): void {
     this.pageNumber++;
@@ -652,11 +651,10 @@ export class DocumentosComponent implements OnInit {
     console.log(this.filtrosAplicados);
   }
 
+
   realizaBuscaAvancada(retornoBuscaAvancada: {
     [key: string]: any;
   }): void {
-
-    console.log(retornoBuscaAvancada)
 
     this.documentoDe = retornoBuscaAvancada['documentoDe'] 
     this.documentoAte = retornoBuscaAvancada['documentoAte'] 
@@ -679,6 +677,10 @@ export class DocumentosComponent implements OnInit {
       this.emissaoAte = `${new Date().getFullYear()}-12-31`
     }
 
+    if (!retornoBuscaAvancada['status']) {
+      this.emissaoAte = `03`
+    }
+
     this.pageNumber = 1;
     this.getItens();
   }
@@ -693,6 +695,7 @@ export class DocumentosComponent implements OnInit {
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = "ZZZZZZZZZ"
     if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoDe')) this.emissaoDe = " "
     if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoAte')) this.emissaoAte = `${new Date().getFullYear()}-12-31`
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'status')) this.status = "02"
 
     this.getItens();
   }
