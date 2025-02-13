@@ -1,45 +1,5 @@
-<po-page-default  [hidden]="!mostraFiltros">
+<!-- <po-page-default  [hidden]="!mostraFiltros">
 
-    <div class="widgets-charts-documentos">
-
-        <po-widget >
-            <po-chart
-                [p-series]="[
-                    { label: 'Pendentes', data: 100 },
-                    { label: 'Liberados', data: 10 }
-                ]"
-                [p-height]="250"
-                p-title="Status"
-            >
-            </po-chart>
-
-        </po-widget>
-
-        <po-widget>
-            <po-chart
-                [p-series]="[
-                    { label: 'Pedidos de compra', data: 100 },
-                    { label: 'Solicitações de compra', data: 10 }
-                ]"
-                [p-height]="250"
-                p-title="Tipos"
-            >
-            </po-chart>
-        </po-widget>
-
-        <po-widget>
-            <po-chart
-                [p-series]="[
-                    { label: 'Marcio Silva', data: 100 },
-                    { label: 'Samuel Araujo', data: 10 }
-                ]"
-                [p-height]="250"
-                p-title="Solicitantes"
-            >
-            </po-chart>
-        </po-widget>
-
-    </div>
 
     <div class="filtros-wrapper">
         <div class="filtros-container">
@@ -59,59 +19,40 @@
 
         </div>
     </div>
-</po-page-default>
-<!-- <po-page-default p-title="Selecione sua pesquisa" [hidden]="!mostraFiltros">
-
-    <div class="widgets-charts-documentos">
-        <po-widget >
-            <po-chart
-                [p-series]="[
-                    { label: 'Angular', data: 100 },
-                    { label: 'React', data: 10 }
-                ]"
-                [p-height]="250"
-            >
-            </po-chart>
-
-        </po-widget>
-
-        <po-widget>
-            <po-chart
-                [p-series]="[
-                    { label: 'Angular', data: 100 },
-                    { label: 'React', data: 10 }
-                ]"
-                [p-height]="250"
-            >
-            </po-chart>
-        </po-widget>
-
-        <po-widget>
-            <po-chart
-                [p-series]="[
-                    { label: 'Angular', data: 100 },
-                    { label: 'React', data: 10 }
-                ]"
-                [p-height]="250"
-            >
-            </po-chart>
-        </po-widget>
-
-    </div>
-
-    <div class="filtros-container">
-        <po-input [(ngModel)]="documentoDe" name="documento-de" p-label="Documento de:"> </po-input>
-        <po-input [(ngModel)]="documentoAte" name="documento-ate" p-label="Documento até:"> </po-input>
-
-        <po-datepicker [(ngModel)]="emissaoDe" name="emissao-de" p-label="Emissão de:"></po-datepicker>
-        <po-datepicker [(ngModel)]="emissaoAte" name="emissao-ate" p-label="Emissão até:"></po-datepicker>
-
-        <po-select [p-required]="true" [p-placeholder]="'Pendentes'" (ngModelChange)="status = $event" p-label="Status"
-            [p-options]="[{label: 'Pendentes', value: '02'}, {label: 'Aprovados', value: '03'}, {label: 'Recusados', value: '06'},{label: 'Bloqueados', value: '04'},{label: 'Todos', value: ' '},]"></po-select>
-
-        <po-button p-label="Próximo" p-kind="primary" p-size="large" (p-click)="aplicarFiltros()"></po-button>
-    </div>
 </po-page-default> -->
+
+<div style="display: flex;width: 100%;justify-content: flex-start;padding: 1.5rem 6rem;">
+    <h1>Liberação de documentos</h1>
+</div>
+
+<div class="widgets-charts-documentos">
+    <po-widget class="widget-chart">
+        <po-chart
+            [p-series]="[
+                { label: 'Pendentes', data: 100 },
+                { label: 'Liberados', data: 10 }
+            ]"
+            [p-height]="300"
+            p-title="Status"
+        >
+        </po-chart>
+
+    </po-widget>
+
+    <po-widget class="widget-chart">
+        <po-chart
+            [p-series]="[
+                { label: 'Pedidos de compra', data: 100 },
+                { label: 'Solicitações de compra', data: 10 }
+            ]"
+            [p-height]="300"
+            p-title="Tipos"
+            [p-type]="tipoDocChartType"
+        >
+        </po-chart>
+    </po-widget>
+
+</div>
 
 <!-- PESQUISA -->
 <po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"

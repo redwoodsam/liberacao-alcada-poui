@@ -10,7 +10,8 @@ import { PoMenuItem } from '@po-ui/ng-components';
 export class MainComponent {
 
   readonly menus: Array<PoMenuItem> = [
-    { label: 'Home', action: this.navigateToHome.bind(this), shortLabel: 'Home', icon: 'po-icon-home' },
+    { label: 'Liberaçao de documentos', action: this.navigateToHome.bind(this), shortLabel: 'Liberação de documentos', icon: 'po-icon-clipboard' },
+    { label: 'Solicitação de compras', action: this.navigateToHome.bind(this), shortLabel: 'Solicitação de compras', icon: 'po-icon-cart' },
     { label: 'Sair', action: this.logout.bind(this), shortLabel: 'Sair', icon: 'po-icon-exit' }
   ];
 
