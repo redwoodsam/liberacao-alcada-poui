@@ -10,15 +10,15 @@ import { PoMenuItem } from '@po-ui/ng-components';
 export class MainComponent {
 
   readonly menus: Array<PoMenuItem> = [
-    { label: 'Liberaçao de documentos', action: this.navigateToHome.bind(this), shortLabel: 'Liberação de documentos', icon: 'po-icon-clipboard' },
-    { label: 'Solicitação de compras', action: this.navigateToHome.bind(this), shortLabel: 'Solicitação de compras', icon: 'po-icon-cart' },
+    { label: 'Liberaçao de documentos', action: () => this.navigateTo('liberacao'), shortLabel: 'Liberação de documentos', icon: 'po-icon-clipboard' },
+    { label: 'Solicitação de compras', action: () => this.navigateTo('solicitacoes-compra'), shortLabel: 'Solicitação de compras', icon: 'po-icon-cart' },
     { label: 'Sair', action: this.logout.bind(this), shortLabel: 'Sair', icon: 'po-icon-exit' }
   ];
 
   constructor(private router:Router) {}
 
-  navigateToHome () {
-    this.router.navigate(['home']);
+  navigateTo (link: string) {
+    this.router.navigate([link]);
   }
 
   logout () {

@@ -1,0 +1,24 @@
+<div style="display: flex;width: 100%;justify-content: flex-start;padding: 1.5rem 6rem;">
+    <h1>Solicitações de compra</h1>
+</div>
+
+<!-- PESQUISA -->
+<po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"
+    (p-advanced-search)="realizaBuscaAvancada($event)" [p-actions]="opcoesTela" [p-filters]="filtroBuscaAvancada">
+
+    <po-table #tableDocumento [p-actions]="acoesTabela" p-container="border" [p-columns]="columns"
+        [p-items]="documentos" [p-loading]="loading"
+        [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
+        (p-dblClick)="abrirDocumento($event)">
+
+    </po-table>
+</po-page-dynamic-search>
+
+
+<!-- MODAL VISUALIZAÇÃO -->
+
+<po-modal p-size="xl" p-title="Visualizar Documento">
+
+</po-modal>
+
+<po-loading-overlay p-text="Carregando itens" [hidden]="!loading"></po-loading-overlay>

@@ -8,11 +8,12 @@ import { DocumentosComponent } from './documentos/documentos.component';
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 import { CommonModule } from '@angular/common';
+import { SolicitacoesCompraComponent } from './solicitacoes-compra/solicitacoes-compra.component';
 
 
 
 @NgModule({
-  declarations: [MainComponent, DocumentosComponent],
+  declarations: [MainComponent, DocumentosComponent, SolicitacoesCompraComponent],
   imports: [
     CommonModule,
     MainRoutingModule,
