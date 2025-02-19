@@ -44,7 +44,7 @@ export class SolicitacoesCompraComponent {
 
   // Tabela
   columns: Array<PoTableColumn> = [];
-  documentos: Documento[] = []
+  documentos: any[] = []
 
 
   // Documento
@@ -78,6 +78,8 @@ export class SolicitacoesCompraComponent {
   constroiAcoesTabela(): PoPageAction[] {
     return [
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
+      { label: 'Editar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok' },
+      // { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close' },
       // { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
     ]
   }
@@ -99,20 +101,14 @@ export class SolicitacoesCompraComponent {
           { value: '04', content: '', label: 'Bloqueada', color: 'color-04' },
         ]
       },
-      { property: 'id', label: 'ID' },
-      { property: 'doc', label: 'Documento' },
-      { property: 'tipoDocumento', label: 'Tipo Documento' },
-      { property: 'codUsuario', label: 'Cód. Usuario' },
-      // { property: 'codAprovador', label: 'Cod. Aprovador' },
-      { property: 'grpAprov', label: 'Grp. Aprov' },
+      { property: 'id'         , label: 'Numero SC' },
+      { property: 'item'       , label: 'Item' },
+      { property: 'produto'    , label: 'Produto' },
+      { property: 'quantidade' , label: 'Quantidade' },
+      { property: 'um1'        , label: 'UN' },
+      // { property: 'tipoCompra' , label: 'Tipo Compra' },
       { property: 'dataEmissao', label: 'Data Emissão' },
-      { property: 'valorTotal', label: 'Valor total', type: 'currency' },
-      { property: 'dataLiberacao', label: 'Data Liberação' },
-      { property: 'prazo', label: 'Prazo' },
-      { property: 'aviso', label: 'Aviso' },
-      { property: 'msg', label: 'Mensagem' },
-      { property: 'tipoCompra', label: 'Tipo Compra' },
-
+      { property: 'nome'       , label: 'Usuário' }
     ];
 
   }
@@ -144,12 +140,48 @@ export class SolicitacoesCompraComponent {
 
     if (pageNumber === 1) this.documentos = [];
 
+    
     this.documentosService
       .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
         console.log(res);
-        this.documentos = this.documentos.concat(res.Itens);
+        this.documentos = [
+         {
+          status: '02',
+          id: '000001',
+          item: '01',
+          produto: 'Parafuso sextavado 8mmm',
+          quantidade: 50,
+          um1: 'UN',
+          tipoCompra: 'tipoCompra',
+          dataEmissao: '11/02/2025',
+          nome: 'Marcio da Silva'
+         },
+         {
+          status: '02',
+          id: '000001',
+          item: '02',
+          produto: 'Bucha para parafuso sextavado 8mmm',
+          quantidade: 50,
+          um1: 'UN',
+          tipoCompra: 'tipoCompra',
+          dataEmissao: '11/02/2025',
+          nome: 'Marcio da Silva'
+         },
+         {
+          status: '02',
+          id: '000001',
+          item: '03',
+          produto: 'Parafusadeira DeWalt 127V',
+          quantidade: 2,
+          um1: 'UN',
+          tipoCompra: 'tipoCompra',
+          dataEmissao: '11/02/2025',
+          nome: 'Marcio da Silva'
+         },
+
+        ];
         this.loading = false;
       }, (error) => {
         this.poNotificationService.error(error)
@@ -189,6 +221,26 @@ export class SolicitacoesCompraComponent {
     console.log(this.filtrosAplicados);
   }
 
+
+  abrirConfirmacaoAprovacao(documento: Documento) {
+    this.poDialogService.confirm({
+      title: 'Aprovação',
+      message: `Confirma aprovação do documento ${documento.id} ?`,
+      confirm: () => {},
+      literals: { cancel: "Não", confirm: 'Sim' },
+    })
+  }
+
+  abrirConfirmacaoRecusa() {
+
+    this.poDialogService.confirm({
+      title: 'Recusa',
+      message: `Confirma a recusa do documento ${this.documentoSelecionado.id} ?`,
+      confirm: () => {},
+      cancel: () => {},
+      literals: { cancel: "Não", confirm: 'Sim' },
+    })
+  }
 
   realizaBuscaAvancada(retornoBuscaAvancada: {
     [key: string]: any;

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn, PoTableColumnSpacing } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
@@ -56,6 +56,16 @@ export class DocumentosComponent implements OnInit {
   colunasHistoricoDocumento: Array<any> = []
   colunasItensDocumento: Array<any> = []
 
+  graficoNumeroDocumentoSeries = [
+    { label: 'Pendentes', data: 1 },
+    // { label: 'Liberados', data: 10 }
+  ]
+
+  graficoTipoDocumentoSeries = [
+    // { label: 'Pedidos de compra', data: 100 },
+    { label: 'Solicitações de compra', data: 1, color: 'color-04' }
+  ]
+
   acoesModalTransferencia = {
     confirmar: { label: 'Transferir', action: this.confirmarTransferencia.bind(this) } as PoModalAction,
     cancelar: { label: 'Cancelar', action: this.fecharModalTransferencia.bind(this), danger: true } as PoModalAction,
@@ -84,7 +94,6 @@ export class DocumentosComponent implements OnInit {
   tipoDocChartType = PoChartType.Donut
 
 
-
   @ViewChild(PoModalComponent) modalDocumento: any;
   @ViewChild('modalItens') modalItens: any;
   @ViewChild('modalSaldos') modalSaldos: any;
@@ -92,23 +101,7 @@ export class DocumentosComponent implements OnInit {
   @ViewChild('modalRecusa') modalRecusa: any;
 
 
-  // constructor(private proAppConfigService: ProAppConfigService) {
-  //   if (!this.proAppConfigService.insideProtheus()) {
-  //     this.proAppConfigService.loadAppConfig();
-  //   }
-  // }
-
-
-
-  //   private closeApp() {
-  //   if (this.proAppConfigService.insideProtheus()) {
-  //     this.proAppConfigService.callAppClose();
-  //   } else {
-  //     alert("O App não está sendo executado dentro do Protheus.");
-  //   }
-  // }
-
-  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService ) {
+  constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService) {
     this.filtroBuscaAvancada = this.constroiBuscaAvançada();
     this.columns = this.constroiColunas();
     this.columnsTabelaModalDocumento = this.constroiColunasModalDocumento();
@@ -346,7 +339,7 @@ export class DocumentosComponent implements OnInit {
   constroiAcoesTela(): PoPageAction[] {
     return [
       // { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
-      { label: 'Filtros', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
+      { label: '', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
     ]
   }
 
@@ -397,13 +390,14 @@ export class DocumentosComponent implements OnInit {
 
   constroiBuscaAvançada(): PoPageDynamicSearchFilters[] {
     return [
-      { property: 'emissaoDe'   , label: 'Emissão de: '   , type: 'date'  , gridColumns: 12 },
-      { property: 'emissaoAte'  , label: 'Emissão até: '  , type: 'date'  , gridColumns: 12 },
-      { property: 'documentoDe' , label: 'Documento de: ' , type: 'string', gridColumns: 12 },
+      { property: 'emissaoDe', label: 'Emissão de: ', type: 'date', gridColumns: 12 },
+      { property: 'emissaoAte', label: 'Emissão até: ', type: 'date', gridColumns: 12 },
+      { property: 'documentoDe', label: 'Documento de: ', type: 'string', gridColumns: 12 },
       { property: 'documentoAte', label: 'Documento até: ', type: 'string', gridColumns: 12 },
-      { property: 'status'      , label: 'Status: '       , type: 'string', options: [
-          { value: '02', label: 'Pendente'  },
-          { value: '03', label: 'Aprovada'  },
+      {
+        property: 'status', label: 'Status: ', type: 'string', options: [
+          { value: '02', label: 'Pendente' },
+          { value: '03', label: 'Aprovada' },
           { value: '06', label: 'Rejeitada' },
           { value: '04', label: 'Bloqueada' },
         ]
@@ -556,6 +550,9 @@ export class DocumentosComponent implements OnInit {
 
         this.loading = false;
         console.log("Aprovação do documento: " + documento.id)
+        this.documentos = [];
+        this.graficoNumeroDocumentoSeries = []
+        this.graficoTipoDocumentoSeries = []
 
         this.poNotificationService.success("Documento Aprovado com sucesso!")
         if (!this.modalDocumento.isHidden) {
@@ -591,6 +588,10 @@ export class DocumentosComponent implements OnInit {
         if (!this.modalDocumento.isHidden) {
           this.modalDocumento?.close()
         }
+
+        this.documentos = [];
+        this.graficoNumeroDocumentoSeries = []
+        this.graficoTipoDocumentoSeries = []
 
       }, (error) => {
         this.poNotificationService.error(error)
@@ -628,7 +629,7 @@ export class DocumentosComponent implements OnInit {
 
   buscaDocumento(documento: string): void {
 
-    if(documento) {
+    if (documento) {
       this.documentoDe = documento;
       this.documentoAte = documento;
     } else {
@@ -658,10 +659,10 @@ export class DocumentosComponent implements OnInit {
     [key: string]: any;
   }): void {
 
-    this.documentoDe = retornoBuscaAvancada['documentoDe'] 
-    this.documentoAte = retornoBuscaAvancada['documentoAte'] 
-    this.emissaoDe = retornoBuscaAvancada['emissaoDe'] 
-    this.emissaoAte = retornoBuscaAvancada['emissaoAte'] 
+    this.documentoDe = retornoBuscaAvancada['documentoDe']
+    this.documentoAte = retornoBuscaAvancada['documentoAte']
+    this.emissaoDe = retornoBuscaAvancada['emissaoDe']
+    this.emissaoAte = retornoBuscaAvancada['emissaoAte']
 
     if (!retornoBuscaAvancada['documentoDe']) {
       this.documentoDe = " "
@@ -687,6 +688,9 @@ export class DocumentosComponent implements OnInit {
     this.getItens();
   }
 
+  formataNumeroMoeda(numero: number) {
+    return numero.toFixed(2)
+  }
 
   // Executado quando é removido os filtros da busca avançada
   clickDisclaimers(disclaimers: any[]) {
