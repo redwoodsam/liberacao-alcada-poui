@@ -9,7 +9,7 @@
     <po-table #tableDocumento [p-actions]="acoesTabela" p-container="border" [p-columns]="columns"
         [p-items]="documentos" [p-loading]="loading"
         [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
-        (p-dblClick)="abrirDocumento($event)">
+        (p-dblClick)="abrirModalVisualizacao($event)">
 
     </po-table>
 </po-page-dynamic-search>
@@ -17,7 +17,73 @@
 
 <!-- MODAL VISUALIZAÇÃO -->
 
-<po-modal p-size="xl" p-title="Visualizar Documento">
+<po-modal #modalVisualizacao p-size="xl" p-title="Visualizar Historico">
+
+        <table class="non-poui-table">
+            <thead>
+                <th>Item</th>
+                <th>Situação</th>
+                <th>Aprovador</th>
+                <th>Nível</th>
+                <th>Data Liberação</th>
+                <th>Mensagem</th>
+                <th>Observações</th>
+                <th>Status</th>
+            </thead>
+            <tbody>
+
+                @for (item of itensDocumento; track item.item) {
+                <tr>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.situacao }}</td>
+                    <td>{{ item.aprovador }}</td>
+                    <td>{{ item.nivel }}</td>
+                    <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
+                    <td>{{ item.msg }}</td>
+                    <td>{{ item.status }}</td>
+                    <!-- <td>{{ item.observacoes }}</td> -->
+                </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+</po-modal>
+
+
+<!-- MODAL DE HISTORICO -->
+<po-modal #modalHistorico p-size="xl" p-title="Visualizar Histórico">
+
+        <table class="non-poui-table">
+            <thead>
+                <th>Item</th>
+                <th>Situação</th>
+                <th>Aprovador</th>
+                <th>Nível</th>
+                <th>Data Liberação</th>
+                <th>Mensagem</th>
+                <th>Observações</th>
+                <th>Status</th>
+            </thead>
+            <tbody>
+
+                @for (item of historicoDocumento; track item.item) {
+                <tr>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.situacao }}</td>
+                    <td>{{ item.aprovador }}</td>
+                    <td>{{ item.nivel }}</td>
+                    <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
+                    <td>{{ item.msg }}</td>
+                    <td>{{ item.status }}</td>
+                    <!-- <td>{{ item.observacoes }}</td> -->
+                </tr>
+                }
+
+            </tbody>
+
+        </table>
 
 </po-modal>
 

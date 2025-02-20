@@ -35,7 +35,7 @@ export class SolicitacoesCompraComponent {
   status = "02"
 
   // Layout
-  opcoesTela: Array<PoPageAction> = [];
+  opcoesTela: Array<PoPageAction>   = [];
   acoesTabela: Array<PoTableAction> = [];
 
   // Estado global
@@ -44,7 +44,10 @@ export class SolicitacoesCompraComponent {
 
   // Tabela
   columns: Array<PoTableColumn> = [];
-  documentos: any[] = []
+  documentos: any[]             = []
+
+  historicoDocumento: any[] = [];
+  itensDocumento:     any[] = [];
 
 
   // Documento
@@ -53,7 +56,8 @@ export class SolicitacoesCompraComponent {
 
 
 
-  @ViewChild(PoModalComponent) modalDocumento: any;
+  @ViewChild(PoModalComponent) modalVisualizacao: any;
+  @ViewChild(PoModalComponent) modalHistorico: any;
 
   constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService ) {
     this.filtroBuscaAvancada = this.constroiBuscaAvançada();
@@ -77,8 +81,8 @@ export class SolicitacoesCompraComponent {
 
   constroiAcoesTabela(): PoPageAction[] {
     return [
-      { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Editar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok' },
+      { label: 'Visualizar', action: this.abrirModalVisualizacao.bind(this), icon: 'po-icon-eye' },
+      { label: 'Editar', action: this.abrirModalVisualizacao.bind(this), icon: 'po-icon-edit' },
       // { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close' },
       // { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
     ]
@@ -194,9 +198,9 @@ export class SolicitacoesCompraComponent {
   }
 
 
-  abrirDocumento(documento: any) {
+  abrirModalVisualizacao(documento: any) {
     this.documentoSelecionado = documento;
-    this.modalDocumento?.open()
+    this.modalVisualizacao?.open()
   }
 
 
@@ -221,15 +225,6 @@ export class SolicitacoesCompraComponent {
     console.log(this.filtrosAplicados);
   }
 
-
-  abrirConfirmacaoAprovacao(documento: Documento) {
-    this.poDialogService.confirm({
-      title: 'Aprovação',
-      message: `Confirma aprovação do documento ${documento.id} ?`,
-      confirm: () => {},
-      literals: { cancel: "Não", confirm: 'Sim' },
-    })
-  }
 
   abrirConfirmacaoRecusa() {
 
