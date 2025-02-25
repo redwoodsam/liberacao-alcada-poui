@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { PoChartType, PoDialogService, PoDynamicViewField, PoGridRowActions, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
@@ -54,7 +54,37 @@ export class SolicitacoesCompraComponent {
   formularioDocumento: Array<PoDynamicViewField> = [];
   documentoSelecionado: Documento = {} as Documento;
 
+  colunasModalVisualizacao: Array<any> = [
+    { property: 'id', label: 'ID', align: 'right', readonly: true },
+    { property: 'produto', label: 'Produto', required: true },
+    { property: 'descricaoProduto', label: 'Descrição', readonly: true },
+    { property: 'quantidade', label: 'Quantidade', required: true },
+    { property: 'un', label: 'UN', readonly: true },
+    { property: 'armazem', label: 'Armazém' },
+    { property: 'centroCusto', label: 'Centro Custo' },
+    { property: 'necessidade', label: 'Necessidade' },
+    { property: 'observacao', label: 'Observação' },
+  ]
 
+  dadosModalVisualizacao: Array<any> = [
+    {
+      id: '001',
+      produto: '',
+      descricaoProduto: '',
+      quantidade: '',
+      un: '',
+      armazem: '',
+      centroCusto: '',
+      necessidade: '',
+      observacao: '',
+    }
+
+    
+  ]
+
+  acoesModalVisualizacao: PoGridRowActions = {
+    beforeSave: ()=> true,
+  };
 
   @ViewChild(PoModalComponent) modalVisualizacao: any;
   @ViewChild(PoModalComponent) modalHistorico: any;
@@ -81,7 +111,8 @@ export class SolicitacoesCompraComponent {
 
   constroiAcoesTabela(): PoPageAction[] {
     return [
-      { label: 'Visualizar', action: this.abrirModalVisualizacao.bind(this), icon: 'po-icon-eye' },
+      { label: 'Visualizar Documento', action: this.abrirModalVisualizacao.bind(this), icon: 'po-icon-eye' },
+      { label: 'Historico', action: this.abrirModalHistorico.bind(this), icon: 'po-icon-history' },
       { label: 'Editar', action: this.abrirModalVisualizacao.bind(this), icon: 'po-icon-edit' },
       // { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close' },
       // { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
@@ -235,6 +266,10 @@ export class SolicitacoesCompraComponent {
       cancel: () => {},
       literals: { cancel: "Não", confirm: 'Sim' },
     })
+  }
+
+  abrirModalHistorico(documento: any) {
+
   }
 
   realizaBuscaAvancada(retornoBuscaAvancada: {

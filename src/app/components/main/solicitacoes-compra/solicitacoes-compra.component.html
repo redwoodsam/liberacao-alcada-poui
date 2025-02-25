@@ -19,35 +19,12 @@
 
 <po-modal #modalVisualizacao p-size="xl" p-title="Visualizar Historico">
 
-        <table class="non-poui-table">
-            <thead>
-                <th>Item</th>
-                <th>Situação</th>
-                <th>Aprovador</th>
-                <th>Nível</th>
-                <th>Data Liberação</th>
-                <th>Mensagem</th>
-                <th>Observações</th>
-                <th>Status</th>
-            </thead>
-            <tbody>
-
-                @for (item of itensDocumento; track item.item) {
-                <tr>
-                    <td>{{ item.item }}</td>
-                    <td>{{ item.situacao }}</td>
-                    <td>{{ item.aprovador }}</td>
-                    <td>{{ item.nivel }}</td>
-                    <td>{{ item.dataLiberacao || "Ainda não liberado" }}</td>
-                    <td>{{ item.msg }}</td>
-                    <td>{{ item.status }}</td>
-                    <!-- <td>{{ item.observacoes }}</td> -->
-                </tr>
-                }
-
-            </tbody>
-
-        </table>
+    <po-grid
+        [p-columns]="colunasModalVisualizacao"
+        [p-data]="dadosModalVisualizacao"
+        [p-row-actions]="acoesModalVisualizacao" 
+    >
+</po-grid>
 
 </po-modal>
 
