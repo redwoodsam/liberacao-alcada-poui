@@ -171,16 +171,10 @@ export class SolicitacoesCompraComponent {
 
 
   getItens(pageNumber: number = 1) {
-    this.loading = true;
+    // this.loading = true;
 
     if (pageNumber === 1) this.documentos = [];
 
-    
-    this.documentosService
-      .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        console.log(res);
         this.documentos = [
          {
           status: '02',
@@ -217,10 +211,52 @@ export class SolicitacoesCompraComponent {
          },
 
         ];
-        this.loading = false;
-      }, (error) => {
-        this.poNotificationService.error(error)
-      });
+    
+    // this.documentosService
+    //   .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
+    //   .pipe(finalize(() => (this.loading = false)))
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //     this.documentos = [
+    //      {
+    //       status: '02',
+    //       id: '000001',
+    //       item: '01',
+    //       produto: 'Parafuso sextavado 8mmm',
+    //       quantidade: 50,
+    //       um1: 'UN',
+    //       tipoCompra: 'tipoCompra',
+    //       dataEmissao: '11/02/2025',
+    //       nome: 'Marcio da Silva'
+    //      },
+    //      {
+    //       status: '02',
+    //       id: '000001',
+    //       item: '02',
+    //       produto: 'Bucha para parafuso sextavado 8mmm',
+    //       quantidade: 50,
+    //       um1: 'UN',
+    //       tipoCompra: 'tipoCompra',
+    //       dataEmissao: '11/02/2025',
+    //       nome: 'Marcio da Silva'
+    //      },
+    //      {
+    //       status: '02',
+    //       id: '000001',
+    //       item: '03',
+    //       produto: 'Parafusadeira DeWalt 127V',
+    //       quantidade: 2,
+    //       um1: 'UN',
+    //       tipoCompra: 'tipoCompra',
+    //       dataEmissao: '11/02/2025',
+    //       nome: 'Marcio da Silva'
+    //      },
+
+    //     ];
+    //     this.loading = false;
+      // }, (error) => {
+      //   this.poNotificationService.error(error)
+      // });
   }
 
 
