@@ -30,7 +30,7 @@
 <po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"
     (p-advanced-search)="realizaBuscaAvancada($event)" [p-actions]="opcoesTela" [p-filters]="filtroBuscaAvancada">
 
-<div class="widgets-charts-documentos">
+<!-- <div class="widgets-charts-documentos">
     @if (graficoNumeroDocumentoSeries.length > 0) {
         <po-widget class="widget-chart">
                 <po-chart
@@ -56,7 +56,7 @@
     }
 
 
-</div>
+</div> -->
     <po-table #tableDocumento [p-actions]="acoesTabela" p-container="border" [p-columns]="columns"
         [p-items]="documentos" [p-loading]="loading"
         [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"

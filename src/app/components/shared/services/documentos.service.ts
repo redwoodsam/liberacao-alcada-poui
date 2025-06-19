@@ -11,9 +11,9 @@ import { Saldo } from '../interfaces/saldo.model';
 })
 export class DocumentosService {
 
-  private baseUrl = 'http://desktop-k38u8fu:8099/rest/controlealcada';
-  // private baseUrl = 'http://srv-protheus-homo.ald.com:9945/api/rest/controlealcada';
-  private headers = { 'Content-Type': 'application/json' };
+  // private baseUrl = 'http://desktop-k38u8fu:8099/rest/controlealcada';
+  private baseUrl = 'http://srv-protheus-dv.ald.com:12745/rest/controlealcada';
+  private headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InBKd3RQdWJsaWNLZXlGb3IyNTYifQ.eyJpc3MiOiJUT1RWUy1BRFZQTC1GV0pXVCIsInN1YiI6Im1hcmNlbC5hZ3VpYXIiLCJpYXQiOjE3NTAzNTM3NDQsInVzZXJpZCI6IjAwMDAxNiIsImV4cCI6MTc1MDM1NzM0NCwiZW52SWQiOiJQUk9USEVVU19ERVMifQ.HK9par0TJzGj--dJngau1yPs2ko84TNeHizxyQWqcBafOkTDYR78I51pDBvuD6h708F8YEHIr7FcBRVZP_4PamFjWNxraML_7l8Dz7LXG-u8ukx4jW88ndEtQ4TGJcV81gD8d1axooTwNdVAu__9bHNfnFEhQm2awa3-xBLWGr4TZopy2IaX3gCYc19n8431JnR2-7iteCQnOBOX-7eXh8zMVM_X6_IbtmW35SB6Pz8d9OETawxqCurdY6-8p8AL6epxb9qM_iDi92i_Ulqyyzgwp977-9qbtt0rRIX7T3YmZkG4uKuh_Kxj-Ig_dB0dAsJ3aRkDDA1HVPq9wEIDWg' };
 
   constructor(private httpClient: HttpClient) { }
 
@@ -83,12 +83,7 @@ export class DocumentosService {
 
   getAll(pageNumber: number, filtrosAplicados: any): Observable<DocumentosServiceModel> {
 
-    let headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa('admin:admin')}`
-    }
-
-    return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${ filtrosAplicados.documentoDe || '%20'}/${ filtrosAplicados.documentoAte }/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte}/${filtrosAplicados.status}/000006`, { headers: headers })
+    return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${ filtrosAplicados.documentoDe || '%20'}/${ filtrosAplicados.documentoAte }/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte}/01/marcel.aguiar`, { headers: this.headers })
   }
 
   rejeitarDocumento(documento: Documento){
