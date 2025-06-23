@@ -444,7 +444,7 @@ export class DocumentosComponent implements OnInit {
         this.saldoAtual = res.Itens[0]
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message);
       });
   }
 
@@ -462,7 +462,7 @@ export class DocumentosComponent implements OnInit {
         this.documentos = this.documentos.concat(res.Itens);
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
   }
 
@@ -477,7 +477,7 @@ export class DocumentosComponent implements OnInit {
         })
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
   }
 
@@ -492,7 +492,7 @@ export class DocumentosComponent implements OnInit {
         })
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
   }
 
@@ -610,7 +610,7 @@ export class DocumentosComponent implements OnInit {
         }
 
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
 
 
@@ -642,7 +642,7 @@ export class DocumentosComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
 
   }
@@ -672,7 +672,7 @@ export class DocumentosComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
 
   }
@@ -702,7 +702,7 @@ export class DocumentosComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
 
   }
@@ -726,7 +726,7 @@ export class DocumentosComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error)
+        this.poNotificationService.error(error.error.message)
       });
   }
 
