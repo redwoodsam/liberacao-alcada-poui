@@ -74,8 +74,8 @@ export class DocumentosService {
 
 
   // headers: { 'tenantId': `01,${documento.filial}` }
-  aprovarDocumento(documento: Documento) {
-    return this.httpClient.put(`${this.baseUrl}/aprovar/${documento.filial}/${documento.doc}/${documento.tipo}`, {}, { headers: { 'tenantId': `01,${documento.filial}` } });
+  aprovarDocumento(documento: Documento, motivo: string) {
+    return this.httpClient.put(`${this.baseUrl}/aprovar/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } });
   }
 
   rejeitarDocumento(documento: Documento, motivo: string) {

@@ -54,19 +54,15 @@ export class DocumentosComponent implements OnInit {
   colunasHistoricoDocumento: Array<any> = []
   colunasItensDocumento: Array<any> = []
 
-  graficoNumeroDocumentoSeries = [
-    { label: 'Pendentes', data: 1 },
-    // { label: 'Liberados', data: 10 }
-  ]
-
-  graficoTipoDocumentoSeries = [
-    // { label: 'Pedidos de compra', data: 100 },
-    { label: 'Solicitações de compra', data: 1, color: 'color-04' }
-  ]
 
   acoesModalTransferencia = {
     confirmar: { label: 'Transferir', action: this.abrirConfirmacaoTransferencia.bind(this) } as PoModalAction,
     cancelar: { label: 'Cancelar', action: this.fecharModalTransferencia.bind(this), danger: true } as PoModalAction,
+  }
+
+  acoesModalAprovacao = {
+    confirmar: { label: 'Aprovar Documento', action: this.abrirConfirmacaoAprovacao.bind(this) } as PoModalAction,
+    cancelar: { label: 'Cancelar', action: this.fecharModalAprovacao.bind(this), danger: true } as PoModalAction,
   }
 
   acoesModalRecusa = {
@@ -102,6 +98,7 @@ export class DocumentosComponent implements OnInit {
   @ViewChild('modalSaldos') modalSaldos: any;
   @ViewChild('modalTransferencia') modalTransferencia: any;
   @ViewChild('modalRecusa') modalRecusa: any;
+  @ViewChild('modalAprovacao') modalAprovacao: any;
   @ViewChild('modalBloqueio') modalBloqueio: any;
 
 
@@ -133,6 +130,13 @@ export class DocumentosComponent implements OnInit {
   fecharModalTransferencia() {
     if (!this.modalTransferencia.isHidden) {
       this.modalTransferencia?.close()
+      this.justificativaDocumento = ""
+    }
+  }
+
+  fecharModalAprovacao() {
+    if (!this.modalAprovacao.isHidden) {
+      this.modalAprovacao?.close()
       this.justificativaDocumento = ""
     }
   }
@@ -337,8 +341,8 @@ export class DocumentosComponent implements OnInit {
   constroiAcoesTabela(): PoPageAction[] {
     return [
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Aprovar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok', visible: (documento: any) => ["02", "04"].includes(documento.status) },
-      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close', visible: (documento: any) => ["02", "04"].includes(documento.status) },
+      { label: 'Aprovar', action: this.abrirModalAprovacao.bind(this), icon: 'po-icon-ok', visible: (documento: any) => documento.status == "02" || documento.status == "04" },
+      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close', visible: (documento: any) => documento.status == "02" || documento.status == "04" },
       { label: 'Estornar', action: this.abrirConfirmacaoEstorno.bind(this), icon: 'po-icon-arrow-left', visible: (documento: any) => documento.status == "03" },
       { label: 'Bloquear', action: this.abrirModalBloqueio.bind(this), icon: 'po-icon-lock', visible: (documento: any) => documento.status == "02" },
       { label: 'Transferir para Superior', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-up', visible: (documento: any) => documento.status == "02" },
@@ -512,15 +516,30 @@ export class DocumentosComponent implements OnInit {
     return ``
   }
 
+  abrirConfirmacaoAprovacao() {
 
-  abrirConfirmacaoAprovacao(documento: Documento) {
+    if (!this.justificativaDocumento) {
+      this.poNotificationService.information({ message: "Por gentileza, digite uma justificativa para a aprovação.", duration: 3000 })
+      return
+    }
+
     this.poDialogService.confirm({
       title: 'Aprovação',
-      message: `Confirma aprovação do documento ${documento.doc} ?`,
-      confirm: () => this.aprovarDocumento(documento),
+      message: `Confirma a  do documento ${this.documentoSelecionado.doc} ?`,
+      confirm: () => this.aprovarDocumento(),
+      cancel: () => this.fecharModalAprovacao(),
       literals: { cancel: "Não", confirm: 'Sim' },
     })
   }
+
+  // abrirConfirmacaoAprovacao(documento: Documento) {
+  //   this.poDialogService.confirm({
+  //     title: 'Aprovação',
+  //     message: `Confirma aprovação do documento ${documento.doc} ?`,
+  //     confirm: () => this.aprovarDocumento(documento),
+  //     literals: { cancel: "Não", confirm: 'Sim' },
+  //   })
+  // }
 
 
   abrirConfirmacaoEstorno(documento: Documento) {
@@ -580,6 +599,11 @@ export class DocumentosComponent implements OnInit {
     })
   }
 
+  abrirModalAprovacao(documento: Documento) {
+    this.documentoSelecionado = documento
+    this.modalAprovacao?.open()
+  }
+
   abrirModalRecusa(documento: Documento) {
     this.documentoSelecionado = documento
     this.modalRecusa?.open()
@@ -591,23 +615,29 @@ export class DocumentosComponent implements OnInit {
   }
 
 
-  aprovarDocumento(documento: Documento) {
+  aprovarDocumento() {
     this.loading = true;
 
     this.documentosService
-      .aprovarDocumento(documento)
+      .aprovarDocumento(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
 
         this.loading = false;
-        console.log("Aprovação do documento: " + documento.id)
-
-        this.getItens(this.pageNumber)
 
         this.poNotificationService.success("Documento Aprovado com sucesso!")
+
+        this.justificativaDocumento = ""
+
+        if (!this.modalAprovacao.isHidden) {
+          this.modalAprovacao?.close()
+        }
+
         if (!this.modalDocumento.isHidden) {
           this.modalDocumento?.close()
         }
+
+        this.getItens(this.pageNumber)
 
       }, (error) => {
         this.poNotificationService.error(error.error.message)

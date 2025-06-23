@@ -183,21 +183,50 @@
     </div>
 
 
-    <div class="po-action-btns-wrapper">
-        <!-- <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
-            (p-click)="abrirItensDocumento(documentoSelecionado)">
+    @if (documentoSelecionado.status == "02" || documentoSelecionado.status == "04") {
 
-        </po-button> -->
+        <div class="po-action-btns-wrapper">
+            <!-- <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
+                (p-click)="abrirItensDocumento(documentoSelecionado)">
 
-        <po-button id="dlg-po-btn-aprovar" p-icon="po-icon-ok" p-size="large"
-            (p-click)="abrirConfirmacaoAprovacao(documentoSelecionado)">
+            </po-button> -->
 
-        </po-button>
-        <po-button p-icon="po-icon-close" p-size="large" p-kind="primary" p-danger
-            (p-click)="abrirModalRecusa(documentoSelecionado)">
+            <po-button id="dlg-po-btn-aprovar" p-icon="po-icon-ok" p-size="large"
+                (p-click)="abrirModalAprovacao(documentoSelecionado)">
 
-        </po-button>
+            </po-button>
+            <po-button p-icon="po-icon-close" p-size="large" p-kind="primary" p-danger
+                (p-click)="abrirModalRecusa(documentoSelecionado)">
+
+            </po-button>
+        </div>
+    }
+
+</po-modal>
+
+<po-modal #modalAprovacao p-title="Aprovar documento" [p-primary-action]="acoesModalAprovacao['confirmar']"
+    [p-secondary-action]="acoesModalAprovacao['cancelar']">
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Por gentileza, justique sua aprovação."> </po-textarea>
+
     </div>
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Documento</h3>
+
+        <po-table #tableModalDocumento p-container="border" [p-columns]="columnsTabelaModalDocumento"
+            [p-items]="[documentoSelecionado]" p-hide-columns-manager>
+
+        </po-table>
+
+    </div>
+
 
 </po-modal>
 
@@ -224,23 +253,6 @@
 
     </div>
 
-    <!-- <div class="modal-visualizacao-container">
-        <h3>Saldo do Aprovador</h3>
-
-        <po-dynamic-view class="modal-visualizacao-saldo-aprovador-container" [p-fields]="formularioSaldoModalDocumento"
-            [p-value]="saldoAtual">
-
-        </po-dynamic-view>
-
-    </div> -->
-
-
-    <!-- <div class="po-action-btns-wrapper">
-        <po-button p-icon="po-icon-document" p-size="large" p-kind="primary"
-            (p-click)="abrirItensDocumento(documentoSelecionado)">
-
-        </po-button>
-    </div> -->
 
 </po-modal>
 
