@@ -11,8 +11,8 @@ export const MAIN_ROUTES: Route[] = [
         path: 'liberacao',
         component: DocumentosComponent
     },
-    {
-        path: 'solicitacoes-compra',
-        component: SolicitacoesCompraComponent
-    }
+    // {
+    //     path: 'solicitacoes-compra',
+    //     component: SolicitacoesCompraComponent
+    // }
 ]

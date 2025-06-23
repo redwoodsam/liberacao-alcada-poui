@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { PoCheckboxGroupOption, PoDialogService, PoSelectOption } from '@po-ui/ng-components';
+import { PoCheckboxGroupOption, PoDialogService, PoNotificationService, PoSelectOption } from '@po-ui/ng-components';
 import { PoPageLogin, PoPageLoginCustomField, PoPageLoginLiterals } from '@po-ui/ng-templates';
 import { Router } from '@angular/router';
+import { UserService } from '../core/user/user.service';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  loadingLogin = false;
   background: string = '';
   contactEmail: string = '';
   // customField: PoPageLoginCustomField;
@@ -39,7 +41,7 @@ export class LoginComponent {
     { value: 'loading', label: 'Loading' }
   ];
 
-  constructor(private poDialog: PoDialogService, private router: Router) {}
+  constructor(private poDialog: PoDialogService, private router: Router, private userService: UserService, private poNotificationService: PoNotificationService) { }
 
   ngOnInit() {
     this.restore();
@@ -72,13 +74,20 @@ export class LoginComponent {
   }
 
   loginSubmit(formData: PoPageLogin) {
-    // if (this.exceededAttempts <= 0) {
-    //   this.poDialog.alert({
-    //     title: 'Authenticate',
-    //     message: JSON.stringify(formData)
-    //   });
-    // }
-    this.router.navigate(['home'])
+    this.loadingLogin = true;
+    this.userService.authenticatication(formData.login, formData.password, 'password')
+      .subscribe(({
+        next: () => {
+          this.loadingLogin = false;
+
+          this.router.navigate(['home']);
+        },
+        error: (err) => {
+          this.loadingLogin = false;
+          this.poNotificationService.error("Usuário e/ou senha incorretos. Tente novamente.")
+        }
+      }));
+
   }
 
   onChangeCustomProperties() {

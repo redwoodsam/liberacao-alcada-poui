@@ -1,12 +1,18 @@
+export interface SaldoModel {
+    Itens: Saldo[];
+}
+
 export interface Saldo {
-    codAprovador: string;
-    codUsuario: string;
+    cod: string;
     nome: string;
-    superior: string;
-    limite: number;
-    moeda: string;
-    perLimite: string;
     login: string;
+    codUsuario: string;
+    codSuperior: number;
+    limite: number;
+    tipoLimite: string;
+    moeda: string;
+    limiteMin: number;
+    limiteMax: number;
     saldo: number;
-    dataRef: string;
+    dataSaldo: string;
 }

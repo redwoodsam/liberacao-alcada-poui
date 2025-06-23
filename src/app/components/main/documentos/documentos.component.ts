@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn, PoTableColumnSpacing } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
-import { Router } from '@angular/router';
 import { Documento, HistoricoDocumento, ItemDocumento } from '../../shared/interfaces/documento';
 import { Saldo } from '../../shared/interfaces/saldo.model';
 import { DocumentosService } from '../../shared/services/documentos.service';
@@ -44,7 +43,6 @@ export class DocumentosComponent implements OnInit {
   // Tabela
   columns: Array<PoTableColumn> = [];
   documentos: Documento[] = []
-
   columnsTabelaModalDocumento: Array<PoTableColumn> = [];
 
   // Documento
@@ -67,13 +65,18 @@ export class DocumentosComponent implements OnInit {
   ]
 
   acoesModalTransferencia = {
-    confirmar: { label: 'Transferir', action: this.confirmarTransferencia.bind(this) } as PoModalAction,
+    confirmar: { label: 'Transferir', action: this.abrirConfirmacaoTransferencia.bind(this) } as PoModalAction,
     cancelar: { label: 'Cancelar', action: this.fecharModalTransferencia.bind(this), danger: true } as PoModalAction,
   }
 
   acoesModalRecusa = {
     confirmar: { label: 'Recusar Documento', action: this.abrirConfirmacaoRecusa.bind(this), danger: true } as PoModalAction,
     cancelar: { label: 'Cancelar', action: this.fecharModalRecusa.bind(this), danger: true } as PoModalAction,
+  }
+
+  acoesModalBloqueio = {
+    confirmar: { label: 'Bloquear Documento', action: this.abrirConfirmacaoBloqueio.bind(this), danger: true } as PoModalAction,
+    cancelar: { label: 'Cancelar', action: this.fecharModalBloqueio.bind(this), danger: true } as PoModalAction,
   }
 
   // Saldos
@@ -99,6 +102,7 @@ export class DocumentosComponent implements OnInit {
   @ViewChild('modalSaldos') modalSaldos: any;
   @ViewChild('modalTransferencia') modalTransferencia: any;
   @ViewChild('modalRecusa') modalRecusa: any;
+  @ViewChild('modalBloqueio') modalBloqueio: any;
 
 
   constructor(private documentosService: DocumentosService, private poNotificationService: PoNotificationService, private poDialogService: PoDialogService) {
@@ -116,7 +120,7 @@ export class DocumentosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getItens(1);
-    // this.getSaldo();
+    this.getSaldo();
     // this.getAprovadores()
     // this.getSuperiores()
   }
@@ -128,13 +132,21 @@ export class DocumentosComponent implements OnInit {
 
   fecharModalTransferencia() {
     if (!this.modalTransferencia.isHidden) {
-      this.modalTransferencia.close()
+      this.modalTransferencia?.close()
+      this.justificativaDocumento = ""
     }
   }
 
   fecharModalRecusa() {
     if (!this.modalRecusa.isHidden) {
       this.modalRecusa?.close()
+      this.justificativaDocumento = ""
+    }
+  }
+
+  fecharModalBloqueio() {
+    if (!this.modalBloqueio.isHidden) {
+      this.modalBloqueio?.close()
       this.justificativaDocumento = ""
     }
   }
@@ -174,11 +186,6 @@ export class DocumentosComponent implements OnInit {
         type: 'string',
         gridColumns: 2
       },
-      // {
-      //   property: 'moeda',
-      //   label: 'Moeda',
-      //   gridColumns: 2
-      // },
       {
         property: 'dataLiberacao',
         label: 'Data Liberação',
@@ -229,8 +236,8 @@ export class DocumentosComponent implements OnInit {
   constroiFormularioSaldos(): PoDynamicViewField[] {
     return [
       {
-        property: 'codUsuario',
-        label: 'Usuário',
+        property: 'cod',
+        label: 'Código',
         type: 'string',
         gridColumns: 3
       },
@@ -241,7 +248,13 @@ export class DocumentosComponent implements OnInit {
         gridColumns: 3
       },
       {
-        property: 'superior',
+        property: 'login',
+        label: 'Login',
+        type: 'string',
+        gridColumns: 3
+      },
+      {
+        property: 'codSuperior',
         label: 'Superior',
         type: 'string',
         gridColumns: 3
@@ -252,21 +265,15 @@ export class DocumentosComponent implements OnInit {
         type: 'currency',
         gridColumns: 3
       },
+      // {
+      //   property: 'moeda',
+      //   label: 'Moeda',
+      //   type: 'string',
+      //   gridColumns: 3
+      // },
       {
-        property: 'moeda',
-        label: 'Moeda',
-        type: 'string',
-        gridColumns: 3
-      },
-      {
-        property: 'perLimite',
-        label: 'Per. Limite',
-        type: 'string',
-        gridColumns: 3
-      },
-      {
-        property: 'login',
-        label: 'Login',
+        property: 'tipoLimite',
+        label: 'Tipo Limite',
         type: 'string',
         gridColumns: 3
       },
@@ -277,8 +284,8 @@ export class DocumentosComponent implements OnInit {
         gridColumns: 3
       },
       {
-        property: 'dataRef',
-        label: 'Data Ref.',
+        property: 'dataSaldo',
+        label: 'Data Saldo',
         type: 'string',
         gridColumns: 3
       },
@@ -330,16 +337,18 @@ export class DocumentosComponent implements OnInit {
   constroiAcoesTabela(): PoPageAction[] {
     return [
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Aprovar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok' },
-      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close' },
-      // { label: 'Transferir para', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-right' },
+      { label: 'Aprovar', action: this.abrirConfirmacaoAprovacao.bind(this), icon: 'po-icon-ok', visible: (documento: any) => ["02", "04"].includes(documento.status) },
+      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close', visible: (documento: any) => ["02", "04"].includes(documento.status) },
+      { label: 'Estornar', action: this.abrirConfirmacaoEstorno.bind(this), icon: 'po-icon-arrow-left', visible: (documento: any) => documento.status == "03" },
+      { label: 'Bloquear', action: this.abrirModalBloqueio.bind(this), icon: 'po-icon-lock', visible: (documento: any) => documento.status == "02" },
+      { label: 'Transferir para Superior', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-up', visible: (documento: any) => documento.status == "02" },
     ]
   }
 
   constroiAcoesTela(): PoPageAction[] {
     return [
-      // { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
-      { label: '', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
+      { label: 'Ver Saldo', action: this.abrirModalSaldos.bind(this), icon: 'po-icon-eye' },
+      // { label: '', action: () => this.mostraFiltros = true, icon: 'po-icon-arrow-left' },
     ]
   }
 
@@ -354,19 +363,16 @@ export class DocumentosComponent implements OnInit {
           { value: '04', content: '', label: 'Bloqueada', color: 'color-04' },
         ]
       },
-      { property: 'id', label: 'ID' },
+      { property: 'filial', label: 'Filial' },
       { property: 'doc', label: 'Documento' },
-      { property: 'tipoDocumento', label: 'Tipo Documento' },
+      { property: 'tipo', label: 'Tipo' },
       { property: 'codUsuario', label: 'Cód. Usuario' },
       // { property: 'codAprovador', label: 'Cod. Aprovador' },
-      { property: 'grpAprov', label: 'Grp. Aprov' },
       { property: 'dataEmissao', label: 'Data Emissão' },
       { property: 'valorTotal', label: 'Valor total', type: 'currency' },
       { property: 'dataLiberacao', label: 'Data Liberação' },
       { property: 'prazo', label: 'Prazo' },
-      { property: 'aviso', label: 'Aviso' },
       { property: 'msg', label: 'Mensagem' },
-      { property: 'tipoCompra', label: 'Tipo Compra' },
 
     ];
 
@@ -375,13 +381,12 @@ export class DocumentosComponent implements OnInit {
 
   constroiColunasModalDocumento(): PoTableColumn[] {
     return [
-      { property: 'id', label: 'Documento' },
-      { property: 'tipoDocumento', label: 'Tipo Documento' },
+      { property: 'filial', label: 'Filial' },
+      { property: 'doc', label: 'Documento' },
+      { property: 'tipo', label: 'Tipo Documento' },
       { property: 'dataEmissao', label: 'Data Emissão' },
       { property: 'valorTotal', label: 'Valor total', type: 'currency' },
       { property: 'prazo', label: 'Prazo' },
-      { property: 'aviso', label: 'Aviso' },
-      { property: 'tipoCompra', label: 'Tipo Compra' },
 
     ];
 
@@ -412,6 +417,7 @@ export class DocumentosComponent implements OnInit {
   abrirDocumento(documento: any) {
     this.documentoSelecionado = documento;
     this.historicoDocumento = documento.Liberacao
+    this.itemsDocumentoSelecionado = documento.itens
     this.modalDocumento?.open()
   }
 
@@ -435,7 +441,7 @@ export class DocumentosComponent implements OnInit {
     this.loading = true
     this.documentosService.consultaSaldo()
       .subscribe((res) => {
-        this.saldoAtual = res
+        this.saldoAtual = res.Itens[0]
         this.loading = false;
       }, (error) => {
         this.poNotificationService.error(error)
@@ -510,12 +516,21 @@ export class DocumentosComponent implements OnInit {
   abrirConfirmacaoAprovacao(documento: Documento) {
     this.poDialogService.confirm({
       title: 'Aprovação',
-      message: `Confirma aprovação do documento ${documento.id} ?`,
+      message: `Confirma aprovação do documento ${documento.doc} ?`,
       confirm: () => this.aprovarDocumento(documento),
       literals: { cancel: "Não", confirm: 'Sim' },
     })
   }
 
+
+  abrirConfirmacaoEstorno(documento: Documento) {
+    this.poDialogService.confirm({
+      title: 'Estorno',
+      message: `Confirma o estorno do documento ${documento.doc} ?`,
+      confirm: () => this.estornarDocumento(documento),
+      literals: { cancel: "Não", confirm: 'Sim' },
+    })
+  }
 
   abrirConfirmacaoRecusa() {
 
@@ -526,17 +541,53 @@ export class DocumentosComponent implements OnInit {
 
     this.poDialogService.confirm({
       title: 'Recusa',
-      message: `Confirma a recusa do documento ${this.documentoSelecionado.id} ?`,
+      message: `Confirma a recusa do documento ${this.documentoSelecionado.doc} ?`,
       confirm: () => this.rejeitarDocumento(),
       cancel: () => this.fecharModalRecusa(),
       literals: { cancel: "Não", confirm: 'Sim' },
     })
   }
 
+  abrirConfirmacaoTransferencia() {
+
+    if (!this.justificativaDocumento) {
+      this.poNotificationService.information({ message: "Por gentileza, digite uma justificativa para a transferência.", duration: 3000 })
+      return
+    }
+
+    this.poDialogService.confirm({
+      title: 'Transferência',
+      message: `Confirma a transferencia do documento ${this.documentoSelecionado.doc} ?`,
+      confirm: () => this.confirmarTransferencia(),
+      cancel: () => this.fecharModalTransferencia(),
+      literals: { cancel: "Não", confirm: 'Sim' },
+    })
+  }
+
+  abrirConfirmacaoBloqueio() {
+
+    if (!this.justificativaDocumento) {
+      this.poNotificationService.information({ message: "Por gentileza, digite uma justificativa para o bloqueio.", duration: 3000 })
+      return
+    }
+
+    this.poDialogService.confirm({
+      title: 'Recusa',
+      message: `Confirma o bloqueio do documento ${this.documentoSelecionado.doc} ?`,
+      confirm: () => this.bloquearDocumento(),
+      cancel: () => this.fecharModalBloqueio(),
+      literals: { cancel: "Não", confirm: 'Sim' },
+    })
+  }
 
   abrirModalRecusa(documento: Documento) {
     this.documentoSelecionado = documento
     this.modalRecusa?.open()
+  }
+
+  abrirModalBloqueio(documento: Documento) {
+    this.documentoSelecionado = documento
+    this.modalBloqueio?.open()
   }
 
 
@@ -550,9 +601,8 @@ export class DocumentosComponent implements OnInit {
 
         this.loading = false;
         console.log("Aprovação do documento: " + documento.id)
-        this.documentos = [];
-        this.graficoNumeroDocumentoSeries = []
-        this.graficoTipoDocumentoSeries = []
+
+        this.getItens(this.pageNumber)
 
         this.poNotificationService.success("Documento Aprovado com sucesso!")
         if (!this.modalDocumento.isHidden) {
@@ -572,7 +622,7 @@ export class DocumentosComponent implements OnInit {
     this.loading = true;
 
     this.documentosService
-      .rejeitarDocumento(this.documentoSelecionado)
+      .rejeitarDocumento(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
         this.loading = false;
@@ -589,9 +639,7 @@ export class DocumentosComponent implements OnInit {
           this.modalDocumento?.close()
         }
 
-        this.documentos = [];
-        this.graficoNumeroDocumentoSeries = []
-        this.graficoTipoDocumentoSeries = []
+        this.getItens(this.pageNumber)
 
       }, (error) => {
         this.poNotificationService.error(error)
@@ -599,18 +647,72 @@ export class DocumentosComponent implements OnInit {
 
   }
 
-
-  confirmarTransferencia() {
-
-    if (!this.novoAprovadorSelecionado) {
-      this.poNotificationService.information({ message: "Por gentileza, selecione um novo aprovador para transferir.", duration: 3000 })
-      return
-    }
+  estornarDocumento(documento: Documento) {
 
     this.loading = true;
 
     this.documentosService
-      .transferirDocumento(this.documentoSelecionado, this.novoAprovadorSelecionado)
+      .estornarDocumento(documento, ' ')
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((res) => {
+        this.loading = false;
+
+        this.poNotificationService.success("Documento Estornado com Sucesso!")
+
+        this.justificativaDocumento = ""
+
+        if (!this.modalRecusa.isHidden) {
+          this.modalRecusa?.close()
+        }
+
+        if (!this.modalDocumento.isHidden) {
+          this.modalDocumento?.close()
+        }
+
+        this.getItens(this.pageNumber)
+
+      }, (error) => {
+        this.poNotificationService.error(error)
+      });
+
+  }
+
+  bloquearDocumento() {
+
+    this.loading = true;
+
+    this.documentosService
+      .bloquearDocumento(this.documentoSelecionado, this.justificativaDocumento)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((res) => {
+        this.loading = false;
+
+        this.poNotificationService.success("Documento Bloqueado com Sucesso!")
+
+        this.justificativaDocumento = ""
+
+        if (!this.modalBloqueio.isHidden) {
+          this.modalBloqueio?.close()
+        }
+
+        if (!this.modalDocumento.isHidden) {
+          this.modalDocumento?.close()
+        }
+
+        this.getItens(this.pageNumber)
+
+      }, (error) => {
+        this.poNotificationService.error(error)
+      });
+
+  }
+
+  confirmarTransferencia() {
+
+    this.loading = true;
+
+    this.documentosService
+      .transferirDocumentoParaSuperior(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
         this.loading = false;
@@ -620,6 +722,8 @@ export class DocumentosComponent implements OnInit {
         if (!this.modalTransferencia.isHidden) {
           this.modalTransferencia?.close()
         }
+
+        this.getItens(this.pageNumber)
 
       }, (error) => {
         this.poNotificationService.error(error)
@@ -663,6 +767,7 @@ export class DocumentosComponent implements OnInit {
     this.documentoAte = retornoBuscaAvancada['documentoAte']
     this.emissaoDe = retornoBuscaAvancada['emissaoDe']
     this.emissaoAte = retornoBuscaAvancada['emissaoAte']
+    this.status = retornoBuscaAvancada['status']
 
     if (!retornoBuscaAvancada['documentoDe']) {
       this.documentoDe = " "
@@ -681,8 +786,9 @@ export class DocumentosComponent implements OnInit {
     }
 
     if (!retornoBuscaAvancada['status']) {
-      this.emissaoAte = `03`
+      this.status = `02`
     }
+
 
     this.pageNumber = 1;
     this.getItens();

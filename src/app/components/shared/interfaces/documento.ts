@@ -1,5 +1,7 @@
 export interface Documento {
+    filial: string,
     id: string,
+    doc: string,
     tipo: string,
     codUsuario: string,
     codAprovador?: string,
@@ -18,7 +20,9 @@ export interface Documento {
 }
 
 export interface ItemDocumento {
+    item: string,
     id?: string,
+    doc: string,
     produto: string,
     descricao: string,
     quantidadeUm1: number,
@@ -29,10 +33,8 @@ export interface ItemDocumento {
     valorTotal?: number,
     solicitante?: string,
     centroCusto?: string,
-    contaContabil?: string,
     necessidade?: string,
     status: string,
-    os?: string,
 }
 
 export interface HistoricoDocumento {

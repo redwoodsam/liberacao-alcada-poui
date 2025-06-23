@@ -13,6 +13,7 @@ import { DocumentosComponent } from './components/main/documentos/documentos.com
 import { LoginComponent } from './components/login/login.component';
 import { MainComponent } from './components/main/main.component';
 import { MainModule } from './components/main/main.module';
+import { InterceptorProtheusModule } from './components/core/http/interceptor-protheus.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MainModule } from './components/main/main.module';
     PoTableModule,
     PoModalModule,
     BrowserAnimationsModule,
-    MainModule
+    MainModule,
+    InterceptorProtheusModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
