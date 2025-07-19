@@ -18,6 +18,8 @@ export class DocumentosComponent implements OnInit {
   pageNumber: number = 1;
   pageSize: number = 10;
 
+  haMaisPaginas: boolean = false;
+
   // filtros
   filtrosAplicados: string = '';
   filtroBuscaAvancada: Array<PoPageDynamicSearchFilters>;
@@ -118,8 +120,6 @@ export class DocumentosComponent implements OnInit {
   ngOnInit(): void {
     this.getItens(1);
     this.getSaldo();
-    // this.getAprovadores()
-    // this.getSuperiores()
   }
 
 
@@ -453,17 +453,17 @@ export class DocumentosComponent implements OnInit {
   }
 
 
-  getItens(pageNumber: number = 1) {
+  getItens(pageNumber: number = 1, pageSize: number = 20) {
     this.loading = true;
 
     if (pageNumber === 1) this.documentos = [];
 
     this.documentosService
-      .getAll(pageNumber, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
+      .getAll(pageNumber, pageSize,{ documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe((res) => {
-        console.log(res);
         this.documentos = this.documentos.concat(res.Itens);
+        this.haMaisPaginas = res.hasNext;
         this.loading = false;
       }, (error) => {
         this.poNotificationService.error(error.error.message)
@@ -772,7 +772,20 @@ export class DocumentosComponent implements OnInit {
     }
 
 
-    this.getItens(this.pageNumber);
+    this.loading = true;
+
+    this.documentos = [];
+
+    this.documentosService
+      .buscaDocumento({ documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((res) => {
+        this.documentos = this.documentos.concat(res.Itens);
+        this.haMaisPaginas = res.hasNext;
+        this.loading = false;
+      }, (error) => {
+        this.poNotificationService.error(error.error.message)
+      });
   }
 
 
@@ -785,7 +798,6 @@ export class DocumentosComponent implements OnInit {
   carregarMais(): void {
     this.pageNumber++;
     this.getItens(this.pageNumber);
-    console.log(this.filtrosAplicados);
   }
 
 
@@ -831,7 +843,6 @@ export class DocumentosComponent implements OnInit {
   // Executado quando é removido os filtros da busca avançada
   clickDisclaimers(disclaimers: any[]) {
     this.pageNumber = 1;
-    console.log(disclaimers);
 
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoDe')) this.documentoDe = " "
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = "ZZZZZZZZZ"

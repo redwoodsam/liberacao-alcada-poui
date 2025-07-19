@@ -2,21 +2,10 @@
     margin-top: 20px !important;
 }
 
-
-.widgets-charts-documentos {
-
-    .widget-chart {
-        display: flex;
-    }
-
-    display: flex;
-    width: 70%;
-    margin: 1rem auto;
-    gap: 2.5rem;
-    // justify-content: center;
-    justify-content: space-evenly;
-    margin-bottom: 20px;
+::ng-deep .po-page-content {
+    height: auto !important;
 }
+
 
 .filtros-wrapper {
     padding: 1em 2em;

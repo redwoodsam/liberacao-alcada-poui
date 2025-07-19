@@ -27,13 +27,20 @@
 
 
 <!-- PESQUISA -->
-<po-page-dynamic-search (p-quick-search)="buscaDocumento($event)" (p-change-disclaimers)="clickDisclaimers($event)"
-    (p-advanced-search)="realizaBuscaAvancada($event)" [p-actions]="opcoesTela" [p-filters]="filtroBuscaAvancada">
+<po-page-dynamic-search 
+    (p-quick-search)="buscaDocumento($event)" 
+    (p-change-disclaimers)="clickDisclaimers($event)"
+    (p-advanced-search)="realizaBuscaAvancada($event)" 
+    [p-actions]="opcoesTela" 
+    [p-filters]="filtroBuscaAvancada">
 
     <po-table #tableDocumento [p-actions]="acoesTabela" p-container="border" [p-columns]="columns"
         [p-items]="documentos" [p-loading]="loading"
         [p-literals]="{ loadMoreData: 'Carregar mais dados', noData: 'Nenhum documento encontrado' }"
-        (p-dblClick)="abrirDocumento($event)">
+        (p-dblClick)="abrirDocumento($event)"
+        (p-show-more)="carregarMais()"
+        [p-show-more-disabled]="!haMaisPaginas"
+        >
 
         <ng-template p-table-row-template let-rowItem let-i="rowIndex">
 

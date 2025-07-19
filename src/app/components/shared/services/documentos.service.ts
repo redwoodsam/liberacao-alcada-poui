@@ -67,7 +67,12 @@ export class DocumentosService {
   //   )
   // }
 
-  getAll(pageNumber: number, filtrosAplicados: any): Observable<DocumentosServiceModel> {
+  getAll(pageNumber: number, pageSize: number, filtrosAplicados: any): Observable<DocumentosServiceModel> {
+
+    return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${filtrosAplicados.documentoDe || '%20'}/${filtrosAplicados.documentoAte || '%20'}/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte || '%20'}/${filtrosAplicados.status || '02'}?page=${pageNumber}&limit=${pageSize}`)
+  }
+
+  buscaDocumento(filtrosAplicados: any): Observable<DocumentosServiceModel> {
 
     return this.httpClient.get<DocumentosServiceModel>(`${this.baseUrl}/consulta/${filtrosAplicados.documentoDe || '%20'}/${filtrosAplicados.documentoAte || '%20'}/${filtrosAplicados.emissaoDe || '%20'}/${filtrosAplicados.emissaoAte || '%20'}/${filtrosAplicados.status || '02'}`)
   }
