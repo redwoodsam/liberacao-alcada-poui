@@ -9,11 +9,13 @@ import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 import { CommonModule } from '@angular/common';
 import { SolicitacoesCompraComponent } from './solicitacoes-compra/solicitacoes-compra.component';
+import { DocumentosMobileComponent } from './documentos/documentos-mobile/documentos-mobile.component';
+import { DocumentosDesktopComponent } from './documentos/documentos-desktop/documentos-desktop.component';
 
 
 
 @NgModule({
-  declarations: [MainComponent, DocumentosComponent, SolicitacoesCompraComponent],
+  declarations: [MainComponent, DocumentosComponent, SolicitacoesCompraComponent, DocumentosMobileComponent, DocumentosDesktopComponent],
   imports: [
     CommonModule,
     MainRoutingModule,
