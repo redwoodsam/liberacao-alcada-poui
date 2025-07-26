@@ -1,0 +1,88 @@
+:host .status-02 {
+    border-left: 7px solid #ea9b3e !important;
+}
+
+:host .status-03 {
+    border-left: 7px solid #56b96b !important;
+}
+
+:host .status-06 {
+    border-left: 7px solid #c64840 !important;
+}
+
+:host .status-04 {
+    border-left: 7px solid #5843c8 !important;
+}
+
+.card-documento-container {
+    position: relative;
+}
+
+.card-documento-botao-opcoes-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+::ng-deep #dropdown-opcoes .po-dropdown-button {
+    padding: 10px !important;
+    height: 30px !important;
+    border: 1px solid var(--color-widget-color-default) !important;
+    color: var(--color-widget-color-default);
+    position: relative;
+
+    &::ng-deep .po-dropdown-icon {
+        margin: 0 !important;
+        display: none;
+    }
+
+}
+
+::ng-deep #dropdown-opcoes .po-popup-container {
+    position: absolute !important;
+    display: flex;
+    left: -89px;
+    min-width: max-content;
+
+    &::ng-deep .po-item-list {
+    }
+}
+
+.card-documento-botao-opcoes-dropdown {
+    display: flex;
+    position: absolute;
+}
+
+.card-documento-botao-opcoes {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.body-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.body-card-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+}
+
+.section-dados-card {
+    display: flex;
+    flex-direction: column;
+    width: 6.7em;
+}
+
+.dado-card-content {
+    text-align: center;
+}

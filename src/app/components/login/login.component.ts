@@ -13,7 +13,6 @@ export class LoginComponent {
   loadingLogin = false;
   background: string = '';
   contactEmail: string = '';
-  // customField: PoPageLoginCustomField;
   customField: any;
   customFieldOption: any;
   customFieldOptions: Array<PoSelectOption> = [];
@@ -108,9 +107,10 @@ export class LoginComponent {
     this.literals = '';
     this.login = '';
     this.loginPattern = '';
+    this.loadingLogin = false;
     this.loginError = '';
     this.loginErrors = [];
-    this.logo = '';
+    this.logo = 'https://www.aldbioenergia.com.br/wp-content/uploads/ald-bio.svg';
     this.passwordError = '';
     this.passwordErrors = [];
     this.passwordPattern = '';

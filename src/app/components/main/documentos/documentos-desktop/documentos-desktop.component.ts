@@ -2,10 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn, PoTableColumnSpacing } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
-import { Documento, HistoricoDocumento, ItemDocumento } from '../../../shared/interfaces/documento';
+import { Documento, HistoricoDocumento, ItemDocumento, STATUS_DOCUMENTO } from '../../../shared/interfaces/documento';
 import { Saldo } from '../../../shared/interfaces/saldo.model';
 import { DocumentosService } from '../../../shared/services/documentos.service';
 import { Aprovador } from '../../../shared/interfaces/aprovador.model';
+import { formataNumeroMoeda } from '../../../shared/utils/utils';
 
 @Component({
   selector: 'app-documentos-desktop',
@@ -340,11 +341,11 @@ export class DocumentosDesktopComponent implements OnInit {
   constroiAcoesTabela(): PoPageAction[] {
     return [
       { label: 'Visualizar', action: this.abrirDocumento.bind(this), icon: 'po-icon-eye' },
-      { label: 'Aprovar', action: this.abrirModalAprovacao.bind(this), icon: 'po-icon-ok', visible: (documento: any) => documento.status == "02" || documento.status == "04" },
-      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close', visible: (documento: any) => documento.status == "02" || documento.status == "04" },
-      { label: 'Estornar', action: this.abrirConfirmacaoEstorno.bind(this), icon: 'po-icon-arrow-left', visible: (documento: any) => documento.status == "03" },
-      { label: 'Bloquear', action: this.abrirModalBloqueio.bind(this), icon: 'po-icon-lock', visible: (documento: any) => documento.status == "02" },
-      { label: 'Transferir para Superior', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-up', visible: (documento: any) => documento.status == "02" },
+      { label: 'Aprovar', action: this.abrirModalAprovacao.bind(this), icon: 'po-icon-ok', visible: (documento: any) => documento.status == STATUS_DOCUMENTO.Pendente || documento.status == STATUS_DOCUMENTO.Bloqueado },
+      { label: 'Recusar', action: this.abrirModalRecusa.bind(this), icon: 'po-icon-close', visible: (documento: any) => documento.status == STATUS_DOCUMENTO.Pendente || documento.status == STATUS_DOCUMENTO.Bloqueado },
+      { label: 'Estornar', action: this.abrirConfirmacaoEstorno.bind(this), icon: 'po-icon-arrow-left', visible: (documento: any) => documento.status == STATUS_DOCUMENTO.Aprovado },
+      { label: 'Bloquear', action: this.abrirModalBloqueio.bind(this), icon: 'po-icon-lock', visible: (documento: any) => documento.status == STATUS_DOCUMENTO.Pendente },
+      { label: 'Transferir para Superior', action: this.abrirModalTransferencia.bind(this), icon: 'po-icon-arrow-up', visible: (documento: any) => documento.status == STATUS_DOCUMENTO.Pendente },
     ]
   }
 
@@ -360,10 +361,10 @@ export class DocumentosDesktopComponent implements OnInit {
     return [
       {
         property: 'status', type: 'subtitle', label: 'Status', subtitles: [
-          { value: '02', content: '', label: 'Pendente', color: 'color-08' },
-          { value: '03', content: '', label: 'Aprovada', color: 'color-10' },
-          { value: '06', content: '', label: 'Rejeitada', color: 'color-07' },
-          { value: '04', content: '', label: 'Bloqueada', color: 'color-04' },
+          { value: STATUS_DOCUMENTO.Pendente, content: '', label: 'Pendente', color: 'color-08' },
+          { value: STATUS_DOCUMENTO.Aprovado, content: '', label: 'Aprovada', color: 'color-10' },
+          { value: STATUS_DOCUMENTO.Rejeitado, content: '', label: 'Rejeitada', color: 'color-07' },
+          { value: STATUS_DOCUMENTO.Bloqueado, content: '', label: 'Bloqueada', color: 'color-04' },
         ]
       },
       { property: 'filial', label: 'Filial' },
@@ -404,10 +405,10 @@ export class DocumentosDesktopComponent implements OnInit {
       { property: 'documentoAte', label: 'Documento até: ', type: 'string', gridColumns: 12 },
       {
         property: 'status', label: 'Status: ', type: 'string', options: [
-          { value: '02', label: 'Pendente' },
-          { value: '03', label: 'Aprovada' },
-          { value: '06', label: 'Rejeitada' },
-          { value: '04', label: 'Bloqueada' },
+          { value: STATUS_DOCUMENTO.Pendente, label: 'Pendente' },
+          { value: STATUS_DOCUMENTO.Aprovado, label: 'Aprovada' },
+          { value: STATUS_DOCUMENTO.Rejeitado, label: 'Rejeitada' },
+          { value: STATUS_DOCUMENTO.Bloqueado, label: 'Bloqueada' },
         ]
       },
     ];
@@ -470,38 +471,8 @@ export class DocumentosDesktopComponent implements OnInit {
   }
 
 
-  getAprovadores() {
-    this.documentosService
-      .getAprovadores()
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.aprovadores = res.map((aprovador: Aprovador) => {
-          return { label: `${aprovador?.codAprovador} - ${aprovador.nome}`, value: aprovador.codAprovador || "" }
-        })
-        this.loading = false;
-      }, (error) => {
-        this.poNotificationService.error(error.error.message)
-      });
-  }
-
-
-  getSuperiores() {
-    this.documentosService
-      .getSuperiores()
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.superiores = res.map((superior: Aprovador) => {
-          return { label: `${superior?.codAprovador} - ${superior.nome}`, value: superior.codAprovador || "" }
-        })
-        this.loading = false;
-      }, (error) => {
-        this.poNotificationService.error(error.error.message)
-      });
-  }
-
-
   abrirItensDocumento(documento: Documento) {
-    this.itemsDocumentoSelecionado = documento.Itens as ItemDocumento[];
+    this.itemsDocumentoSelecionado = documento.itens as ItemDocumento[];
     this.modalItens.open();
   }
 
@@ -530,15 +501,6 @@ export class DocumentosDesktopComponent implements OnInit {
       literals: { cancel: "Não", confirm: 'Sim' },
     })
   }
-
-  // abrirConfirmacaoAprovacao(documento: Documento) {
-  //   this.poDialogService.confirm({
-  //     title: 'Aprovação',
-  //     message: `Confirma aprovação do documento ${documento.doc} ?`,
-  //     confirm: () => this.aprovarDocumento(documento),
-  //     literals: { cancel: "Não", confirm: 'Sim' },
-  //   })
-  // }
 
 
   abrirConfirmacaoEstorno(documento: Documento) {
@@ -827,7 +789,7 @@ export class DocumentosDesktopComponent implements OnInit {
     }
 
     if (!retornoBuscaAvancada['status']) {
-      this.status = `02`
+      this.status = STATUS_DOCUMENTO.Pendente
     }
 
 
@@ -836,7 +798,7 @@ export class DocumentosDesktopComponent implements OnInit {
   }
 
   formataNumeroMoeda(numero: number) {
-    return numero.toFixed(2)
+    return formataNumeroMoeda(numero)
   }
 
   // Executado quando é removido os filtros da busca avançada
@@ -847,7 +809,7 @@ export class DocumentosDesktopComponent implements OnInit {
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = "ZZZZZZZZZ"
     if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoDe')) this.emissaoDe = " "
     if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoAte')) this.emissaoAte = `${new Date().getFullYear()}-12-31`
-    if (!disclaimers.some(disclaimer => disclaimer.property === 'status')) this.status = "02"
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'status')) this.status = STATUS_DOCUMENTO.Pendente
 
     this.getItens();
   }

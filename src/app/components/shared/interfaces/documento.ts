@@ -1,3 +1,10 @@
+export const STATUS_DOCUMENTO = {
+    'Pendente': '02',
+    'Aprovado': '03',
+    'Rejeitado': '06',
+    'Bloqueado': '04',
+}
+
 export interface Documento {
     filial: string,
     id: string,
@@ -14,7 +21,7 @@ export interface Documento {
     aviso?: string,
     tipoCompra?: string,
     status: string,
-    Itens?: Array<ItemDocumento>,
+    itens?: Array<ItemDocumento>,
     Liberacao?: HistoricoDocumento[],
     obs?: string
 }

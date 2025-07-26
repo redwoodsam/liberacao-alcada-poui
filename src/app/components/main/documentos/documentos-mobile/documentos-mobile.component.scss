@@ -1,0 +1,217 @@
+
+/*********************  ***************************/
+
+:host .status-pendente {
+    border-left: 7px solid #ea9b3e !important;
+}
+
+:host .status-liberado {
+    border-left: 7px solid #56b96b !important;
+}
+
+:host .status-rejeitado {
+    border-left: 7px solid #c64840 !important;
+}
+
+:host .status-bloqueado {
+    border-left: 7px solid #5843c8 !important;
+}
+
+.container-sem-itens {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #dcdcdc;
+    padding: 50px 20px;
+    border-radius: 10px;
+    gap: 20px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.sem-itens-icon {
+    font-size: 50px;
+    color: #409df3;
+}
+
+.documentos-mobile-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.documentos-mobile-container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 20px;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+.container-botoes-acao {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    bottom: 20px;
+    right: 15px;
+    gap: 10px;
+}
+
+/******************* Detalhes Modal **************************/
+.container-detalhes-documento {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.container-historico-documento {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    gap: 5px;
+}
+
+.card-historico {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.body-card-historico {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.section-dados-card-historico {
+    display: flex;
+    flex-direction: column;
+}
+
+.body-card-itens {
+    display: flex;
+    padding: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.section-dados-card-itens {
+    display: flex;
+    flex-direction: column;
+    min-width: 100px;
+}
+
+::ng-deep .botao-acao-aprovar .po-button[p-kind=secondary]  {
+    background-color: #1b8f04 !important;
+    color: #ffffff !important;
+
+    &:hover {
+        background-color: #135f03 !important;
+    }
+}
+
+::ng-deep .po-accordion-item {
+    border: none !important;
+}
+
+::ng-deep .po-accordion-item-header {
+    border: none !important;
+}
+
+::ng-deep .po-accordion-item-header :last-child {
+    border-bottom: none !important;
+}
+
+::ng-deep .po-accordion-item-header-button {
+    border: none !important;
+    outline: none !important;
+
+    &:focus {
+        border: none !important;
+        outline: none !important;
+    }
+}
+
+::ng-deep .po-list-view-content {
+    margin-top: 0 !important;
+}
+
+::ng-deep .po-accordion-item-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+
+::ng-deep #modalDetalhes .po-modal-body {
+    padding: 0 !important;
+}
+
+::ng-deep #modalDetalhes .po-modal-body {
+    padding: 0 !important;
+}
+
+::ng-deep .po-list-view-title-no-link {
+    font-size: .9em;
+    text-align: center;
+}
+
+::ng-deep #modal-ver-saldo .po-modal-body {
+    padding: 10px !important;
+
+    &::ng-deep .po-info {
+        margin: 10px !important;
+    }
+
+    &::ng-deep .po-info-container-content {
+        padding: 0px !important;
+    }
+}
+
+.container-modal-confirmacao-documento {
+    display: flex;
+    column-gap: 30px;
+    row-gap: 10px;
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+::ng-deep .modal-detalhes-documento-container-acoes .po-modal-footer {
+    display: flex;
+    justify-content: center !important;
+    padding: 0 15px;
+    padding-top: 30px;
+    padding-bottom: 15px;
+    gap: 10px;
+}
+
+::ng-deep .botao-acao-modal-detalhes .po-button {
+    padding: .6em;
+    font-size: 16px;
+}
+
+.po-action-btns-wrapper {
+    display: flex;
+    column-gap: 10px;
+}
+
+::ng-deep .footer-modal-documento-detalhes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+::ng-deep .modal-confirmacao-documento .po-modal-body {
+    padding: 20px 25px !important;
+}

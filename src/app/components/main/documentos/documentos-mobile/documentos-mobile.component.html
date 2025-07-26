@@ -1,1 +1,407 @@
-<p>documentos-mobile works!</p>
+<div class="documentos-mobile-header" #containerScroll>
+    <h1>Liberação de documentos</h1>
+</div>
+
+
+<div class="documentos-mobile-container">
+
+    @for (documento of documentos; track $index) {
+        <app-card-documento 
+            [documento]="documento" 
+            (verDetalhes)="abrirModalDetalhes($event)"
+            (aprovar)="abrirModalAprovacao($event)"
+            (rejeitar)="abrirModalRecusa($event)"
+            (bloquear)="abrirModalBloqueio($event)"
+            (estornar)="abrirConfirmacaoEstorno($event)"
+            (transferir)="abrirModalTransferencia($event)"
+        />
+    }
+
+    @if (documentos.length === 0) {
+        <div class="container-sem-itens">
+            <po-icon p-icon="po-icon-info" class="sem-itens-icon"></po-icon>
+            <p>Nenhum documento encontrado com os filtros selecionados</p>
+        </div>
+    }
+
+    @if (haMaisPaginas) {
+        <div style="display: flex; width: 100%; justify-content: center;">
+
+            <po-button
+                p-label="Mostrar Mais" 
+                p-icon="po-icon-arrow-down"
+                (p-click)="carregarMais()" 
+                [p-loading]="loading"
+                [p-disabled]="!haMaisPaginas" 
+            />
+
+        </div>
+    }
+
+</div>
+
+
+
+<div class="container-botoes-acao">
+    <po-button id="btn-acao-filtro" p-icon="po-icon-align-justify" p-size="large" p-kind="primary"
+        (p-click)="abrirModalFiltro()"></po-button>
+
+    <po-button id="btn-acao-filtro" p-icon="po-icon-eye" p-size="large" p-kind="primary"
+        (p-click)="abrirModalSaldo()"></po-button>
+
+    <po-button id="btn-acao-move-topo" p-kind="primary" p-icon="po-icon-arrow-up" p-size="large" (p-click)="scrollParaTopo()">
+    </po-button>
+</div>
+
+<po-modal #modalSaldo p-title="Ver saldo" [p-click-out]="true" id="modal-ver-saldo" >
+    <po-dynamic-view [p-fields]="formularioSaldo" [p-value]="saldoAtual">
+    </po-dynamic-view>
+
+</po-modal>
+
+<po-modal #modalFiltros p-title="Filtrar Documentos" [p-primary-action]="acoesModalFiltros.primary" [p-secondary-action]="acoesModalFiltros.secondary" [p-click-out]="true" >
+    <po-input name="documento-de" p-placeholder="Documento de" [(ngModel)]="documentoDe" >Documento de</po-input>
+    <po-input name="documento-ate" p-placeholder="Documento até" [(ngModel)]="documentoAte">Documento ate</po-input>
+    <po-datepicker name="emissao-de" p-placeholder="Emissão de" [(ngModel)]="emissaoDe">Data de</po-datepicker>
+    <po-datepicker name="emissao-ate" p-placeholder="Emissão até" [(ngModel)]="emissaoAte">Data ate</po-datepicker>
+    <po-select [ngModel]="status" (ngModelChange)="status = $event" name="status" [p-options]="opcoesFiltroStatus" p-placeholder="Selecione um status"></po-select>
+</po-modal>
+
+
+<po-modal #modalDetalhes [p-title]="tituloDocumentoSelecionado" id="modalDetalhes" [p-click-out]="true">
+    <div class="container-detalhes-documento">
+
+        <div class="section-dados-card-historico">
+            <strong>Documento</strong>
+            <small class="dado-card-content">{{ documentoSelecionado.doc }}</small>
+        </div>
+
+        <div class="section-dados-card-historico">
+            <strong>Tipo</strong>
+            <small class="dado-card-content">{{ documentoSelecionado.tipo }}</small>
+        </div>
+
+        <div class="section-dados-card-historico">
+            <strong>Emissão</strong>
+            <small class="dado-card-content">{{ documentoSelecionado.dataEmissao }}</small>
+        </div>
+        <div class="section-dados-card-historico">
+            <strong>Vlr. Total</strong>
+            <small class="dado-card-content">{{ formataValorMoeda(documentoSelecionado.valorTotal) }}</small>
+        </div>
+    </div>
+    
+    <po-accordion>
+
+        <po-accordion-item p-label="Histórico de aprovação" #accordionHistorico>
+
+            <div class="container-historico-documento">
+
+                @for(historico of historicoDocumento; track $index) {
+
+                    <div [class]="'card-historico' + ' ' + 'status-' + historico.status.toLocaleLowerCase()">
+                        <po-widget >
+                            <div class="body-card-historico">
+
+                                <div class="section-dados-card-historico">
+                                    <strong>Nível</strong>
+                                    <small class="dado-card-content">{{ historico.nivel }}</small>
+                                </div>
+
+                                <div class="section-dados-card-historico">
+                                    <strong>Aprovador</strong>
+                                    <small class="dado-card-content">{{ historico.aprovador}}</small>
+                                </div>
+
+                                <div class="section-dados-card-historico">
+                                    <strong>Dt. Liberação</strong>
+                                    <small class="dado-card-content">{{ historico.situacao }}</small>
+                                </div>
+
+                                <div class="section-dados-card-historico">
+                                    <strong>Mensagem</strong>
+                                    <small class="dado-card-content">{{ historico.msg }}</small>
+                                </div>
+                            </div>
+                        </po-widget>
+                    </div>
+                }
+
+            </div>
+
+        </po-accordion-item>
+
+        <po-accordion-item p-label="Itens do documento">
+
+            <div class="container-historico-documento">
+                <po-list-view
+                    [p-hide-select-all]="true"
+                    [p-items]="itemsDocumentoSelecionado"
+                >
+                    <ng-template p-list-view-content-template let-item [p-title]="formataTituloItem"></ng-template>
+
+                    <ng-template p-list-view-detail-template let-item >
+                        <div class="po-row">
+                            <!-- <po-info class="po-md-6" p-label="Age" [p-value]="item.age"></po-info> -->
+                            <div class="body-card-itens">
+
+                                <div class="section-dados-card-itens">
+                                    <strong>Quantidade</strong>
+                                    <small class="dado-card-content">{{ item.quantidadeUm1 + " " + item.um}}</small>
+                                </div>
+
+                                <div class="section-dados-card-itens">
+                                    <strong>Vlr. Unitario</strong>
+                                    <small class="dado-card-content">{{ formataValorMoeda(item.valorUnitario) }}</small>
+                                </div>
+                                <div class="section-dados-card-itens">
+                                    <strong>Vlr Total</strong>
+                                    <small class="dado-card-content">{{ formataValorMoeda(item.valorTotal) }}</small>
+                                </div>
+                                <div class="section-dados-card-itens">
+                                    <strong>Solicitante</strong>
+                                    <small class="dado-card-content">{{ item.solicitante }}</small>
+                                </div>
+                                <div class="section-dados-card-itens">
+                                    <strong>Centro Custo</strong>
+                                    <small class="dado-card-content">{{ item.centroCusto }}</small>
+                                </div>
+                                <div class="section-dados-card-itens">
+                                    <strong>Necessidade</strong>
+                                    <small class="dado-card-content">{{ item.necessidade }}</small>
+                                </div>
+
+                                @if (item.observacao) {
+                                    <div class="section-dados-card-itens">
+                                        <strong>Observação</strong>
+                                        <small class="dado-card-content">{{ item.observacao }}</small>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </ng-template>
+                </po-list-view>
+
+            </div>
+        </po-accordion-item>
+    </po-accordion>
+
+    @if (documentoSelecionado.status == "02" || documentoSelecionado.status == "04") { 
+        <po-modal-footer class="modal-detalhes-documento-container-acoes" [p-disabled-align]="true">
+
+            <div class="po-action-btns-wrapper">
+
+                <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-label="Tranferir"
+                    (p-click)="abrirModalTransferencia(documentoSelecionado)">
+                </po-button>
+
+                <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-danger p-label="Rejeitar"
+                    (p-click)="abrirModalRecusa(documentoSelecionado)">
+                </po-button>
+
+                <po-button class="botao-acao-modal-detalhes botao-acao-aprovar" p-icon="po-icon-ok" p-label="Aprovar"
+                    (p-click)="abrirModalAprovacao(documentoSelecionado)">
+                </po-button>
+
+            </div>
+
+        </po-modal-footer>
+    }
+
+
+
+</po-modal>
+
+
+<po-modal #modalAprovacao [p-click-out]="true" p-title="Aprovar documento" [p-primary-action]="acoesModalAprovacao['confirmar']" class="modal-confirmacao-documento"
+    [p-secondary-action]="acoesModalAprovacao['cancelar']">
+
+    <div class="modal-visualizacao-container">
+        <h3>Dados do documento</h3>
+
+        <div class="container-modal-confirmacao-documento">
+
+            <div class="section-dados-card-historico">
+                <strong>Nº</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.doc }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Tipo</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.tipo }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Emissão</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.dataEmissao }}</small>
+            </div>
+            <div class="section-dados-card-historico">
+                <strong>Vlr. Total</strong>
+                <small class="dado-card-content">{{ formataValorMoeda(documentoSelecionado.valorTotal) }}</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Por gentileza, justique sua aprovação.">
+        </po-textarea>
+
+    </div>
+
+
+
+
+</po-modal>
+
+
+<po-modal #modalRecusa [p-click-out]="true" p-title="Recusar documento" [p-primary-action]="acoesModalRecusa['confirmar']" class="modal-confirmacao-documento"
+    [p-secondary-action]="acoesModalRecusa['cancelar']">
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Dados do documento</h3>
+
+        <div class="container-modal-confirmacao-documento">
+
+            <div class="section-dados-card-historico">
+                <strong>Nº</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.doc }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Tipo</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.tipo }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Emissão</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.dataEmissao }}</small>
+            </div>
+            <div class="section-dados-card-historico">
+                <strong>Vlr. Total</strong>
+                <small class="dado-card-content">{{ formataValorMoeda(documentoSelecionado.valorTotal) }}</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Explique, por gentileza, qual seria o motivo da recusa?"> </po-textarea>
+
+    </div>
+
+
+
+
+</po-modal>
+
+
+<po-modal #modalBloqueio [p-click-out]="true" p-title="Bloquear documento" class="modal-confirmacao-documento" [p-primary-action]="acoesModalBloqueio['confirmar']"
+    [p-secondary-action]="acoesModalBloqueio['cancelar']">
+
+
+    <div class="modal-visualizacao-container">
+        <h3>Dados do documento</h3>
+
+        <div class="container-modal-confirmacao-documento">
+
+            <div class="section-dados-card-historico">
+                <strong>Nº</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.doc }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Tipo</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.tipo }}</small>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Emissão</strong>
+                <small class="dado-card-content">{{ documentoSelecionado.dataEmissao }}</small>
+            </div>
+            <div class="section-dados-card-historico">
+                <strong>Vlr. Total</strong>
+                <small class="dado-card-content">{{ formataValorMoeda(documentoSelecionado.valorTotal) }}</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Explique, por gentileza, qual seria o motivo do bloqueio?" />
+
+    </div>
+
+
+</po-modal>
+
+<!-- Modal Tranferencia -->
+<po-modal #modalTransferencia 
+    p-title="Transferir para Superior"
+    class="modal-confirmacao-documento"
+    [p-primary-action]="acoesModalTransferencia['confirmar']"
+    [p-secondary-action]="acoesModalTransferencia['cancelar']"
+    [p-click-out]="true"
+>
+
+    <div class="modal-visualizacao-container">
+        <h3>Dados do documento</h3>
+
+        <div class="container-modal-confirmacao-documento">
+
+            <div class="section-dados-card-historico">
+                <strong>Nº</strong>
+                <p class="dado-card-content">{{ documentoSelecionado.doc }}</p>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Tipo</strong>
+                <p class="dado-card-content">{{ documentoSelecionado.tipo }}</p>
+            </div>
+
+            <div class="section-dados-card-historico">
+                <strong>Emissão</strong>
+                <p class="dado-card-content">{{ documentoSelecionado.dataEmissao }}</p>
+            </div>
+            <div class="section-dados-card-historico">
+                <strong>Vlr. Total</strong>
+                <p class="dado-card-content">{{ formataValorMoeda(documentoSelecionado.valorTotal) }}</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Superior</h3>
+
+        <div style="margin-top: 10px; margin-bottom: 30px;">
+            <p class="dado-card-content">{{ saldoAtual.codSuperior }}</p>
+        </div>
+
+    </div>
+
+    <div class="modal-visualizacao-container">
+        <h3>Justificativa</h3>
+
+        <po-textarea name="justificativa" [(ngModel)]="justificativaDocumento"
+            p-placeholder="Explique, por gentileza, qual seria o motivo da transferência?"> </po-textarea>
+
+    </div>
+
+
+
+</po-modal>
+
+
+<po-loading-overlay p-text="Carregando itens" [hidden]="!loading"></po-loading-overlay>

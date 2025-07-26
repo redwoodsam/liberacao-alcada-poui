@@ -30,7 +30,8 @@ export class UserService {
     ) { }
 
     authenticatication(userName: string = '', password: string = '', granType: string, refresh_token: string = ''): Observable<any> {
-        return this.http.post(`${API}/api/oauth2/v1/token?grant_type=${granType}&password=${password}&username=${userName}&refresh_token=${refresh_token}`, {}, this.httpOptions)
+        let encodedPassword = encodeURI(password)
+        return this.http.post(`${API}/api/oauth2/v1/token?grant_type=${granType}&password=${encodedPassword}&username=${userName}&refresh_token=${refresh_token}`, {}, this.httpOptions)
             .pipe(
                 share(),
                 map((res: any) => {

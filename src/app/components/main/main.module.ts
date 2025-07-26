@@ -11,11 +11,12 @@ import { CommonModule } from '@angular/common';
 import { SolicitacoesCompraComponent } from './solicitacoes-compra/solicitacoes-compra.component';
 import { DocumentosMobileComponent } from './documentos/documentos-mobile/documentos-mobile.component';
 import { DocumentosDesktopComponent } from './documentos/documentos-desktop/documentos-desktop.component';
+import { CardDocumentoComponent } from './documentos/documentos-mobile/components/card-documento/card-documento.component';
 
 
 
 @NgModule({
-  declarations: [MainComponent, DocumentosComponent, SolicitacoesCompraComponent, DocumentosMobileComponent, DocumentosDesktopComponent],
+  declarations: [MainComponent, DocumentosComponent, SolicitacoesCompraComponent, DocumentosMobileComponent, DocumentosDesktopComponent, CardDocumentoComponent],
   imports: [
     CommonModule,
     MainRoutingModule,

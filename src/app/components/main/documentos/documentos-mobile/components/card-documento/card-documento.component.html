@@ -1,0 +1,63 @@
+<div [class]="'card-documento-container' + ' status-' + documento.status">
+
+
+    <po-dropdown
+        id="dropdown-opcoes"
+        class="card-documento-botao-opcoes" 
+        [p-label]="'...'"
+        [p-actions]="acoesDocumento"
+    >
+    </po-dropdown>
+
+    <po-widget 
+        p-title="{{ tituloDocumentoFormatado }}" 
+        [p-height]="size" 
+        p-primary-label="Ver Detalhes"
+        (p-primary-action)="clickVerDetalhes($event)"
+        [p-no-shadow]="true"
+    >
+
+        <div class="body-card">
+
+            <div class="body-card-linha">
+
+                <div class="section-dados-card">
+                    <strong>Filial</strong>
+                    <small class="dado-card-content">{{documento.filial}}</small>
+                </div>
+
+                <div class="section-dados-card">
+                    <strong>Cod. Usuário</strong>
+                    <small class="dado-card-content">{{documento.codUsuario}}</small>
+                </div>
+
+                <div class="section-dados-card">
+                    <strong>Data Emissão</strong>
+                    <small class="dado-card-content">{{documento.dataEmissao}}</small>
+                </div>
+
+            </div>
+
+
+            <div class="body-card-linha">
+
+                <div class="section-dados-card">
+                    <strong>Prazo</strong>
+                    <small class="dado-card-content">{{documento.prazo}}</small>
+                </div>
+
+                <div class="section-dados-card">
+                    <strong>Valor total</strong>
+                    <small class="dado-card-content">{{ valorTotalFormatado }}</small>
+                </div>
+
+                <div class="section-dados-card">
+                    <strong>Data Liberação</strong>
+                    <small class="dado-card-content">{{ documento.dataLiberacao }}</small>
+                </div>
+            </div>
+
+        </div>
+
+    </po-widget>
+</div>
