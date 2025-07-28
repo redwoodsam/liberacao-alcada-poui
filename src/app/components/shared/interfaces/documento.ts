@@ -28,6 +28,7 @@ export interface Documento {
 
 export interface ItemDocumento {
     item: string,
+    fornecedor: string,
     id?: string,
     doc: string,
     produto: string,

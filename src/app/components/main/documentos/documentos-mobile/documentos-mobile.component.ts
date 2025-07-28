@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoAccordionItemComponent, PoDialogService, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoSelectOption } from '@po-ui/ng-components';
+import { PoAccordionItemComponent, PoDialogService, PoDisclaimer, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoSelectOption } from '@po-ui/ng-components';
 import { finalize } from 'rxjs';
-import { Documento, HistoricoDocumento, ItemDocumento } from '../../../shared/interfaces/documento';
+import { Documento, HistoricoDocumento, ItemDocumento, STATUS_DOCUMENTO } from '../../../shared/interfaces/documento';
 import { DocumentosService } from '../../../shared/services/documentos.service';
 import { ScrollService } from '../../../shared/services/scroll.service';
 import { formataNumeroMoeda } from '../../../shared/utils/utils';
@@ -22,11 +22,19 @@ export class DocumentosMobileComponent implements OnInit {
   // filtros
   filtrosAplicados: string = '';
 
-  documentoDe = ""
-  documentoAte = ""
-  emissaoDe = ""
-  emissaoAte = ""
-  status = ""
+  documentoDe  = "";
+  documentoAte = "";
+  emissaoDe    = "";
+  emissaoAte   = "";
+  status       = STATUS_DOCUMENTO.Pendente;
+
+
+  documentoDeForm  = "";
+  documentoAteForm = "";
+  emissaoDeForm    = "";
+  emissaoAteForm   = "";
+  statusForm       = STATUS_DOCUMENTO.Pendente;
+
   justificativaDocumento: string = "";
 
   formularioSaldo: PoDynamicViewField[] = [];
@@ -49,6 +57,7 @@ export class DocumentosMobileComponent implements OnInit {
     }
   }
   
+  disclaimersFiltros:Array<PoDisclaimer> = []
 
   // Estado global
   loading: boolean = false;
@@ -96,6 +105,7 @@ export class DocumentosMobileComponent implements OnInit {
     cancelar: { label: 'Cancelar', action: this.fecharModalBloqueio.bind(this), danger: true } as PoModalAction,
   }
 
+
   constructor(
      private documentosService: DocumentosService,
      private poNotificationService: PoNotificationService,
@@ -106,21 +116,21 @@ export class DocumentosMobileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inicializaFiltros()
+    this.resetaFiltros()
     this.getSaldo();
-    this.getItens(1);
+    this.getItens();
   }
 
   get tituloDocumentoSelecionado() {
     return `Documento #${this.documentoSelecionado.doc}`
   }
 
-  inicializaFiltros() {
-    this.documentoDe = ""
-    this.documentoAte = "ZZZZZZZZ"
-    this.emissaoDe = ""
-    this.emissaoAte = `${new Date().getFullYear()}-12-31`
-    this.status = "02"
+  resetaFiltros() {
+    this.documentoDeForm = ""
+    this.documentoAteForm = ""
+    this.emissaoDeForm = ""
+    this.emissaoAteForm = ""
+    this.statusForm = STATUS_DOCUMENTO.Pendente;
   }
 
   constroiFormularioSaldos(): PoDynamicViewField[] {
@@ -186,6 +196,18 @@ export class DocumentosMobileComponent implements OnInit {
       });
   }
 
+  aoMudarFiltrosAplicados(disclaimers: PoDisclaimer[]) {
+    this.pageNumber = 1;
+
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoDe')) this.documentoDe = ""
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = ""
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoDe')) this.emissaoDe = ""
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'emissaoAte')) this.emissaoAte = ""
+    if (!disclaimers.some(disclaimer => disclaimer.property === 'status')) this.status = STATUS_DOCUMENTO.Pendente
+
+    this.getItens();
+  }
+
 
   getItens(pageNumber: number = 1, pageSize: number = 20) {
     this.loading = true;
@@ -218,6 +240,7 @@ export class DocumentosMobileComponent implements OnInit {
   }
 
   fecharModalFiltros() {
+    this.resetaFiltros();
     this.modalFiltros.close();
   }
 
@@ -228,22 +251,47 @@ export class DocumentosMobileComponent implements OnInit {
       return;
     }
 
-    this.fecharModalFiltros();
-    this.getItens(1);
-  }
+    // Copia os valores das variáveis temporárias do formulário para as variáveis de consulta à API.
 
-  limparFiltros() {
-    this.inicializaFiltros();
-    this.getItens(1);
+    if(this.documentoDeForm !== this.documentoDe) {
+      this.documentoDe = this.documentoDeForm;
+      this.disclaimersFiltros =  this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoDe')
+      this.disclaimersFiltros.push({ property: 'documentoDe', label: `Documento de: ${this.documentoDeForm}`, value: this.documentoDeForm });
+    }
+
+    if(this.documentoAteForm !== this.documentoAte) {
+      this.documentoAte = this.documentoAteForm;
+      this.disclaimersFiltros =  this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoAte')
+      this.disclaimersFiltros.push({ property: 'documentoAte', label: `Documento até: ${this.documentoAteForm}`, value: this.documentoAteForm });
+    }
+
+    if(this.emissaoDeForm !== this.emissaoDe) {
+      this.emissaoDe = this.emissaoDeForm;
+      this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'emissaoDe')
+      this.disclaimersFiltros.push({ property: 'emissaoDe', label: `Emissão de: ${this.emissaoDeForm}`, value: this.emissaoDeForm });
+    }
+
+    if(this.emissaoAteForm !== this.emissaoAte) {
+      this.emissaoAte = this.emissaoAteForm;
+      this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'emissaoAte')
+      this.disclaimersFiltros.push({ property: 'emissaoAte', label: `Emissão até: ${this.emissaoAteForm}`, value: this.emissaoAteForm });
+    }
+
+    if(this.status !== this.statusForm) {
+      this.status = this.statusForm;
+      this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'status')
+      this.disclaimersFiltros.push({ property: 'status', label: `Status: ${this.formataNomeStatus(this.status)}`, value: this.statusForm });
+    }
+
+    this.getItens();
     this.fecharModalFiltros();
   }
-
 
   validaFiltros(): boolean {
     let isValido = true;
     let mensagem = "";
 
-    if (this.emissaoDe && this.emissaoAte && this.emissaoDe > this.emissaoAte) {
+    if (this.emissaoDeForm && this.emissaoAteForm && this.emissaoDeForm > this.emissaoAteForm) {
       mensagem += "A data de emissão de não pode ser maior que a data de emissão até. ";
       isValido = false;
     }
@@ -284,7 +332,22 @@ export class DocumentosMobileComponent implements OnInit {
     }
   }
 
-    abrirConfirmacaoAprovacao() {
+  private formataNomeStatus(status: string): string {
+    switch(status) {
+      case STATUS_DOCUMENTO.Pendente:
+        return 'Pendente';
+      case STATUS_DOCUMENTO.Aprovado:
+        return 'Aprovado';
+      case STATUS_DOCUMENTO.Bloqueado:
+        return 'Bloqueado';
+      case STATUS_DOCUMENTO.Rejeitado:
+        return 'Rejeitado';
+      default:
+        return 'Desconhecido';
+    }
+  }
+
+  abrirConfirmacaoAprovacao() {
 
     if (!this.justificativaDocumento) {
       this.poNotificationService.information({ message: "Por gentileza, digite uma justificativa para a aprovação.", duration: 3000 })
@@ -377,7 +440,6 @@ export class DocumentosMobileComponent implements OnInit {
 
     if (!this.modalDetalhes.isHidden) {
       this.justificativaDocumento = ""
-      this.modalDetalhes?.close();
     }
 
     if (!this.modalTransferencia.isHidden) {
@@ -390,7 +452,6 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalAprovacao() {
 
     if (!this.modalDetalhes.isHidden) {
-      this.modalDetalhes?.close();
       this.justificativaDocumento = ""
     }
 
@@ -403,7 +464,6 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalRecusa() {
 
     if (!this.modalDetalhes.isHidden) {
-      this.modalDetalhes?.close();
       this.justificativaDocumento = ""
     }
 
@@ -416,7 +476,6 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalBloqueio() {
 
     if (!this.modalDetalhes.isHidden) {
-      this.modalDetalhes?.close();
       this.justificativaDocumento = ""
     }
 

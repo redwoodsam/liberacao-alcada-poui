@@ -99,7 +99,7 @@ export class UserService {
     }
 
     getJwtTokenExipiresIn() {
-        return (this.jwtToken?.exp || 1 * 1000);
+        return this.jwtToken?.exp ? this.jwtToken.exp * 1000 : 1 * 1000;
     }
 
     private parseJwt(token: string) {

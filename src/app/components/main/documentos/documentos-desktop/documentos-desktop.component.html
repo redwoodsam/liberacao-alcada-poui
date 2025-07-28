@@ -25,6 +25,7 @@
                 <table id="itens-table" class="non-poui-table">
                     <thead>
                         <th>Item</th>
+                        <th>Fornecedor</th>
                         <th>Produto</th>
                         <th>Descrição</th>
                         <th>Quantidade</th>
@@ -43,6 +44,7 @@
                         @for (item of rowItem.itens; track item.id; let i = $index) {
                         <tr>
                             <td style="text-align: center;">{{ (i+1).toString().padStart(2, '0') }}</td>
+                            <td>{{ item.fornecedor || "Sem informação" }}</td>
                             <td>{{ item.produto }}</td>
                             <td>{{ item.descricao }}</td>
                             <td>{{ formataNumeroMoeda(item.quantidadeUm1) }}</td>
@@ -133,6 +135,7 @@
         <table class="non-poui-table">
             <thead>
                 <th>Item</th>
+                <th>Fornecedor</th>
                 <th>Documento</th>
                 <th>Produto</th>
                 <th>Descrição</th>
@@ -148,6 +151,7 @@
                 @for (item of itemsDocumentoSelecionado; track item.item) {
                 <tr>
                     <td>{{ item.item }}</td>
+                    <td>{{ item.fornecedor || "Sem informação" }}</td>
                     <td>{{ item.doc }}</td>
                     <td>{{ item.produto }}</td>
                     <td>{{ item.descricao }}</td>

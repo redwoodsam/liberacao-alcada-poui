@@ -48,10 +48,10 @@ export class InterceptorProtheus implements HttpInterceptor {
 
     if (this.userService.isLogged()) {
       dateExpiresIn = new Date(this.userService.getJwtTokenExipiresIn()); // Data que vence o token
-      dateNow.setMinutes(dateNow.getMinutes() - 2); // Retira 2 minutos da data atual para considerar uma folga no tempo
 
       // Verifica se Token Venceu
       if (dateExpiresIn < dateNow) {
+
         return this.userService.authenticatication('', '', REFRESH_TOKEN, this.userService.getRefreshToken())
           .pipe(
             switchMap((auth) => {
@@ -63,7 +63,7 @@ export class InterceptorProtheus implements HttpInterceptor {
             }),
             catchError((error) => {
               if (error.status === 401) {
-                this.poNotification.error('Usuário e senha vencidos, por favor realizar uma nova autenticação informando seu usuário e senha!');
+                this.poNotification.information('Usuário e senha vencidos, por favor realizar uma nova autenticação informando seu usuário e senha!');
                 this.userService.logout();
                 this.router.navigate(['login']);
               }

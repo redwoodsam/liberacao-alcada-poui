@@ -1,5 +1,15 @@
 <div class="documentos-mobile-header" #containerScroll>
     <h1>Liberação de documentos</h1>
+
+    <div class="documentos-mobile-filter-disclaimers">
+        <po-disclaimer-group 
+            [p-title]="'Filtros aplicados'" 
+            [p-disclaimers]="disclaimersFiltros" 
+            (p-remove)="aoMudarFiltrosAplicados(disclaimersFiltros)" 
+            (p-remove-all)="resetaFiltros(); aplicarFiltros(); disclaimersFiltros = []"
+        />
+    </div>
+
 </div>
 
 
@@ -60,11 +70,11 @@
 </po-modal>
 
 <po-modal #modalFiltros p-title="Filtrar Documentos" [p-primary-action]="acoesModalFiltros.primary" [p-secondary-action]="acoesModalFiltros.secondary" [p-click-out]="true" >
-    <po-input name="documento-de" p-placeholder="Documento de" [(ngModel)]="documentoDe" >Documento de</po-input>
-    <po-input name="documento-ate" p-placeholder="Documento até" [(ngModel)]="documentoAte">Documento ate</po-input>
-    <po-datepicker name="emissao-de" p-placeholder="Emissão de" [(ngModel)]="emissaoDe">Data de</po-datepicker>
-    <po-datepicker name="emissao-ate" p-placeholder="Emissão até" [(ngModel)]="emissaoAte">Data ate</po-datepicker>
-    <po-select [ngModel]="status" (ngModelChange)="status = $event" name="status" [p-options]="opcoesFiltroStatus" p-placeholder="Selecione um status"></po-select>
+    <po-input name="documento-de" p-placeholder="Documento de" [(ngModel)]="documentoDeForm" >Documento de</po-input>
+    <po-input name="documento-ate" p-placeholder="Documento até" [(ngModel)]="documentoAteForm">Documento ate</po-input>
+    <po-datepicker name="emissao-de" p-placeholder="Emissão de" [(ngModel)]="emissaoDeForm">Data de</po-datepicker>
+    <po-datepicker name="emissao-ate" p-placeholder="Emissão até" [(ngModel)]="emissaoAteForm">Data ate</po-datepicker>
+    <po-select [ngModel]="statusForm" (ngModelChange)="statusForm = $event" name="status" [p-options]="opcoesFiltroStatus" p-placeholder="Selecione um status"></po-select>
 </po-modal>
 
 
@@ -145,6 +155,13 @@
                             <!-- <po-info class="po-md-6" p-label="Age" [p-value]="item.age"></po-info> -->
                             <div class="body-card-itens">
 
+                                @if (item.fornecedor) {
+                                    <div class="section-dados-card-itens" style="width: 83%;">
+                                        <strong>Fornecedor</strong>
+                                        <small class="dado-card-content">{{ item.fornecedor }}</small>
+                                    </div>
+                                }
+
                                 <div class="section-dados-card-itens">
                                     <strong>Quantidade</strong>
                                     <small class="dado-card-content">{{ item.quantidadeUm1 + " " + item.um}}</small>
@@ -160,7 +177,7 @@
                                 </div>
                                 <div class="section-dados-card-itens">
                                     <strong>Solicitante</strong>
-                                    <small class="dado-card-content">{{ item.solicitante }}</small>
+                                    <small class="dado-card-content">{{ item.solicitante || "Sem informação" }}</small>
                                 </div>
                                 <div class="section-dados-card-itens">
                                     <strong>Centro Custo</strong>
