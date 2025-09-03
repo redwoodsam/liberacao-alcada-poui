@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoChartType, PoDialogService, PoDynamicViewField, PoGridRowActions, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
+import { Component, ViewChild } from '@angular/core';
+import { PoDialogService, PoDynamicViewField, PoGridRowActions, PoModalComponent, PoNotificationService, PoPageAction, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
-import { finalize } from 'rxjs';
-import { Router } from '@angular/router';
-import { Documento, HistoricoDocumento, ItemDocumento } from '../../shared/interfaces/documento';
-import { Saldo } from '../../shared/interfaces/saldo.model';
+import { Documento, ItemDocumento } from '../../shared/interfaces/documento';
 import { DocumentosService } from '../../shared/services/documentos.service';
-import { Aprovador } from '../../shared/interfaces/aprovador.model';
 
 
 

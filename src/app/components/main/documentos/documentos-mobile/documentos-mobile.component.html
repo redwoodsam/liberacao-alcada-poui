@@ -1,5 +1,5 @@
 <div class="documentos-mobile-header" #containerScroll>
-    <h1>Liberação de documentos</h1>
+    <h2>Liberação de documentos</h2>
 
     <div class="documentos-mobile-filter-disclaimers">
         <po-disclaimer-group 
@@ -18,6 +18,7 @@
     @for (documento of documentos; track $index) {
         <app-card-documento 
             [documento]="documento" 
+            [saldoAtual]="saldoAtual"
             (verDetalhes)="abrirModalDetalhes($event)"
             (aprovar)="abrirModalAprovacao($event)"
             (rejeitar)="abrirModalRecusa($event)"
@@ -209,9 +210,11 @@
 
             <div class="po-action-btns-wrapper">
 
-                <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-label="Tranferir"
-                    (p-click)="abrirModalTransferencia(documentoSelecionado)">
-                </po-button>
+                @if (saldoAtual.codSuperior) {
+                    <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-label="Tranferir"
+                        (p-click)="abrirModalTransferencia(documentoSelecionado)">
+                    </po-button>
+                }
 
                 <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-danger p-label="Rejeitar"
                     (p-click)="abrirModalRecusa(documentoSelecionado)">

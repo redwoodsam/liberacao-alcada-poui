@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PoChartType, PoDialogService, PoDynamicViewField, PoMenuItem, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn, PoTableColumnSpacing } from '@po-ui/ng-components';
+import { PoDialogService, PoDynamicViewField, PoModalAction, PoModalComponent, PoNotificationService, PoPageAction, PoSelectOption, PoTableAction, PoTableColumn } from '@po-ui/ng-components';
 import { PoPageDynamicSearchFilters } from '@po-ui/ng-templates';
 import { finalize } from 'rxjs';
 import { Documento, HistoricoDocumento, ItemDocumento, STATUS_DOCUMENTO } from '../../../shared/interfaces/documento';
-import { Saldo } from '../../../shared/interfaces/saldo.model';
+import { SaldoModel } from '../../../shared/interfaces/saldo.model';
 import { DocumentosService } from '../../../shared/services/documentos.service';
-import { Aprovador } from '../../../shared/interfaces/aprovador.model';
 import { formataNumeroMoeda } from '../../../shared/utils/utils';
 
 @Component({
@@ -79,7 +78,7 @@ export class DocumentosDesktopComponent implements OnInit {
   }
 
   // Saldos
-  saldoAtual: Saldo = {} as Saldo;
+  saldoAtual: SaldoModel = {} as SaldoModel;
   formularioSaldo: Array<PoDynamicViewField> = [];
 
   formularioSaldoModalDocumento: Array<PoDynamicViewField> = [];
@@ -269,12 +268,6 @@ export class DocumentosDesktopComponent implements OnInit {
         type: 'currency',
         gridColumns: 3
       },
-      // {
-      //   property: 'moeda',
-      //   label: 'Moeda',
-      //   type: 'string',
-      //   gridColumns: 3
-      // },
       {
         property: 'tipoLimite',
         label: 'Tipo Limite',
@@ -417,6 +410,9 @@ export class DocumentosDesktopComponent implements OnInit {
   /************************************************************/
 
 
+  tituloItemFormatado(item: any) {
+    return item.filial + ' - ' + item.centroCusto + ' - ' + item.descricao
+  }
 
   abrirDocumento(documento: any) {
     this.documentoSelecionado = documento;
@@ -445,10 +441,12 @@ export class DocumentosDesktopComponent implements OnInit {
     this.loading = true
     this.documentosService.consultaSaldo()
       .subscribe((res) => {
-        this.saldoAtual = res.Itens[0]
+        this.saldoAtual = res;
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error.error.message);
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
   }
 
@@ -466,7 +464,11 @@ export class DocumentosDesktopComponent implements OnInit {
         this.haMaisPaginas = res.hasNext;
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
+
       });
   }
 
@@ -601,7 +603,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
 
 
@@ -633,7 +637,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
 
   }
@@ -663,7 +669,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
 
   }
@@ -693,7 +701,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
 
   }
@@ -717,7 +727,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.getItens(this.pageNumber)
 
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
   }
 
@@ -745,7 +757,9 @@ export class DocumentosDesktopComponent implements OnInit {
         this.haMaisPaginas = res.hasNext;
         this.loading = false;
       }, (error) => {
-        this.poNotificationService.error(error.error.message)
+        if (error.code != 401 || error.code != 403) {
+          this.poNotificationService.error(error.error.message)
+        }
       });
   }
 

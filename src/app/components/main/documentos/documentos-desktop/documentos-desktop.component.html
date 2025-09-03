@@ -91,7 +91,6 @@
         <table class="non-poui-table">
             <thead>
                 <th>Item</th>
-                <th>Situação</th>
                 <th>Aprovador</th>
                 <th>Nível</th>
                 <th>Data Liberação</th>
@@ -103,10 +102,9 @@
                 @for (item of historicoDocumento; track item.item) {
                 <tr>
                     <td>{{ item.item }}</td>
-                    <td>{{ item.situacao }}</td>
                     <td>{{ item.aprovador }}</td>
                     <td>{{ item.nivel }}</td>
-                    <td>{{ item.dataLiberacao || "Não liberado" }}</td>
+                    <td>{{ item.situacao }}</td>
                     <td>{{ item.msg }}</td>
                     <td>{{ item.status }}</td>
                 </tr>
@@ -317,11 +315,98 @@
 
 
 <!-- Modal Saldos -->
-<po-modal #modalSaldos p-size="xl" p-title="Ver Saldo">
-    <po-dynamic-view [p-fields]="formularioSaldo" [p-value]="saldoAtual">
+<po-modal id="modal-saldos-desktop" #modalSaldos p-size="xl" p-title="Ver Saldo">
 
-    </po-dynamic-view>
+    @if (!saldoAtual.PcoAtivo) {
+        <po-dynamic-view [p-fields]="formularioSaldo" [p-value]="saldoAtual.Itens"></po-dynamic-view>
+    }
 
+    @else {
+
+        <div>
+            <h3 style="margin-left: 20px; margin-bottom: 10px; font-weight: 600;">Dados do usuário</h3>
+            <div class="cabecalho-saldos-pco">
+                <div class="container-info-saldo-pco">
+                    <div class="titulo-info-saldo-pco">Código</div>
+                    <div>{{saldoAtual.Usuario.codUsuario || "Sem informações"}}</div>
+                </div>
+
+                <div class="container-info-saldo-pco">
+                    <div class="titulo-info-saldo-pco">Usuario</div>
+                    <div>{{saldoAtual.Usuario.nome || "Sem informações"}}</div>
+                </div>
+
+                <div class="container-info-saldo-pco">
+                    <div class="titulo-info-saldo-pco">Login</div>
+                    <div>{{saldoAtual.Usuario.login || "Sem informações"}}</div>
+                </div>
+
+                <div class="container-info-saldo-pco">
+                    <div class="titulo-info-saldo-pco">Superior</div>
+                    <div>{{saldoAtual.Usuario.codSuperior || "Sem informações"}}</div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <po-accordion>
+
+            <po-accordion-item p-label="Ver Saldos PCO">
+
+                @for(centroCusto of saldoAtual.Itens; track $index) {
+
+                    <!-- Centros de Custo -->
+                    <po-accordion >
+
+                        <po-accordion-item [p-label]="tituloItemFormatado(centroCusto)">
+
+                            @for(contaContabil of centroCusto.saldos; track $index) {
+
+                                <!-- Contas Contábeis -->
+                                <po-accordion>
+                                    <po-accordion-item class="accordion-item-item" [p-label]="contaContabil.codContaContabil + ' - ' + contaContabil.descricaoConta ">
+
+                                        <div class="cabecalho-saldos-pco">
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Filial</div>
+                                                <div>{{ contaContabil.filial || "Sem informações" }}</div>
+                                            </div>
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Conta Contábil</div>
+                                                <div>{{ contaContabil.codContaContabil + " - " + contaContabil.descricaoConta || "Sem informações" }}</div>
+                                            </div>
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Valor orçado</div>
+                                                <div>{{ formataNumeroMoeda(contaContabil.valorOrcado) || "Sem informações" }}</div>
+                                            </div>
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Data Orçamento</div>
+                                                <div>{{ contaContabil.dataOrcamento || "Sem informações" }}</div>
+                                            </div>
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Valor Realizado</div>
+                                                <div>{{ formataNumeroMoeda(contaContabil.valorRealizado) || "Sem informações" }}</div>
+                                            </div>
+                                            <div  class="container-info-saldo-pco">
+                                                <div class="titulo-info-saldo-pco">Última Atualização</div>
+                                                <div>{{ contaContabil.dataUltimaAtualizacaoRealizado || "Ainda sem movimentos" }}</div>
+                                            </div>
+
+                                        </div>
+                                    </po-accordion-item>
+                                </po-accordion>
+                            }
+
+                        </po-accordion-item>
+
+                    </po-accordion>
+                }
+
+            </po-accordion-item>
+        </po-accordion>
+    }
+    
 </po-modal>
 
 

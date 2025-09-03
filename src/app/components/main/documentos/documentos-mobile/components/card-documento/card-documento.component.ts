@@ -13,6 +13,9 @@ export class CardDocumentoComponent implements OnInit {
   @Input()
   documento: Documento = {} as Documento;
 
+  @Input()
+  saldoAtual: any = {};
+
   acoesDocumento: Array<PoDropdownAction> = []
 
 
@@ -36,8 +39,16 @@ export class CardDocumentoComponent implements OnInit {
         {label: 'Aprovar'         , action: this.clickAprovar.bind(this)},
         {label: 'Rejeitar'        , action: this.clickRejeitar.bind(this)},
         {label: 'Bloquear'        , action: this.clickBloquear.bind(this)},
-        {label: 'Transferir para' , action: this.clickTransferir.bind(this)}
       )
+
+      if(this.saldoAtual.codSuperior) {
+
+        this.acoesDocumento.push(
+          {label: 'Transferir para' , action: this.clickTransferir.bind(this)}
+        );
+
+      }
+
     }
 
     if (this.documento.status === STATUS_DOCUMENTO.Aprovado) {

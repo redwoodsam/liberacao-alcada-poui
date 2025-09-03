@@ -31,6 +31,53 @@
     justify-content: flex-end;
 }
 
+::ng-deep #modal-saldos-desktop {
+
+    .po-modal-body {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .po-accordion-item-header-button {
+        padding-left: 30px;
+    }
+
+    .po-accordion-item-body-content {
+        padding: 10px;
+    }
+
+    .po-accordion-item-header {
+        border: none;
+    }
+
+    .po-accordion-item:is(:first-child) {
+        border: none;
+    }
+
+
+}
+
+.cabecalho-saldos-pco {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
+    padding: 0 20px;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 30px;
+}
+
+.titulo-info-saldo-pco {
+    font-weight: 600;
+}
+
+.container-info-saldo-pco {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    padding: 10px;
+}
+
 @media screen and (max-width: 1024px) {
    .filtros-wrapper {
         width: 100%;
