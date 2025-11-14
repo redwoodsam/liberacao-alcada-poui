@@ -210,8 +210,8 @@
 
             <div class="po-action-btns-wrapper">
 
-                @if (saldoAtual.codSuperior) {
-                    <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-label="Tranferir"
+                @if (saldoAtual?.codSuperior) {
+                    <po-button class="botao-acao-modal-detalhes" p-icon="po-icon-close" p-kind="primary" p-label="Transferir"
                         (p-click)="abrirModalTransferencia(documentoSelecionado)">
                     </po-button>
                 }
@@ -406,7 +406,7 @@
         <h3>Superior</h3>
 
         <div style="margin-top: 10px; margin-bottom: 30px;">
-            <p class="dado-card-content">{{ saldoAtual.codSuperior }}</p>
+            <p class="dado-card-content">{{ saldoAtual?.codSuperior }}</p>
         </div>
 
     </div>

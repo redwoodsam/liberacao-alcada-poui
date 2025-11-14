@@ -32,23 +32,23 @@ export class DocumentosService {
 
   // headers: { 'tenantId': `01,${documento.filial}` }
   aprovarDocumento(documento: Documento, motivo: string) {
-    return this.httpClient.put(`${this.baseUrl}/aprovar/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } });
+    return this.httpClient.put(`${this.baseUrl}/aprovar/${documento.filial}/${documento.doc}/${documento.tipo}/${documento.codAprovador}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } });
   }
 
   rejeitarDocumento(documento: Documento, motivo: string) {
-    return this.httpClient.put(`${this.baseUrl}/rejeitar/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
+    return this.httpClient.put(`${this.baseUrl}/rejeitar/${documento.filial}/${documento.doc}/${documento.tipo}/${documento.codAprovador}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
   }
 
   estornarDocumento(documento: Documento, motivo: string) {
-    return this.httpClient.put(`${this.baseUrl}/estornar/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
+    return this.httpClient.put(`${this.baseUrl}/estornar/${documento.filial}/${documento.doc}/${documento.tipo}/${documento.codAprovador}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
   }
 
   bloquearDocumento(documento: Documento, motivo: string) {
-    return this.httpClient.put(`${this.baseUrl}/bloquear/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
+    return this.httpClient.put(`${this.baseUrl}/bloquear/${documento.filial}/${documento.doc}/${documento.tipo}/${documento.codAprovador}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
   }
 
   transferirDocumentoParaSuperior(documento: Documento, motivo: string) {
-    return this.httpClient.put(`${this.baseUrl}/transferirSuperior/${documento.filial}/${documento.doc}/${documento.tipo}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
+    return this.httpClient.put(`${this.baseUrl}/transferirSuperior/${documento.filial}/${documento.doc}/${documento.tipo}/${documento.codAprovador}`, { "justificativa": motivo }, { headers: { 'tenantId': `01,${documento.filial}` } })
   }
 
 

@@ -22,18 +22,18 @@ export class DocumentosMobileComponent implements OnInit {
   // filtros
   filtrosAplicados: string = '';
 
-  documentoDe  = "";
+  documentoDe = "";
   documentoAte = "";
-  emissaoDe    = "";
-  emissaoAte   = "";
-  status       = STATUS_DOCUMENTO.Pendente;
+  emissaoDe = "";
+  emissaoAte = "";
+  status = STATUS_DOCUMENTO.Pendente;
 
 
-  documentoDeForm  = "";
+  documentoDeForm = "";
   documentoAteForm = "";
-  emissaoDeForm    = "";
-  emissaoAteForm   = "";
-  statusForm       = STATUS_DOCUMENTO.Pendente;
+  emissaoDeForm = "";
+  emissaoAteForm = "";
+  statusForm = STATUS_DOCUMENTO.Pendente;
 
   justificativaDocumento: string = "";
 
@@ -56,8 +56,8 @@ export class DocumentosMobileComponent implements OnInit {
       label: 'Cancelar',
     }
   }
-  
-  disclaimersFiltros:Array<PoDisclaimer> = []
+
+  disclaimersFiltros: Array<PoDisclaimer> = []
 
   // Estado global
   loading: boolean = false;
@@ -74,16 +74,16 @@ export class DocumentosMobileComponent implements OnInit {
 
   @ViewChild(PoModalComponent) modalDocumento: any;
 
-  @ViewChild("modalFiltros")       modalFiltros!: PoModalComponent;
-  @ViewChild("modalDetalhes")      modalDetalhes!: PoModalComponent;
-  @ViewChild("modalSaldo")         modalSaldo!: PoModalComponent;
+  @ViewChild("modalFiltros") modalFiltros!: PoModalComponent;
+  @ViewChild("modalDetalhes") modalDetalhes!: PoModalComponent;
+  @ViewChild("modalSaldo") modalSaldo!: PoModalComponent;
   @ViewChild("accordionHistorico") accordionHistorico!: PoAccordionItemComponent;
 
 
   @ViewChild('modalTransferencia') modalTransferencia!: PoModalComponent;
-  @ViewChild('modalRecusa')        modalRecusa!: PoModalComponent;
-  @ViewChild('modalAprovacao')     modalAprovacao!: PoModalComponent;
-  @ViewChild('modalBloqueio')      modalBloqueio!: PoModalComponent;
+  @ViewChild('modalRecusa') modalRecusa!: PoModalComponent;
+  @ViewChild('modalAprovacao') modalAprovacao!: PoModalComponent;
+  @ViewChild('modalBloqueio') modalBloqueio!: PoModalComponent;
 
   acoesModalTransferencia = {
     confirmar: { label: 'Transferir', action: this.abrirConfirmacaoTransferencia.bind(this) } as PoModalAction,
@@ -107,10 +107,10 @@ export class DocumentosMobileComponent implements OnInit {
 
 
   constructor(
-     private documentosService: DocumentosService,
-     private poNotificationService: PoNotificationService,
-     private scrollService: ScrollService,
-     private poDialogService: PoDialogService,
+    private documentosService: DocumentosService,
+    private poNotificationService: PoNotificationService,
+    private scrollService: ScrollService,
+    private poDialogService: PoDialogService,
   ) {
     this.formularioSaldo = this.constroiFormularioSaldos();
   }
@@ -157,13 +157,14 @@ export class DocumentosMobileComponent implements OnInit {
         property: 'codSuperior',
         label: 'Superior',
         type: 'string',
-        gridColumns: 12 
+        gridColumns: 12
+
       },
       {
         property: 'limite',
         label: 'Limite',
         type: 'currency',
-        gridColumns: 6 
+        gridColumns: 6
       },
       {
         property: 'tipoLimite',
@@ -187,13 +188,16 @@ export class DocumentosMobileComponent implements OnInit {
   }
 
   getSaldo() {
-    this.loading = true
     this.documentosService.consultaSaldo()
-      .subscribe((res) => {
-        this.saldoAtual = res.Itens[0]
-      }, (error) => {
-        this.poNotificationService.error({ message: error.error.message, duration: 3000 });
-      });
+      .subscribe(
+        {
+          next: (res) => {
+            this.saldoAtual = { ...res.Itens[0], ...res.Usuario }
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 });
+          }
+        });
   }
 
   aoMudarFiltrosAplicados(disclaimers: PoDisclaimer[]) {
@@ -217,13 +221,18 @@ export class DocumentosMobileComponent implements OnInit {
     this.documentosService
       .getAll(pageNumber, pageSize, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.documentos = this.documentos.concat(res.Itens);
-        this.haMaisPaginas = res.hasNext;
-        this.loading = false;
-      }, (error) => {
-        this.poNotificationService.error(error.error.message)
-      });
+      .subscribe(
+        {
+          next: (res) => {
+            this.documentos = this.documentos.concat(res.Itens);
+            this.haMaisPaginas = res.hasNext;
+          },
+          error: (error) => {
+            this.poNotificationService.error(error.error.message)
+          },
+          complete: () => this.loading = false
+        }
+      );
   }
 
   scrollParaTopo() {
@@ -253,31 +262,31 @@ export class DocumentosMobileComponent implements OnInit {
 
     // Copia os valores das variáveis temporárias do formulário para as variáveis de consulta à API.
 
-    if(this.documentoDeForm !== this.documentoDe) {
+    if (this.documentoDeForm !== this.documentoDe) {
       this.documentoDe = this.documentoDeForm;
-      this.disclaimersFiltros =  this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoDe')
+      this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoDe')
       this.disclaimersFiltros.push({ property: 'documentoDe', label: `Documento de: ${this.documentoDeForm}`, value: this.documentoDeForm });
     }
 
-    if(this.documentoAteForm !== this.documentoAte) {
+    if (this.documentoAteForm !== this.documentoAte) {
       this.documentoAte = this.documentoAteForm;
-      this.disclaimersFiltros =  this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoAte')
+      this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'documentoAte')
       this.disclaimersFiltros.push({ property: 'documentoAte', label: `Documento até: ${this.documentoAteForm}`, value: this.documentoAteForm });
     }
 
-    if(this.emissaoDeForm !== this.emissaoDe) {
+    if (this.emissaoDeForm !== this.emissaoDe) {
       this.emissaoDe = this.emissaoDeForm;
       this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'emissaoDe')
       this.disclaimersFiltros.push({ property: 'emissaoDe', label: `Emissão de: ${this.emissaoDeForm}`, value: this.emissaoDeForm });
     }
 
-    if(this.emissaoAteForm !== this.emissaoAte) {
+    if (this.emissaoAteForm !== this.emissaoAte) {
       this.emissaoAte = this.emissaoAteForm;
       this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'emissaoAte')
       this.disclaimersFiltros.push({ property: 'emissaoAte', label: `Emissão até: ${this.emissaoAteForm}`, value: this.emissaoAteForm });
     }
 
-    if(this.status !== this.statusForm) {
+    if (this.status !== this.statusForm) {
       this.status = this.statusForm;
       this.disclaimersFiltros = this.disclaimersFiltros.filter(disclaimer => disclaimer.property !== 'status')
       this.disclaimersFiltros.push({ property: 'status', label: `Status: ${this.formataNomeStatus(this.status)}`, value: this.statusForm });
@@ -301,9 +310,9 @@ export class DocumentosMobileComponent implements OnInit {
     }
 
     return isValido;
-    
+
   }
-  
+
   abrirModalSaldo() {
     this.modalSaldo.open();
   }
@@ -333,7 +342,7 @@ export class DocumentosMobileComponent implements OnInit {
   }
 
   private formataNomeStatus(status: string): string {
-    switch(status) {
+    switch (status) {
       case STATUS_DOCUMENTO.Pendente:
         return 'Pendente';
       case STATUS_DOCUMENTO.Aprovado:
@@ -439,11 +448,12 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalTransferencia() {
 
     if (!this.modalDetalhes.isHidden) {
+      this.modalDetalhes.close();
       this.justificativaDocumento = ""
     }
 
     if (!this.modalTransferencia.isHidden) {
-      this.modalTransferencia?.close()
+      this.modalTransferencia.close()
       this.justificativaDocumento = ""
     }
 
@@ -452,6 +462,7 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalAprovacao() {
 
     if (!this.modalDetalhes.isHidden) {
+      this.modalDetalhes.close();
       this.justificativaDocumento = ""
     }
 
@@ -464,6 +475,7 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalRecusa() {
 
     if (!this.modalDetalhes.isHidden) {
+      this.modalDetalhes?.close()
       this.justificativaDocumento = ""
     }
 
@@ -476,6 +488,7 @@ export class DocumentosMobileComponent implements OnInit {
   fecharModalBloqueio() {
 
     if (!this.modalDetalhes.isHidden) {
+      this.modalDetalhes?.close()
       this.justificativaDocumento = ""
     }
 
@@ -515,29 +528,30 @@ export class DocumentosMobileComponent implements OnInit {
     this.documentosService
       .aprovarDocumento(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
+      .subscribe(
+        {
+          next: (res) => {
 
-        this.loading = false;
+            this.poNotificationService.success({ message: "Documento Aprovado com sucesso!", duration: 3000 })
 
-        this.poNotificationService.success({ message: "Documento Aprovado com sucesso!", duration: 3000 })
+            this.justificativaDocumento = ""
 
-        this.justificativaDocumento = ""
+            if (!this.modalAprovacao.isHidden) {
+              this.modalAprovacao?.close()
+            }
 
-        if (!this.modalAprovacao.isHidden) {
-          this.modalAprovacao?.close()
-        }
+            if (!this.modalDocumento.isHidden) {
+              this.modalDocumento?.close()
+            }
 
-        if (!this.modalDocumento.isHidden) {
-          this.modalDocumento?.close()
-        }
+            this.fecharModalAprovacao();
+            this.getItens(this.pageNumber)
 
-        this.fecharModalAprovacao();
-        this.getItens(this.pageNumber)
-
-      }, (error) => {
-        this.poNotificationService.error({ message: error.error.message, duration: 3000 })
-      });
-
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 })
+          },
+        })
 
   }
 
@@ -548,28 +562,32 @@ export class DocumentosMobileComponent implements OnInit {
 
     this.documentosService
       .rejeitarDocumento(this.documentoSelecionado, this.justificativaDocumento)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.loading = false;
+      // .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        {
+          next: (res) => {
 
-        this.poNotificationService.success({ message: "Documento Recusado com Sucesso!", duration: 3000 })
+            this.poNotificationService.success({ message: "Documento Recusado com Sucesso!", duration: 3000 })
 
-        this.justificativaDocumento = ""
+            this.justificativaDocumento = ""
 
-        if (!this.modalRecusa.isHidden) {
-          this.modalRecusa?.close()
+            if (!this.modalRecusa.isHidden) {
+              this.modalRecusa?.close()
+            }
+
+            if (!this.modalDocumento.isHidden) {
+              this.modalDocumento?.close()
+            }
+
+            this.fecharModalRecusa();
+            this.getItens(this.pageNumber)
+
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 })
+          },
         }
-
-        if (!this.modalDocumento.isHidden) {
-          this.modalDocumento?.close()
-        }
-
-        this.fecharModalRecusa();
-        this.getItens(this.pageNumber)
-
-      }, (error) => {
-        this.poNotificationService.error({ message: error.error.message, duration: 3000 })
-      });
+      );
 
   }
 
@@ -580,26 +598,31 @@ export class DocumentosMobileComponent implements OnInit {
     this.documentosService
       .estornarDocumento(documento, ' ')
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.loading = false;
+      .subscribe(
+        {
+          next: (res) => {
 
-        this.poNotificationService.success({ message: "Documento Estornado com Sucesso!", duration: 3000 })
+            this.poNotificationService.success({ message: "Documento Estornado com Sucesso!", duration: 3000 })
 
-        this.justificativaDocumento = ""
+            this.justificativaDocumento = ""
 
-        if (!this.modalRecusa.isHidden) {
-          this.modalRecusa?.close()
+            if (!this.modalRecusa.isHidden) {
+              this.modalRecusa?.close()
+            }
+
+            if (!this.modalDocumento.isHidden) {
+              this.modalDocumento?.close()
+            }
+
+            this.getItens(this.pageNumber)
+
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 })
+          },
         }
 
-        if (!this.modalDocumento.isHidden) {
-          this.modalDocumento?.close()
-        }
-
-        this.getItens(this.pageNumber)
-
-      }, (error) => {
-        this.poNotificationService.error({ message: error.error.message, duration: 3000 })
-      });
+      );
 
   }
 
@@ -610,27 +633,33 @@ export class DocumentosMobileComponent implements OnInit {
     this.documentosService
       .bloquearDocumento(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.loading = false;
+      .subscribe(
+        {
+          next: (res) => {
+            this.loading = false;
 
-        this.poNotificationService.success({ message: "Documento Bloqueado com Sucesso!", duration: 3000 })
+            this.poNotificationService.success({ message: "Documento Bloqueado com Sucesso!", duration: 3000 })
 
-        this.justificativaDocumento = ""
+            this.justificativaDocumento = ""
 
-        if (!this.modalBloqueio.isHidden) {
-          this.modalBloqueio?.close()
+            if (!this.modalBloqueio.isHidden) {
+              this.modalBloqueio?.close()
+            }
+
+            if (!this.modalDocumento.isHidden) {
+              this.modalDocumento?.close()
+            }
+
+            this.fecharModalBloqueio();
+            this.getItens(this.pageNumber)
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 })
+          },
+
         }
 
-        if (!this.modalDocumento.isHidden) {
-          this.modalDocumento?.close()
-        }
-
-        this.fecharModalBloqueio();
-        this.getItens(this.pageNumber)
-
-      }, (error) => {
-        this.poNotificationService.error({message: error.error.message, duration: 3000})
-      });
+      );
 
   }
 
@@ -641,20 +670,23 @@ export class DocumentosMobileComponent implements OnInit {
     this.documentosService
       .transferirDocumentoParaSuperior(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.loading = false;
+      .subscribe({
+        next: (res) => {
+          this.loading = false;
 
-        this.poNotificationService.success({message: "Documento transferido com sucesso!", duration: 3000})
+          this.poNotificationService.success({ message: "Documento transferido com sucesso!", duration: 3000 })
 
-        if (!this.modalTransferencia.isHidden) {
-          this.modalTransferencia?.close()
+          if (!this.modalTransferencia.isHidden) {
+            this.modalTransferencia?.close()
+          }
+
+          this.fecharModalTransferencia();
+          this.getItens(this.pageNumber)
+
+        },
+        error: (error) => {
+          this.poNotificationService.error({ message: error.error.message, duration: 3000 })
         }
-
-        this.fecharModalTransferencia();
-        this.getItens(this.pageNumber)
-
-      }, (error) => {
-        this.poNotificationService.error({message: error.error.message, duration: 3000})
       });
   }
 
@@ -669,21 +701,24 @@ export class DocumentosMobileComponent implements OnInit {
       this.documentoAte = "ZZZZZZZZZ";
     }
 
-
-    this.loading = true;
-
     this.documentos = [];
 
     this.documentosService
       .buscaDocumento({ documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.documentos = this.documentos.concat(res.Itens);
-        this.haMaisPaginas = res.hasNext;
-        this.loading = false;
-      }, (error) => {
-        this.poNotificationService.error({message: error.error.message, duration: 3000});
-      });
+      .subscribe(
+        {
+          next: (res) => {
+            this.documentos = this.documentos.concat(res.Itens);
+            this.haMaisPaginas = res.hasNext;
+          },
+          error: (error) => {
+            this.poNotificationService.error({ message: error.error.message, duration: 3000 });
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
   }
 
 

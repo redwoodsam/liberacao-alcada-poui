@@ -27,7 +27,7 @@ export class InterceptorProtheus implements HttpInterceptor {
     let dateNow: Date = new Date();
 
     // Requisição para autenticação
-    if (request.url.includes('/api/oauth2')) {
+    if (request.url.includes('/auth')) {
       return next.handle(request).pipe(
         catchError((error) => {
           return throwError(error);

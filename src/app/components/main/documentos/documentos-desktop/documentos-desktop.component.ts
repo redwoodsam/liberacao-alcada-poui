@@ -440,13 +440,15 @@ export class DocumentosDesktopComponent implements OnInit {
   getSaldo() {
     this.loading = true
     this.documentosService.consultaSaldo()
-      .subscribe((res) => {
-        this.saldoAtual = res;
-        this.loading = false;
-      }, (error) => {
-        if (error.code != 401 || error.code != 403) {
-          this.poNotificationService.error(error.error.message)
-        }
+      .subscribe({
+        next: (res) => {
+          this.saldoAtual = res;
+        },
+        error: (error) => {
+          if (error.code != 401 || error.code != 403) {
+            this.poNotificationService.error(error.error.message)
+          }
+        },
       });
   }
 
@@ -457,19 +459,23 @@ export class DocumentosDesktopComponent implements OnInit {
     if (pageNumber === 1) this.documentos = [];
 
     this.documentosService
-      .getAll(pageNumber, pageSize,{ documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
+      .getAll(pageNumber, pageSize, { documentoDe: this.documentoDe, documentoAte: this.documentoAte, emissaoDe: this.emissaoDe, emissaoAte: this.emissaoAte, status: this.status })
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
-        this.documentos = this.documentos.concat(res.Itens);
-        this.haMaisPaginas = res.hasNext;
-        this.loading = false;
-      }, (error) => {
-
-        if (error.code != 401 || error.code != 403) {
-          this.poNotificationService.error(error.error.message)
-        }
-
-      });
+      .subscribe(
+        {
+          next: (res) => {
+            this.documentos = this.documentos.concat(res.Itens);
+            this.haMaisPaginas = res.hasNext;
+          },
+          error: (error) => {
+            if (error.code != 401 || error.code != 403) {
+              this.poNotificationService.error(error.error.message)
+            }
+          },
+          complete: () => {
+            this.loading = false
+          }
+        },);
   }
 
 
@@ -715,7 +721,8 @@ export class DocumentosDesktopComponent implements OnInit {
     this.documentosService
       .transferirDocumentoParaSuperior(this.documentoSelecionado, this.justificativaDocumento)
       .pipe(finalize(() => (this.loading = false)))
-      .subscribe((res) => {
+      .subscribe(
+        (res) => {
         this.loading = false;
 
         this.poNotificationService.success("Documento transferido com sucesso!")

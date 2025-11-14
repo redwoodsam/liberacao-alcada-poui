@@ -285,7 +285,6 @@ export class SolicitacoesCompraComponent {
   carregarMais(): void {
     this.pageNumber++;
     this.getItens(this.pageNumber);
-    console.log(this.filtrosAplicados);
   }
 
 
@@ -341,7 +340,6 @@ export class SolicitacoesCompraComponent {
   // Executado quando é removido os filtros da busca avançada
   clickDisclaimers(disclaimers: any[]) {
     this.pageNumber = 1;
-    console.log(disclaimers);
 
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoDe')) this.documentoDe = " "
     if (!disclaimers.some(disclaimer => disclaimer.property === 'documentoAte')) this.documentoAte = "ZZZZZZZZZ"

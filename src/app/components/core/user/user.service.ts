@@ -5,7 +5,7 @@ import { Observable, map, share } from 'rxjs';
 import { JwtToken } from './user';
 import { environment } from '../../../../environments/environment';
 
-const API = environment.baseUrl;
+const API = environment.baseAuthUrl;
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -30,8 +30,14 @@ export class UserService {
     ) { }
 
     authenticatication(userName: string = '', password: string = '', granType: string, refresh_token: string = ''): Observable<any> {
-        let encodedPassword = encodeURI(password)
-        return this.http.post(`${API}/api/oauth2/v1/token?grant_type=${granType}&password=${encodedPassword}&username=${userName}&refresh_token=${refresh_token}`, {}, this.httpOptions)
+        let body = {
+            username: userName,
+            password: password,
+            grant_type: granType,
+            refresh_token: refresh_token
+        }
+
+        return this.http.post(`${API}/auth`, body, this.httpOptions)
             .pipe(
                 share(),
                 map((res: any) => {
@@ -44,6 +50,7 @@ export class UserService {
                         this.guardRouter(JSON.stringify(res));
                         localStorage.setItem('AUTH_TOKEN', JSON.stringify(res));
                     }
+                    return res;
                 })
             );
     }
@@ -53,11 +60,13 @@ export class UserService {
     }
 
     guardRouter(cTokenConfig: string = '') {
+
         if (cTokenConfig) {
             this.configToken = JSON.parse(cTokenConfig);
         } else {
             this.configToken = JSON.parse(localStorage.getItem('AUTH_TOKEN')!);
         }
+
         if (this.configToken !== null) {
             this.accessToken = this.configToken.access_token;
             this.refreshToken = this.configToken.refresh_token;
@@ -72,6 +81,7 @@ export class UserService {
                 this.userName += element.charAt(0).toUpperCase() + element.slice(1) + ' ';
             }
             this.userName = this.userName.trim();
+
         } else {
             this.userName = '';
         }
